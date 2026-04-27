@@ -148,7 +148,6 @@ python3 build_step3.py   # 修复重复、加入核心 JS 逻辑、闭合 HTML
 
 ### 在线访问
 - **域名**：[https://wangdada8208.xyz](https://wangdada8208.xyz)
-- **服务器**：47.80.18.105（Ubuntu 24.04）
 - **HTTPS**：Let's Encrypt 自动续期
 - **反向代理**：Nginx，HTTP 301 自动跳转 HTTPS
 

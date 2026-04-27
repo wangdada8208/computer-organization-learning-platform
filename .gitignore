@@ -1,0 +1,16 @@
+# WorkBuddy AI 助手配置
+.workbuddy/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,787 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>计算机组成原理 完整学习平台🦞</title><style>
+:root{--bg:#0f1117;--bg2:#1a1d27;--bg3:#252836;--tx:#e1e4ed;--t2:#8b8fa3;--ac:#6c5ce7;--a2:#a29bfe;--gn:#00b894;--rd:#e17055;--or:#fdcb6e;--bd:#2d3143;--rdx:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;display:flex}
+.sb{width:300px;min-width:300px;background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.sb-h{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.sb-h .lg{font-size:22px}.sb-h h2{font-size:15px;font-weight:600}.sb-h .su{font-size:11px;color:var(--t2)}
+.pw{padding:12px 20px;border-bottom:1px solid var(--bd)}
+.pl{font-size:11px;color:var(--t2);margin-bottom:6px;display:flex;justify-content:space-between}
+.pb{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--ac),var(--a2));border-radius:3px;transition:width .4s}
+.tr{flex:1;overflow-y:auto;padding:8px 0}.tr::-webkit-scrollbar{width:4px}.tr::-webkit-scrollbar-thumb{background:var(--bd)}
+.tp{margin-bottom:4px}.tp-h{display:flex;align-items:center;padding:8px 20px;cursor:pointer;font-size:12px;color:var(--a2);font-weight:600;gap:6px}.tp-h:hover{background:var(--bg3)}
+.tp-h .ar{font-size:10px;transition:transform .2s;display:inline-block;width:12px}
+.tp.cl .tp-h .ar{transform:rotate(-90deg)}.tp.cl .clst{display:none}
+.ci{display:flex;align-items:center;padding:9px 20px 9px 32px;cursor:pointer;font-size:13px;gap:8px;border-left:3px solid transparent}
+.ci:hover{background:var(--bg3)}.ci.ac{background:var(--bg3);border-left-color:var(--ac);color:#fff}
+.ci .cn{font-size:10px;color:var(--t2);width:20px}.ci .cna{flex:1}.ci .cd{width:8px;height:8px;border-radius:50%;background:var(--bd)}
+.ci.dn .cd{background:var(--gn)}
+.mn{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tb{padding:12px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mb{padding:6px 16px;border-radius:20px;border:1px solid var(--bd);background:transparent;color:var(--t2);cursor:pointer;font-size:12px}
+.mb:hover{border-color:var(--ac);color:var(--a2)}.mb.ac{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tb .ti{font-size:16px;font-weight:600;flex:1;min-width:200px}
+.tb .ba{font-size:10px;padding:3px 10px;border-radius:10px;background:var(--bg3);color:var(--t2)}
+.ct{flex:1;overflow-y:auto;padding:24px}.ct::-webkit-scrollbar{width:6px}.ct::-webkit-scrollbar-thumb{background:var(--bd)}
+.sec{max-width:900px;margin:0 auto;display:none}.sec.ac{display:block}
+.sec h3{font-size:22px;margin-bottom:8px;color:#fff}.sec .chd{color:var(--t2);font-size:13px;margin-bottom:24px;line-height:1.8}
+.sect{margin:24px 0;padding:16px 20px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd)}
+.sect h4{font-size:15px;color:var(--a2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.pt{margin:14px 0;padding-left:4px}
+.pt .ptt{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px}
+.pt .ptt::before{content:'▸ ';color:var(--ac);font-size:10px}
+.pt .ptc{font-size:12px;color:var(--t2);line-height:1.8;margin-left:16px}
+.st{font-size:12px;color:var(--t2);margin-bottom:16px}
+.qc{padding:20px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd);margin-bottom:16px}
+.qc .qn{font-size:11px;color:var(--t2);margin-bottom:6px}.qc .qt{font-size:14px;line-height:1.6;margin-bottom:14px}
+.qc .op{display:flex;flex-direction:column;gap:6px}
+.qc .ot{padding:10px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);cursor:pointer;font-size:13px}
+.qc .ot:hover{border-color:var(--ac)}.qc .ot.sl{border-color:var(--ac);background:rgba(108,92,231,.15)}
+.qc .ot.cr{border-color:var(--gn)!important;background:rgba(0,184,148,.15)!important}
+.qc .ot.wr{border-color:var(--rd)!important;background:rgba(225,112,85,.15)!important}
+.fbk{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:6px}
+.fbk.ok{background:rgba(0,184,148,.1);color:var(--gn)}.fbk.er{background:rgba(225,112,85,.1);color:var(--rd)}
+.qa{display:flex;gap:10px;margin-top:16px}
+.bt{padding:8px 20px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);cursor:pointer;font-size:12px}
+.bt:hover{border-color:var(--ac)}.bt.pr{background:var(--ac);border-color:var(--ac)}.bt.pr:hover{background:#5a4bd1}
+.sd{text-align:center;padding:30px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd);margin:16px 0}
+.sd .bs{font-size:48px;font-weight:700}.gr{color:var(--gn)}.gd{color:var(--a2)}.ok{color:var(--or)}
+.sd .det{font-size:13px;color:var(--t2);margin-top:6px}
+.mp{padding:24px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd);text-align:center;line-height:2.2}
+.mp .mt{font-size:13px;font-weight:600;color:var(--a2);margin:8px 0 4px}
+.mp .mc{display:inline-block;padding:5px 12px;margin:3px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:11px;cursor:pointer}
+.mp .mc:hover{border-color:var(--ac);color:var(--a2)}
+.es{text-align:center;padding:60px 20px;color:var(--t2)}.es .ic{font-size:48px;margin-bottom:12px}
+/* ===== 响应式适配 ===== */
+/* 汉堡菜单按钮 */
+.hb{display:none;background:transparent;border:none;color:var(--tx);font-size:20px;cursor:pointer;padding:4px;line-height:1}
+.sb-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:90}
+/* 平板 (768-1024px): 折叠侧边栏 */
+@media(max-width:1024px){
+  .sb{width:260px;min-width:260px;transition:transform .3s;position:fixed;top:0;left:0;height:100vh;z-index:100;transform:translateX(0)}
+  .sb.collapsed{transform:translateX(-260px)}
+  .mn{margin-left:260px;transition:margin-left .3s}
+  .mn.expanded{margin-left:0}
+  .hb{display:block}
+  .sec{max-width:100%}
+  .sect{padding:14px 16px}
+  .tb{gap:6px;padding:10px 16px}
+  .tb .ti{font-size:14px;min-width:0}
+  .mb{padding:5px 12px;font-size:11px}
+  .ba{display:none}
+  body{overflow:hidden}
+}
+/* 手机 (<768px): 抽屉式侧边栏 */
+@media(max-width:768px){
+  .sb{width:280px;min-width:280px;transform:translateX(-100%)}
+  .sb.open{transform:translateX(0)}
+  .sb-overlay.show{display:block}
+  .mn{margin-left:0!important;flex-direction:column}
+  .ct{padding:12px}
+  .sec{padding:0}
+  .sec h3{font-size:18px}
+  .sect{padding:12px 14px;margin:14px 0}
+  .sect h4{font-size:14px}
+  .pt .ptt{font-size:12px}
+  .pt .ptc{font-size:11px;margin-left:8px}
+  .pt .svg-wrap{margin-left:0;padding:6px}
+  .pt .svg-wrap svg{max-width:100%;height:auto}
+  .pt .tip{font-size:10px}
+  .tb{flex-wrap:nowrap;overflow-x:auto;gap:4px;padding:8px 12px;-webkit-overflow-scrolling:touch}
+  .tb .ti{font-size:13px;flex:0 0 auto;white-space:nowrap}
+  .mb{flex-shrink:0;padding:5px 10px;font-size:10px;border-radius:14px}
+  .qc{padding:14px}
+  .qc .qt{font-size:13px}
+  .qc .ot{padding:8px 12px;font-size:12px}
+  .sim{padding:14px}
+  .sim-body{scale:0.7;transform-origin:top center}
+  .sim-ctrl{flex-direction:column;gap:4px}
+  .sim-selector{flex-wrap:nowrap;overflow-x:auto;gap:4px;-webkit-overflow-scrolling:touch}
+  .sim-selector button{flex-shrink:0;padding:6px 10px;font-size:10px}
+  .gp-step{width:28px;height:28px;font-size:11px}
+  .bt{padding:6px 14px;font-size:11px}
+  .tf-btns{flex-direction:column}
+  .mp{padding:16px}
+  .sd .bs{font-size:36px}
+  body{overflow:hidden;position:relative}
+}
+
+/* 模拟器和导学扩展样式 */
+.pt .ptt{cursor:pointer;display:flex;align-items:flex-start;gap:4px}.pt .ptt::before{content:'\25b8';color:var(--ac);font-size:10px;flex-shrink:0;margin-top:2px;width:14px;text-align:center}
+.pt.exp .ptt::before{content:'\25be'}.pt .ptc{font-size:12px;color:var(--t2);line-height:1.8;margin-left:16px;display:none}
+.pt .svg-wrap{margin:8px 0 8px 16px;padding:10px;background:var(--bg3);border-radius:8px;overflow-x:auto;display:none;text-align:center}
+.pt .tip{margin:6px 0 0 16px;padding:6px 10px;background:rgba(253,203,110,.1);border-left:2px solid var(--or);font-size:10px;color:var(--or);border-radius:0 4px 4px 0;display:none}
+.pt.exp .ptc,.pt.exp .svg-wrap,.pt.exp .tip{display:block}
+.qc .fill{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:13px}
+.qc .fill:focus{outline:none;border-color:var(--ac)}
+.tf-btns{display:flex;gap:10px}.tf-btn{padding:8px 24px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);cursor:pointer;font-size:13px}
+.tf-btn:hover{border-color:var(--ac)}.tf-btn.sl{border-color:var(--ac);background:rgba(108,92,231,.15)}
+.bt.danger{border-color:var(--rd);color:var(--rd)}.bt.danger:hover{background:rgba(225,112,85,.1)}
+.sim{padding:20px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd);margin:20px 0}
+.sim h4{font-size:14px;color:var(--a2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.sim canvas{border-radius:8px;background:#111;max-width:100%}
+.sim-body{display:flex;flex-direction:column;gap:12px;align-items:center}
+.sim-ctrl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:8px}
+.sim-ctrl input,.sim-ctrl select{padding:6px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:12px}
+.sim-ctrl input:focus,.sim-ctrl select:focus{outline:none;border-color:var(--ac)}
+.sim-ctrl button{padding:6px 14px;border-radius:6px;border:none;background:var(--ac);color:#fff;cursor:pointer;font-size:12px}
+.sim-ctrl button:hover{background:#5a4bd1}
+.sim-info{font-size:11px;color:var(--t2);text-align:center;line-height:1.8}
+.sim-steps{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.sim-step{padding:6px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:10px;color:var(--t2)}
+.sim-step.active{border-color:var(--ac);background:rgba(108,92,231,.15);color:var(--a2)}
+.sim-selector{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
+.sim-selector button{padding:8px 16px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--t2);cursor:pointer;font-size:12px}
+.sim-selector button:hover,.sim-selector button.ac{background:var(--ac);color:#fff;border-color:var(--ac)}
+.guide-card{padding:16px 20px;background:var(--bg2);border-radius:var(--rdx);border:1px solid var(--bd);margin:12px 0}
+.gc-title{font-size:14px;color:var(--a2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.gc-body{font-size:12px;color:var(--t2);line-height:1.8}
+.gp-row{display:flex;gap:10px;align-items:center;margin:12px 0}
+.gp-step{width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.gp-step.dn{border-color:var(--gn);background:rgba(0,184,148,.15);color:var(--gn)}
+.gp-line{flex:1;height:2px;background:var(--bd)}.gp-line.dn{background:var(--gn)}
+.wb-item{padding:12px;margin:8px 0;background:var(--bg3);border-radius:8px;border:1px solid var(--bd)}
+.wb-item .wb-q{font-size:12px;font-weight:600;margin-bottom:4px}
+.wb-item .wb-a{font-size:11px;color:var(--gn)}.wb-item .wb-my{font-size:11px;color:var(--rd)}
+.qc .exp-box{margin-top:10px;padding:10px;background:rgba(108,92,231,.08);border-radius:6px;border:1px solid rgba(108,92,231,.2);font-size:11px;color:var(--a2);line-height:1.5;display:none}
+.qc .exp-box.show{display:block}
+.fbk{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:6px;line-height:1.6}
+
+</style>
+<body>
+<aside class="sb"><div class="sb-h"><span class="lg">🧠</span><div><h2>计算机组成原理</h2><span class="su">唐朔飞 第3版 · 完整版</span></div></div>
+<div class="pw"><div class="pl"><span>📖 学习进度</span><span id="pp">0%</span></div><div class="pb"><div class="pf" id="pf" style="width:0%"></div></div></div>
+<nav class="tr" id="chTree"></nav></aside>
+<main class="mn"><div class="tb"><button class="hb" onclick="toggleSidebar()" title="目录">☰</button><span class="ti" id="cTitle">📚 选择章节开始学习</span><button class="mb ac" data-mode="notes">📒 笔记</button><button class="mb" data-mode="quiz">✍️ 刷题</button><button class="mb" data-mode="sim">🎮 模拟器</button><button class="mb" data-mode="graph">🗺️ 图谱</button><button class="mb" data-mode="guide">🧭 导学</button><span class="ba" id="cBadge">唐朔飞 第3版</span></div><div class="ct" id="content"><div class="es"><div class="ic">👈</div><p>从左侧选择章节开始</p><p style="font-size:12px;margin-top:6px">全10章 · 200+知识点 · 6个交互模拟器 · 30+图解 · 零基础可学</p></div></div></main>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
+<script>
+const CHS=[{"id": "ch1", "n": 1, "nm": "计算机系统概论", "pg": "3-19", "desc": "本章是计算机组成原理的入门，建立对计算机系统的基本认知，理解软硬件概念、冯·诺依曼结构、计算机工作步骤和主要技术指标。", "secs": [{"title": "1.1 计算机系统简介", "points": [{"t": "计算机的软硬件概念", "c": "<b>硬件</b>是计算机实体部分——运算器、控制器、存储器、输入输出设备等看得见摸得着的物理装置。<b>软件</b>是程序和数据，分为<b>系统软件</b>和<b>应用软件</b>。在逻辑功能上等效——这叫<b>软硬件逻辑等价性</b>。","svg":'<svg viewBox="0 0 400 130"><rect x="10" y="5" width="380" height="48" rx="8" fill="#1a1d27" stroke="#6c5ce7"/><text x="200" y="20" text-anchor="middle" fill="#a29bfe" font-size="11">软件层（应用软件 → 系统软件）</text><text x="200" y="38" text-anchor="middle" fill="#8b8fa3" font-size="9">逻辑功能等效 ↕</text><rect x="10" y="60" width="380" height="48" rx="8" fill="#1a1d27" stroke="#00b894"/><text x="200" y="80" text-anchor="middle" fill="#00b894" font-size="11">硬件层（CPU + 存储器 + I/O设备）</text><text x="200" y="98" text-anchor="middle" fill="#8b8fa3" font-size="9">物理装置，看得见摸得着</text></svg>',"tip":"💡 口诀：硬件实体软件虚，逻辑等效可互换","c":"，如运算器、控制器、存储器、输入输出设备等看得见摸得着的物理装置。软件是计算机的程序和数据，分为系统软件（操作系统、编译器、数据库管理系统等）和应用软件（Office、浏览器、游戏等）。系统软件管理硬件资源，应用软件解决用户具体问题。硬件和软件在逻辑功能上是等效的——某些功能可以用硬件实现，也可以用软件实现，这称为软硬件逻辑等价性。例如浮点运算可由硬件FPU完成，也可由软件模拟实现。"}, {"t": "计算机系统的层次结构", "c": "计算机系统从底层到高层可分为：微程序级（CPU内部微操作控制）、机器语言级（二进制指令）、操作系统级（资源管理）、汇编语言级（助记符编程）、高级语言级（C/Java/Python等）。层与层之间通过翻译或解释实现转换。虚拟机概念：除了底层物理机外，每层都对其上层表现为一台虚拟机，隐藏了下层细节。层次结构使得各层可以独立发展演进，上层无需关心下层实现细节——这就是抽象的力量。"}, {"t": "计算机组成 vs 计算机体系结构", "c": "这是两个容易混淆但本质不同的概念。计算机体系结构是程序员视角看到的计算机属性——指令集、数据类型、寻址方式、I/O机制等，它是软硬件的交界面。计算机组成是体系结构的逻辑实现——具体的数据通路、控制信号、存储层次、总线结构等。同一体系结构(如x86)可以有多种组成实现(Intel和AMD的内部设计不同)。区分这两个概念有助于理解为什么不同厂商的CPU可以运行相同的软件。"}]}, {"title": "1.2 计算机的基本组成", "points": [{"t": "冯·诺依曼计算机的特点", "c": "<b>冯·诺依曼</b>1945年提出<b>存储程序</b>概念。六大特点：①五大部件组成 ②指令和数据用二进制 ③指令含操作码和地址码 ④顺序存放PC指示 ⑤以运算器为中心 ⑥<b>存储程序按地址执行</b>——最核心特征。","svg":'<svg viewBox="0 0 400 180"><rect x="130" y="8" width="140" height="36" rx="8" fill="#6c5ce7"/><text x="200" y="31" text-anchor="middle" fill="#fff" font-size="11">运算器 ALU</text><rect x="130" y="52" width="140" height="36" rx="8" fill="#00b894"/><text x="200" y="75" text-anchor="middle" fill="#fff" font-size="11">控制器 CU</text><rect x="20" y="100" width="95" height="30" rx="6" fill="#252836" stroke="#fdcb6e"/><text x="67" y="119" text-anchor="middle" fill="#fdcb6e" font-size="9">输入</text><rect x="130" y="140" width="140" height="30" rx="6" fill="#252836" stroke="#e17055"/><text x="200" y="159" text-anchor="middle" fill="#e17055" font-size="9">存储器（指令+数据）</text><rect x="285" y="100" width="95" height="30" rx="6" fill="#252836" stroke="#fdcb6e"/><text x="332" y="119" text-anchor="middle" fill="#fdcb6e" font-size="9">输出</text><line x1="200" y1="44" x2="200" y2="52" stroke="#fff" stroke-width="1"/></svg>',"tip":"💡 口诀：运控存储入出，存储程序是核心","c":"：(1)计算机由运算器、控制器、存储器、输入设备、输出设备五大部件组成；(2)指令和数据以同等地位存储在存储器中，均以二进制代码表示；(3)指令由操作码和地址码组成；(4)指令在存储器中按顺序存放，由程序计数器PC指示下一条指令地址；(5)以运算器为中心，I/O设备与存储器之间的数据传送都经过运算器（早期设计）；(6)存储程序并按地址顺序执行——这是冯·诺依曼机最核心的特点。"}, {"t": "计算机的硬件框图——以运算器为中心", "c": "早期冯·诺依曼结构以运算器为中心：运算器与存储器、输入设备、输出设备均直接相连。控制器通过控制线指挥各部件。这种结构的缺点是运算器成为数据传送的瓶颈——所有I/O数据都要经过运算器，降低了效率。现代计算机已改进为以存储器为中心的结构（哈佛结构的变体），I/O设备可以通过DMA等方式直接与存储器交换数据。"}, {"t": "计算机的工作步骤——取指令阶段", "c": "计算机执行程序的过程就是周而复始地执行指令。每条指令的执行分为取指、分析、执行三个阶段。取指令阶段：(1)PC中的指令地址送MAR（存储器地址寄存器）；(2)控制器发出读命令，存储器将MAR所指单元的内容读到MDR（存储器数据寄存器）；(3)MDR内容送IR（指令寄存器）；(4)PC自动加1，指向下一条指令地址。(PC)→MAR→存储体→MDR→IR，同时(PC)+1→PC。这是取指周期的标准微操作序列。"}, {"t": "计算机的工作步骤——分析指令和执行指令", "c": "分析指令阶段：IR中的指令经指令译码器ID译码，CU（控制单元）根据译码结果产生相应的控制信号序列。执行指令阶段：根据指令类型执行不同操作。以加法指令ADD X为例：(1)IR中地址码部分（X的地址）送MAR；(2)发出读命令，将操作数从主存取到MDR；(3)MDR中操作数送ALU的X寄存器；(4)ACC（累加器）内容送ALU，与X寄存器内容相加；(5)结果存回ACC。整个过程由CU发出的微操作控制信号精确协调。"}, {"t": "主存储器的基本结构", "c": "主存储器由存储体和外围电路组成。存储体由大量存储单元构成，每个单元包含若干存储元（能存1bit）。一个存储单元存放一个存储字，其位数称为存储字长。每个单元有唯一地址编号（地址号）。主存的工作方式是按地址存取——根据地址找到存储单元，对其内容进行读或写。地址由MAR提供，数据通过MDR进出。存储容量=2^(MAR位数)×(MDR位数)。例如MAR=16位则最多有64K个存储单元。"}, {"t": "运算器的基本结构", "c": "运算器至少包含3个寄存器和1个ALU。ACC(累加器)存放被加数/被减数/被乘数/被除数及运算结果；MQ(乘商寄存器)存放乘数及乘积低位/商；X(操作数寄存器)存放加数/减数/被乘数/除数。ALU(算术逻辑单元)完成算术和逻辑运算。这些寄存器在不同运算中存放不同操作数。例如加法：ACC存被加数及和，X存加数；乘法：ACC存乘积高位，MQ存乘数及乘积低位，X存被乘数。"}]}, {"title": "1.3 计算机硬件的主要技术指标", "points": [{"t": "机器字长", "c": "机器字长指CPU一次能处理的数据位数，通常与CPU内部寄存器的位数相同。字长越长，计算精度越高，但硬件成本也越高。历史上经历了4位→8位→16位→32位→64位的发展。当前主流是64位。注意区分：机器字长、指令字长、数据字长和存储字长可以不同，但都必须是字节(8bit)的整数倍。"}, {"t": "存储容量", "c": "存储容量表示存储器能存储信息的多少。主存容量=存储单元个数×存储字长(bit)。通常用字节数表示：主存容量=存储单元个数×存储字长/8 (B)。常见的容量单位：1KB=2^10B=1024B，1MB=2^20B，1GB=2^30B，1TB=2^40B。例如某计算机MAR=16位(64K单元)、MDR=32位(4B)，则主存容量=64K×4B=256KB。辅助存储器容量更大（GB/TB级），通常用硬盘、SSD、光盘等实现。"}, {"t": "运算速度——主频与CPI", "c": "CPU主频(f)是CPU内部时钟频率，单位Hz。主频越高，执行速度越快，但不是唯一决定因素。CPI(Cycles Per Instruction)是执行一条指令所需的平均时钟周期数。不同指令的CPI不同：简单指令(如MOV)可能1个周期，复杂指令(如DIV)可能需要几十个周期。平均CPI取决于指令集设计和程序特征。MIPS(Million Instructions Per Second)=f/(CPI×10⁶)。例如f=1GHz、CPI=2，则MIPS=1000/2=500。"}, {"t": "运算速度——MIPS与FLOPS", "c": "MIPS衡量每秒执行多少百万条指令，但局限在于：(1)不同机器的指令集不同，指令功能不具可比性；(2)同一程序在不同机器上的指令数不同。FLOPS(每秒浮点运算次数)更适合科学计算场景：MFLOPS=10⁶次浮点运算/秒，GFLOPS=10⁹，TFLOPS=10¹²。CPU执行时间=指令条数×CPI×时钟周期。要提高性能可从三方面入手：减少指令条数(编译器优化)、降低CPI(微架构改进)、缩短时钟周期(提高主频或改进工艺)。"}, {"t": "本书结构导读", "c": "本书围绕一台模型机展开，分四篇共10章。第1篇概论(Ch1-2)：建立计算机整体认知。第2篇硬件结构(Ch3-5)：覆盖总线、存储器和I/O系统——这三大部件通过总线连接成整机。第3篇CPU(Ch6-8)：涵盖运算方法、指令系统和CPU结构——这是计算机的核心。第4篇控制单元(Ch9-10)：CU的功能和两种设计方法（组合逻辑和微程序）。全书采用自顶向下逐步细化的思路，先了解整机，再深入各部件。"}]}]}, {"id": "ch2", "n": 2, "nm": "计算机的发展及应用", "pg": "20-40", "desc": "了解计算机发展历程和应用全景，建立计算机技术演进的历史观，理解各类应用的驱动因素。", "secs": [{"title": "2.1 计算机的产生和发展", "points": [{"t": "第一代：电子管计算机(1946-1958)", "c": "ENIAC(1946)是第一台通用电子数字计算机，使用18000多个电子管，重30吨，耗电150kW，每秒可完成5000次加法。电子管体积大、功耗高、寿命短、可靠性差。同时期冯·诺依曼参与设计了EDVAC，确立了存储程序概念。这一时期的计算机使用机器语言编程，输入输出采用穿孔纸带。主要应用于军事（弹道计算）和科研。第一代计算机奠定了现代计算机的体系结构基础。"}, {"t": "第二代：晶体管计算机(1958-1964)", "c": "晶体管替代电子管使计算机体积大幅缩小、功耗降低、可靠性提高。运算速度从每秒几千次提升到几十万次。开始使用磁芯存储器和磁盘作为外存。软件方面出现了高级程序设计语言(FORTRAN 1957、COBOL 1959、ALGOL 1960)和简单的操作系统。应用领域从军事科研扩展到工业控制和数据处理。IBM 7090是这一时期的代表机型。"}, {"t": "第三~五代：集成电路→超大规模集成电路", "c": "第三代(1964-1971)：中小规模集成电路(SSI/MSI)，磁芯存储器被半导体存储器取代，出现了多道程序、分时操作系统。IBM System/360首次实现了系列化。第四代(1971-1990s)：大规模集成电路(LSI)，微处理器诞生(Intel 4004,1971)，PC时代开启。第五代(1990s至今)：超大规模集成电路(VLSI)，集成度超过百万晶体管/芯片。摩尔定律(1965)：集成电路上晶体管数量每18-24个月翻一番，至今基本延续。"}, {"t": "微型计算机的出现和发展", "c": "1971年Intel推出4004(4位微处理器)，标志微处理器时代开始。随后8008(8位)、8080、8086/8088(16位，IBM PC用8088)、80386(32位)、Pentium系列到今天的Core i9。发展规律：字长增加(4→8→16→32→64位)、主频提高(几MHz→数GHz)、集成度剧增(几千→数百亿晶体管)、指令集扩展(MMX→SSE→AVX)。微型计算机的发展推动了PC革命和互联网普及。"}, {"t": "软件技术的兴起和发展", "c": "系统软件：操作系统从批处理(IBM OS/360)→分时系统(UNIX,1969)→PC系统(DOS→Windows/Mac/Linux)→移动系统(iOS/Android)。语言发展：机器语言→汇编→FORTRAN/COBOL→C(1972)→C++(1983)→Java(1995)→Python→Go/Rust。数据库：层次→网状→关系型(Oracle/MySQL)→NoSQL→NewSQL。软件工程：瀑布模型→螺旋→敏捷→DevOps。AI框架：TensorFlow→PyTorch。软件技术是计算机的灵魂。"}]}, {"title": "2.2 计算机的应用", "points": [{"t": "科学计算与数据处理", "c": "科学计算是计算机最早的应用领域，处理复杂的数学问题和物理模拟，如天气预报、核爆模拟、基因分析、密码破译等。需要高性能计算(HPC)，常使用超级计算机和并行计算技术。数据处理是信息管理的基础，包括企业ERP、银行交易处理、人口普查、医疗记录等，特点是数据量大但计算相对简单，核心是数据库和检索技术。两者分别代表了计算密集型和数据密集型的典型场景。"}, {"t": "工业控制与实时控制", "c": "计算机在工业生产中通过传感器采集数据、分析处理后控制执行机构。要求实时性强、可靠性高。典型应用：数控机床、机器人控制、化工流程控制、智能电网等。嵌入式系统在此领域广泛应用——将计算机嵌入到设备内部，专用性强。PLC(可编程逻辑控制器)是工业控制的标准化设备，使用梯形图编程，具有高可靠性和抗干扰能力。"}, {"t": "网络技术与虚拟现实", "c": "互联网从ARPANET(1969)→TCP/IP协议(1983)→WWW(1990)→Web 2.0→移动互联网→物联网→云计算。关键概念：分组交换、TCP/IP协议栈、HTTP/HTTPS、DNS、CDN。虚拟现实(VR)：通过计算机生成三维虚拟环境，用户通过头戴显示器、手柄等设备交互。核心技术：3D渲染、空间定位、力反馈。应用领域：游戏娱乐、教育培训、建筑设计、医疗仿真等。"}, {"t": "办公自动化、CAD/CAM与多媒体", "c": "办公自动化(OA)：文字处理→电子表格→演示文稿→邮件→协同办公→移动办公。CAD/CAM/CIMS：计算机辅助设计/制造/集成制造系统，极大提高了工业设计效率。三维建模、有限元分析、数控编程一体化。多媒体技术：文本/图像/音频/视频的综合处理。关键技术：图像压缩(JPEG)、视频编码(H.264/H.265/AV1)、音频编码(MP3/AAC)。流媒体技术支撑了在线视频、直播等应用。"}, {"t": "人工智能", "c": "AI经历了三次浪潮：(1)1956-1974符号主义(逻辑推理、专家系统)；(2)1980s连接主义(神经网络、BP算法)；(3)2012至今深度学习(GPU+大数据+深层网络)。关键技术：机器学习(监督/无监督/强化学习)、深度学习(CNN/RNN/Transformer)、自然语言处理(GPT/BERT)、计算机视觉(YOLO/ResNet)。应用：自动驾驶、智能语音助手、医疗影像诊断、AlphaGo、ChatGPT。AI已从实验室走向产业化。"}, {"t": "计算机的未来展望", "c": "量子计算利用量子叠加和纠缠实现指数级并行，在密码学、药物发现等领域有巨大潜力。神经形态计算模仿人脑的神经元和突触结构，追求超低功耗的类脑智能。生物计算用DNA分子进行存储和计算。光子计算利用光信号代替电信号。此外还有：新型存储器(忆阻器/RRAM)、存内计算、Chiplet异构集成、3D堆叠封装等技术趋势。计算的边界在不断扩展。"}]}]}, {"id": "ch3", "n": 3, "nm": "系统总线", "pg": "41-67", "desc": "系统总线是连接计算机各大部件的信息传输线，本章掌握总线的分类、性能指标、结构形式和仲裁/通信机制。", "secs": [{"title": "3.1-3.2 总线的基本概念与分类", "points": [{"t": "什么是总线", "c": "总线是连接计算机多个部件的一组公共信息传输线，各部件通过总线交换信息。总线本质上是一组共享的传输通道，采用分时共享机制——同一时刻只允许一个部件向总线发送信息，但允许多个部件同时接收。总线的核心优势是标准化和可扩展性——只要遵守相同的总线协议，不同厂商的设备可以直接互连。"}, {"t": "总线分类：片内总线", "c": "片内总线是CPU芯片内部连接各部件（寄存器、ALU、控制器等）的总线。它位于芯片内部，由芯片制造商设计，对用户透明。片内总线的宽度（位数）决定了CPU内部数据通路宽度，与机器字长密切相关。例如64位CPU内部有64位片内总线连接寄存器和ALU。"}, {"t": "总线分类：系统总线", "c": "系统总线连接CPU、主存和I/O接口，是计算机系统骨架。由三组线构成：(1)数据总线——双向，传输数据信息，宽度决定每次传输的数据位数（如32位、64位）；(2)地址总线——单向（CPU发出），传输地址信息，宽度决定可直接寻址的主存空间（如32位地址线可寻址4GB）；(3)控制总线——传输控制信号，如读/写命令、中断请求/响应、总线请求/同意等，每根线有特定方向。"}, {"t": "总线分类：通信总线", "c": "通信总线用于计算机系统之间或系统与外部设备之间的通信。分为串行和并行两种。串行通信（USB、SATA、PCIe、以太网）逐位传送，速度可达数十Gbps，抗干扰强，现代主流。并行通信(老式并口/IDE)多位同时传送，速度快但难以高频、线缆多。通信总线还需要考虑传输协议、差错校验和流量控制。"}]}, {"title": "3.3 总线特性及性能指标", "points": [{"t": "总线的四大特性", "c": "(1)机械特性：总线的物理尺寸、形状、引脚数、排列方式等。如PCIe插槽长度和引脚定义。(2)电气特性：信号电平（TTL/CMOS/LVDS）、传输方向、驱动能力。决定了信号传输的电学参数。(3)功能特性：每根信号线的功能定义，如地址线、数据线、控制命令线等。(4)时间特性：信号的时序关系，包括建立时间、保持时间、信号有效时间段等。四者共同定义了总线标准。"}, {"t": "总线性能指标——宽度与频率", "c": "总线宽度：数据总线的位数，如32位、64位、128位。总线频率(f)：总线每秒传输的次数(Hz)，即总线时钟频率或传输速率。注意区分总线频率和CPU主频，两者可以不同（通过倍频/分频关系连接）。例如PCIe 4.0单通道频率16GT/s（Giga Transfers per second）。"}, {"t": "总线带宽", "c": "总线带宽（又称吞吐率）=总线宽度×总线频率，单位B/s。表示总线每秒钟能传输的最大数据量。例如：64位数据总线、频率100MHz → 带宽=8B×100M=800MB/s。再如PCIe 3.0 x16通道：带宽≈16×8GT/s×128b/130b编码效率≈15.75GB/s。总线带宽是衡量总线性能的最核心指标，决定了系统数据吞吐能力上限。"}, {"t": "总线复用与信号线数", "c": "总线复用指地址线和数据线共用一组物理线，分时传送地址和数据。优点是减少引脚数、节省空间，缺点是增加控制复杂度、降低传输效率。例如DDR内存总线采用地址/命令复用。信号线数：总线包含的信号线总数，越少则成本和体积越低，但带宽可能受限。设计时需在性能、成本和复杂度间权衡。"}, {"t": "总线标准", "c": "常见总线标准：(1)PCIe——高速串行点对点总线，当前主流，Gen5速率32GT/s；(2)USB——通用串行总线，4.0速率40Gbps；(3)SATA——串行ATA硬盘接口，3.0速率6Gbps；(4)I²C/SPI——芯片间低速串行总线；(5)AMBA——ARM的片内总线标准(AHB/APB/AXI)。总线标准化是实现即插即用的前提——任何厂商的设备只要遵循同一标准即可互操作。"}]}, {"title": "3.4 总线结构", "points": [{"t": "单总线结构", "c": "系统只有一组系统总线，CPU、主存和所有I/O设备都挂在同一组总线上。优点：结构简单、成本低、易于扩展。缺点：所有部件争用同一组总线，总线成为系统瓶颈——同一时刻只有一个设备能发送数据。当I/O设备与主存交换数据时，CPU无法访问主存，造成CPU等待。适用于简单系统或I/O需求不高的场景。"}, {"t": "多总线结构", "c": "为解决单总线瓶颈，现代计算机采用多级总线架构：(1)CPU-主存总线（系统总线/前端总线）——高速连接CPU和主存/北桥；(2)I/O总线（PCIe）——连接高速I/O设备（显卡、SSD）；(3)扩展总线（USB/SATA）——连接低速外设。通过桥接芯片（北桥/南桥或SoC内部的互联结构）实现不同总线间的协议转换和速度匹配。多总线实现了数据流的分层分流，大幅提升整体性能。"}, {"t": "现代总线结构举例——Intel平台", "c": "Intel Core平台典型结构：CPU通过Ring Bus或Mesh连接核心、缓存和内存控制器。内存控制器直接连接DDR主存。CPU通过DMI（Direct Media Interface）连接PCH（Platform Controller Hub，即南桥）。PCH连接PCIe、USB、SATA、网络等外设。PCIe采用树形拓扑，Root Complex→Switch→Endpoint。这种层次化结构保证了CPU-主存的高带宽短延迟，同时支持丰富的外设连接。"}]}, {"title": "3.5 总线控制", "points": [{"t": "总线判优控制——为何需要仲裁", "c": "系统中可能有多个主设备（CPU、DMA控制器等）同时请求使用总线，但总线是共享资源，同一时刻只能有一个主设备获得控制权。总线判优即决定哪个主设备获得总线使用权。根据仲裁器位置分为集中式（有统一仲裁器）和分布式（各设备自带仲裁逻辑）。"}, {"t": "链式查询方式", "c": "链式查询使用3根控制线：BS(Bus Busy总线忙)、BR(Bus Request总线请求)、BG(Bus Grant总线同意)。BG线从仲裁器出发，按菊花链方式串行经过各设备。仲裁器收到BR后，若总线空闲则发BG信号。BG沿链传递，第一个有请求的设备截获BG并置BS为忙。优先级由设备在链中的物理位置决定——离仲裁器越近优先级越高。优点：线数少(仅3根)、易扩充。缺点：优先级固定不可改、对BG线故障敏感（断链会导致后续设备无法获得总线）。"}, {"t": "计数器定时查询方式", "c": "取消BG线，改用一组设备地址线（log₂n根，n为设备数）。仲裁器收到BR后，若总线空闲则启动计数器工作，计数器输出设备地址通过地址线发送。对应地址的设备若有请求则响应并置BS为忙，仲裁器停止计数。优先级可通过改变计数初值调整——每次从上次获得总线的设备下一号开始计数，实现循环优先级。优点：优先级可编程改变。缺点：增加log₂n根控制线（n大时线多）。"}, {"t": "独立请求方式", "c": "每台设备有独立的BR和BG线(共2n根)。仲裁器内部有排队电路，根据预定的优先级算法（固定优先级、轮转、时变等）决定哪个请求的设备获得总线。仲裁器直接向选中的设备发送其独立BG信号。优点：响应速度快（无需链传递）、优先级算法灵活可编程。缺点：控制线数量多(2n根)、仲裁器设计复杂。现代高性能总线（PCIe的虚拟通道仲裁）多采用此方式。"}, {"t": "总线通信控制——同步通信", "c": "同步通信使用统一的时钟信号控制总线传输。主设备和从设备都在时钟边沿(上升沿或下降沿)完成动作。发送方在时钟边沿发出数据，接收方在下一个或几个时钟周期后的时钟边沿采样数据。优点是时序简单、易于实现。缺点：(1)所有设备必须工作在同一时钟频率下，无法适应不同速度设备；(2)时钟偏差(skew)问题——时钟到达不同器件的时延不同会导致采样错误。适用于高速但设备类型单一的场景。"}, {"t": "总线通信控制——异步通信", "c": "异步通信不使用统一时钟，而是通过请求-应答(握手)信号协调传输。过程分四步(全互锁)：(1)主模块发请求信号；(2)从模块收到后发应答信号；(3)主模块收到应答后撤销请求；(4)从模块检测到请求撤销后撤销应答。所有步骤都依赖对方信号的到达，形成互锁闭环。优点：可适应不同速度设备、不受时钟偏差影响。缺点：控制复杂、握手开销降低了传输效率。适用于慢速或设备差异大的场景。"}]}]}, {"id": "ch4", "n": 4, "nm": "存储器", "pg": "68-123", "desc": "存储器是计算机的记忆部件，本章从层次结构入手，深入主存、Cache和辅存三大层次，掌握存储器设计的关键技术。", "secs": [{"title": "4.1 存储器概述", "points": [{"t": "存储器分类——按存储介质", "c": "(1)半导体存储器：用半导体器件存储信息，包括TTL型和MOS型。TTL速度快但功耗大；MOS(尤其是CMOS)功耗低集成度高，是当前主流。MOS存储器又分为SRAM和DRAM。(2)磁表面存储器：在磁介质上存储信息，如硬盘、磁带，非易失、容量大、速度慢。(3)光盘存储器：用激光在光介质上读写，如CD/DVD/BD，非易失、容量大。此外新兴存储器有闪存(NAND Flash/SSD)、3D XPoint等。"}, {"t": "存储器分类——按存取方式", "c": "(1)RAM(随机存取存储器)：读写时间与存储单元物理位置无关，即任意地址的存取时间相同，包括SRAM和DRAM。(2)ROM(只读存储器)：正常工作时只能读不能写，非易失，包括掩膜ROM、PROM、EPROM(紫外线擦除)、EEPROM(电擦除)、Flash Memory。(3)顺序存取存储器(SAM)：存取时间与位置相关，如磁带，必须顺序查找。(4)直接存取存储器(DAM)：先直接定位到某区域，再在该区域内顺序查找，如硬盘(磁头臂定位到磁道→旋转到扇区)。"}, {"t": "存储器的层次结构", "c": "存储器的三个核心矛盾：速度、容量、价格三者互相制约——速度快则价格高容量小，容量大价格低则速度慢。解决方法是建立层次结构：(1)寄存器——CPU内部，速度最快(ns级)、容量最小(KB级)、价格最贵；(2)Cache(高速缓存)——CPU与主存之间，SRAM实现，ns级、MB级；(3)主存——DRAM实现，数十ns、GB级；(4)辅存——磁盘/SSD，ms/μs级、TB级。层次结构的核心思想：利用程序访问的局部性原理（时间局部性和空间局部性），将频繁访问的数据留在高层，不常用的放在低层，使得整体性能接近高层存储器而成本接近低层。"}, {"t": "局部性原理", "c": "时间局部性：如果一个信息项被访问，那么近期它很可能再次被访问。例如循环体内的指令和数据会反复使用。空间局部性：如果某个存储单元被访问，那么其附近的单元也很快会被访问。例如顺序执行的指令、数组遍历。局部性原理是Cache工作机制和存储层次设计的理论基础——正是因为程序具有局部性，小而快的Cache+大而慢的主存方案才有效。命中率h：CPU访问的信息在Cache中的概率。h通常可达90%以上。"}]}, {"title": "4.2 主存储器——SRAM与DRAM", "points": [{"t": "SRAM静态随机存取存储器", "c": "SRAM的基本存储元是双稳态触发器（6个MOS管组成），只要不断电信息就稳定保持，不需要刷新。读操作非破坏性。速度快（几ns）、功耗低（维持时）、但集成度低（6管/bit）、成本高。主要用作Cache。每个SRAM芯片包含存储矩阵、地址译码器、读写控制电路和三态双向数据缓冲器。芯片容量=2^(地址线数)×(数据线数)。如64K×8位芯片表示有64K个存储单元，每单元8位。"}, {"t": "DRAM动态随机存取存储器", "c": "DRAM基本存储元是电容+一个MOS管。用电容存储电荷表示1/0。由于电容会漏电，必须定期刷新（读出后重写）以保持数据不丢失。速度比SRAM慢（数十ns），但集成度高（1管+1电容/bit）、成本低、功耗低。主要用作主存。DRAM读操作是破坏性的——读出后电容电荷减少，需要重写（再生）。刷新方式有三种：集中刷新（一段时间内集中刷新所有行，有死区）、分散刷新（每行分散到各周期刷新，无死区但慢）、异步刷新（在指令译码等阶段刷新，折中方案）。"}, {"t": "ROM只读存储器", "c": "掩膜ROM：制造时用掩膜写入内容，不可更改，适合批量生产。PROM(可编程ROM)：用户可一次性写入（熔丝型），写入后不可改。EPROM(紫外线擦除PROM)：通过紫外线照射擦除，可多次编程，需取下芯片操作。EEPROM(电擦除PROM)：用电信号擦除，可在线修改，但写入速度慢。Flash Memory(闪存)：EEPROM的改进，按块擦除（而非逐字节），速度快，广泛用于U盘、SSD、BIOS芯片。NOR Flash支持随机读取(可执行代码)，NAND Flash支持页读写（大容量数据存储）。"}, {"t": "存储器与CPU的连接", "c": "核心任务：将多片存储芯片组合成所需容量和字长的存储器，然后与CPU的总线正确连接。步骤：(1)确定所需芯片数量——根据总容量和每片容量计算；(2)地址线连接——低位地址线连芯片片内地址，高位地址线经译码器产生片选信号；(3)数据线连接——若CPU数据线位宽>芯片数据线位宽，需多片位扩展（多片并联，每片提供部分数据位）；(4)控制线连接——读/写信号连所有芯片。示例：用64K×4位芯片组成64K×16位存储器，需(16/4)=4片，地址线全并行，数据线分为4组各4位。"}, {"t": "存储器的校验——汉明码", "c": "存储器可能因干扰、器件故障等原因出错，需检错纠错。汉明码能纠正1位错、检测2位错。原理：在数据位中插入k位校验位，使n+k位编码中任意两个合法码字距离≥3。校验位位置在2的幂次方（第1,2,4,8...位）。每个校验位负责一组数据位的奇偶校验：P1校验所有二进制编号最低位为1的位，P2校验次低位为1的位，以此类推。纠错时重新计算各校验组的奇偶性，得到的二进制值(指误字)指出出错位的位置，将其取反即纠正。"}, {"t": "提高访存速度——多体并行", "c": "主存速度跟不上CPU速度是系统瓶颈。提高访存速度的方法：(1)多体并行——将主存分成多个独立模块，可同时访问不同模块。高位交叉编址（顺序编址）：连续地址在同一模块内，适合顺序访问但无法并行。低位交叉编址（交叉编址）：连续地址分布在不同模块（体号=地址%体数），支持流水线方式访问，n体交叉可使带宽提升n倍。需注意存储体冲突——多个访问请求访问同一体时仍会阻塞。(2)双端口存储器——两套独立地址/数据/控制线，允许两个设备同时访问不同单元。例如显存常采用此方案，允许CPU和GPU同时访问。"}]}, {"title": "4.3 高速缓冲存储器(Cache)", "points": [{"t": "Cache的基本原理", "c": "Cache是介于CPU和主存之间的高速小容量存储器(SRAM实现)。利用局部性原理，将CPU近期可能使用的数据从主存预取到Cache。CPU访存时先查Cache——命中则直接返回(快)，不命中则从主存取并更新Cache(慢)。平均访存时间=h×tc+(1-h)×tm。其中h为命中率，tc为Cache访问时间，tm为主存访问时间。假设tc=5ns、tm=50ns、h=0.95，则平均时间=0.95×5+0.05×50=7.25ns，远优于无Cache的50ns。"}, {"t": "Cache-主存地址映射——直接映射", "c": "直接映射将主存按Cache大小分成若干区，每区内各块固定映射到Cache对应行。j=i mod 2^c（i为主存块号，c为Cache行数的幂）。CPU访存地址被分为三段：标记(tag)|行号(index)|块内偏移(offset)。Cache查找：用行号找到对应行，比较该行标记是否等于地址标记——相等则命中，不等则缺失。优点：硬件简单，只需一次比较。缺点：多个主存块映射到同一Cache行时会产生冲突抖动，降低命中率。"}, {"t": "Cache-主存地址映射——组相联映射", "c": "组相联是直接映射和全相联的折中。将Cache分成多个组，每组包含r行(r路组相联)。主存块先按组号映射到固定组（组号=主存块号 mod 组数），组内再全相联放置（可放组内任一行）。地址划分：标记|组号|块内偏移。查找时用组号定位到组，同时与组内所有r行的标记比较。r=1即直接映射，r=Cache总行数即全相联。常用2/4/8/16路组相联，兼顾命中率和硬件复杂度。现代CPU的L1 Cache通常8路组相联，L2/L3可达16路。"}, {"t": "Cache替换策略与写策略", "c": "当Cache满且需调入新块时，必须替换一个已有块。常见策略：LRU(Least Recently Used)——替换近期最少使用的块，命中率最高但需要记录使用历史，硬件开销大。FIFO——替换最早进入的块，简单但可能替换掉常用块。随机替换——硬件最简单。写策略：(1)写直达(Write Through)——每次写入同时更新Cache和主存，数据一致性好但写操作慢，需配合写缓冲；(2)写回(Write Back)——只更新Cache，被替换时才写回主存，速度快但一致性差（需脏位标记）。现代CPU通常L1采用写回，配合MESI等缓存一致性协议。"}]}, {"title": "4.4 辅助存储器", "points": [{"t": "硬磁盘存储器", "c": "硬盘由磁盘片、磁头、主轴电机等组成。盘片表面涂有磁介质，数据以磁化方向存储在同心圆磁道上。每面有多个磁道，同一半径的所有磁道组成柱面。每个磁道分为多个扇区（通常512B或4KB）。地址格式：柱面号|磁头号|扇区号(CHS)。硬盘性能指标：(1)存储容量=柱面数×磁头数×扇区数×每扇区字节数，可达数十TB；(2)平均存取时间=寻道时间(磁头移动到目标磁道)+旋转延迟(等待目标扇区转到磁头下，平均半圈)+数据传输时间；(3)转速：5400/7200/10000/15000rpm。传统硬盘(HDD)正在被固态硬盘(SSD)逐步替代。"}, {"t": "固态硬盘SSD与光盘", "c": "SSD基于NAND Flash，纯电子存取，无机械部件。优点：随机访问极快(μs级)、低功耗、抗震。缺点：写入次数有限(擦写寿命)、价格较HDD高。核心技术：FTL(闪存转换层)将逻辑地址映射到物理页，实现磨损均衡和垃圾回收。NVMe协议充分发挥SSD性能，PCIe 4.0 x4接口可达7GB/s。光盘：CD(650MB)→DVD(4.7GB单层)→BD蓝光(25GB单层)。工作原理：激光照射凹坑/平面反射强度不同来读取数据。光盘适合长期归档存储，随机访问速度慢。"}]}]}, {"id": "ch5", "n": 5, "nm": "输入输出系统", "pg": "124-180", "desc": "I/O系统解决计算机与外部世界的通信问题，掌握四种I/O控制方式的原理、特点和应用场景。", "secs": [{"title": "5.1 I/O接口", "points": [{"t": "I/O接口的功能", "c": "I/O接口是连接主机和外部设备的桥梁电路。主要功能：(1)选址——CPU通过地址总线选择具体I/O接口；(2)传送命令——CPU向接口发送控制命令(读/写/状态查询)；(3)传送数据——在CPU/主存和I/O设备间中转数据；(4)反映设备状态——接口向CPU报告设备忙/就绪、是否有中断请求等。此外还完成信号转换(电平、格式、串并转换)、速度匹配（设备速度远低于CPU）等功能。接口本质上是主机和外设间的协议转换器+缓冲区。"}, {"t": "I/O接口的组成", "c": "典型的I/O接口包含：(1)数据缓冲寄存器DBR——暂存传送的数据；(2)设备选择电路——接收地址译码结果，判断是否选中本接口；(3)命令字/状态字寄存器——接收CPU命令、保存设备状态；(4)控制逻辑——协调接口内部各部件工作。I/O端口：接口中每个可被CPU读写的寄存器称为一个端口，各有独立地址。端口编址方式有两种：统一编址（端口和主存统一地址空间，用访存指令访问I/O）和独立编址（I/O有独立地址空间，用专用I/O指令访问）。"}]}, {"title": "5.2 程序查询方式", "points": [{"t": "程序查询方式的工作原理", "c": "程序查询是CPU主动、循环检测I/O设备状态的方式。流程：(1)CPU向I/O接口发送命令，启动设备；(2)CPU反复读取状态寄存器，检查设备是否就绪（忙则继续等待）；(3)设备就绪后，CPU执行数据传送（从接口数据寄存器读取或写入）；(4)所有数据传送完成后，CPU继续执行后续程序。这种方式下CPU和设备串行工作，CPU大量时间浪费在等待查询上，效率极低。仅适用于简单系统或对CPU利用率要求不高的场景。实际上现代计算机很少使用此方式。"}, {"t": "程序查询方式的特点", "c": "优点：硬件接口简单、控制程序容易编写、无需额外硬件支持。缺点：CPU被完全占用等待外设，CPU与外设无法并行工作，系统吞吐率极低。例如：若外设速度为10KB/s，即使CPU速度为1GHz，CPU也只能以10KB/s的速度传送数据，其余时间全在空转查询。改进方法：定时查询（每隔一段时间查询一次，之间CPU可做其他事），但仍不如中断和DMA高效。"}]}, {"title": "5.3 程序中断方式", "points": [{"t": "中断的基本概念", "c": "中断是I/O设备主动通知CPU的方式。CPU启动设备后不再查询，继续执行主程序。当设备准备就绪时，向CPU发出中断请求信号。CPU在每条指令执行结束时检查中断请求——若有请求且允许响应，则暂停当前程序（断点），转去执行中断服务程序，服务完成后返回继续原程序。整个过程类似于你在看书时电话响了——暂停阅读、接电话、继续阅读。中断实现了CPU与I/O设备的并行工作，大幅提高了CPU利用率和系统吞吐率。"}, {"t": "中断请求与判优", "c": "中断请求：每个中断源有独立的中断请求触发器(INTR)。当设备需要服务时，置INTR=1。CPU在指令执行末尾检查INTR信号。中断判优：当多个中断源同时请求时，需决定先响应哪个。判优方法：(1)硬件判优——用排队器电路，根据预定的优先级编码判定最高优先级请求；(2)软件判优——CPU响应中断后，用程序依次查询各中断源状态。优先级排序：机器故障>DMA请求>外部中断>程序中断>访管中断。高优先级中断可以打断低优先级中断服务（中断嵌套）。"}, {"t": "中断响应与中断隐指令", "c": "响应条件：(1)中断源有请求；(2)CPU允许中断(开中断状态，EINT=1)；(3)当前指令执行结束。满足条件后CPU执行中断隐指令（硬件自动完成，非程序指令）：(1)关中断（防止响应过程中被新中断干扰）；(2)保存断点——将PC和PSW压入堆栈；(3)形成中断服务程序入口地址——通过中断向量表获得（向量地址=中断类型号×4或其他编码方式）。之后CPU进入中断服务程序，由软件完成：保护现场(PUSH寄存器)→执行服务→恢复现场(POP)→开中断→返回(IRET指令恢复PC和PSW)。"}, {"t": "中断屏蔽技术", "c": "中断屏蔽允许CPU通过编程控制中断响应顺序。每级中断有一个屏蔽触发器，系统还有一个屏蔽字寄存器。当某级中断服务时，将屏蔽字中对应位置1，屏蔽同级和更低级的中断请求，仅允许更高级中断请求通过。这样就实现了动态优先级——高优先级中断总可以打断低优先级中断。屏蔽字是可编程的，CPU可根据需要灵活设置。中断屏蔽使得CPU能有效管理复杂的多中断源环境，避免低优先级中断阻塞高优先级服务。"}]}, {"title": "5.4 DMA方式", "points": [{"t": "DMA的基本概念与特点", "c": "DMA(Direct Memory Access，直接存储器访问)是在主存和I/O设备之间建立直接数据通路，数据传送无需CPU干预。核心思想：让I/O设备像一个「总线主设备」一样，自己控制总线完成数据传输。特点：(1)数据传送完全由DMA控制器硬件实现，不需要CPU执行传送指令；(2)数据在主存和I/O之间直接交换，不经过CPU寄存器；(3)CPU仅在传送开始(预处理)和结束(后处理)时介入；(4)适用于高速大批量数据传送（磁盘读写、网络数据包、显卡帧缓存）。DMA显著降低了CPU的数据传送负担。"}, {"t": "DMA的工作过程", "c": "三个阶段：(1)预处理——CPU向DMA控制器写入：传送方向(读/写)、主存起始地址、传送字数、设备地址等信息，然后启动设备，CPU继续执行程序；(2)数据传送——DMA控制器申请总线使用权(通过HRQ/HOLD信号)，获准后控制总线，每周期从设备读一个字写到主存(或反向)，主存地址递增、字数递减，直到字数=0；(3)后处理——DMA控制器向CPU发中断请求，CPU执行中断服务程序检查传送是否正确，然后关闭DMA。DMA传送期间，CPU和DMA通过总线仲裁分时使用总线——这就是周期窃取(cycle stealing)。"}, {"t": "DMA与中断的比较", "c": "共性：两者都实现了CPU和I/O的并行工作。区别：(1)中断在指令执行结束时响应，DMA在总线周期结束时即可响应（响应更及时）；(2)中断需要CPU执行服务程序来传送数据(软件传送)，DMA用硬件直接传送；(3)中断适合中低速、少量数据传送（键盘、打印机），DMA适合高速、大量数据传送（磁盘、网卡）；(4)中断每条数据都要打断CPU，DMA只在传送开始和结束时各打断一次CPU。现代计算机中DMA是高速I/O的核心机制。"}]}]}, {"id": "ch6", "n": 6, "nm": "计算机的运算方法", "pg": "181-260", "desc": "运算方法是CPU核心能力的基础，掌握数制码制、定点浮点表示、补码运算和ALU设计。", "secs": [{"title": "6.1 数制与码制", "points": [{"t": "进位计数制", "c": "计算机使用二进制(基2，数码0/1)，因为物理器件最容易实现两种状态。二进制与十进制转换：整数部分除2取余逆序排列；小数部分乘2取整顺序排列。八进制(基8，数码0-7)和十六进制(基16，数码0-9+A-F)常用于简化二进制书写。一个八进制位对应3个二进制位，一个十六进制位对应4个二进制位。如10111010B=BAH=272O=186D。"}, {"t": "原码表示法", "c": "原码用最高位表示符号(0正1负)，其余位表示数值绝对值。优点：简单直观，与真值转换方便。缺点：(1)0有两种表示(+0=0000, -0=1000)，造成编码浪费；(2)加减运算复杂——需要判断符号和绝对值大小，电路设计困难。n位原码整数范围：-(2^(n-1)-1) ~ +(2^(n-1)-1)。原码主要用于乘除法（符号和数值可分开处理），加减法不适用。"}, {"t": "补码表示法", "c": "补码是计算机中最主要的数值表示方式。正数补码=原码；负数补码=原码除符号位外取反+1（或从右向左找到第一个1，其左边除符号位外取反）。补码的核心优势：(1)0只有一种表示(全0)；(2)减法可以转化为加法：[X-Y]补=[X]补+[-Y]补，统一了加减法运算，简化了ALU设计；(3)符号位参与运算。n位补码整数范围：-2^(n-1) ~ +(2^(n-1)-1)。例如8位补码范围-128~+127。求[-X]补的快速方法：[X]补连同符号位取反+1。"}, {"t": "反码与移码", "c": "反码：正数同原码，负数除符号位外按位取反。作为原码到补码的过渡。移码(增码)：在真值上加一个常数(偏置值)，将数值整体平移使全为非负数。例如IEEE754浮点数的阶码用移码表示，偏置值=2^(k-1)-1(k为阶码位数)。移码特点：数值越大编码越大，便于比较大小——可用无符号数比较器比较浮点数阶码。"}, {"t": "字符与汉字的表示", "c": "ASCII码：7位编码表示128个字符(0-127)，包括控制字符(0-31)、数字'0'-'9'(48-57)、大写字母(65-90)、小写字母(97-122)。扩展ASCII用8位表示256个字符。中文字符编码：GB2312(6763个汉字)、GBK(21003个)、GB18030(强制标准)、Unicode(统一字符集)。UTF-8可变长编码：ASCII用1字节，中文通常3字节。在计算机中，英文字符存ASCII码值，中文字符存对应的区位码或Unicode码点。"}]}, {"title": "6.2 定点运算", "points": [{"t": "补码加减运算", "c": "补码加法：[X+Y]补=[X]补+[Y]补。两个补码直接相加即得和的补码，符号位参与运算——这是补码最强大的特性。溢出判断三种方法：(1)单符号位法——符号位进位Cn和最高数值位进位Cn-1异或，Cn⊕Cn-1=1则溢出；(2)双符号位法——用两位符号位，00正常正、11正常负、01正溢出(上溢)、10负溢出(下溢)；(3)进位判断法——判断操作数符号与结果符号。补码减法：[X-Y]补=[X]补+[-Y]补，先求[-Y]补再相加。"}, {"t": "原码乘法运算", "c": "原码乘法：符号位单独处理（同号得正、异号得负），数值部分用绝对值相乘。基本思想：逐位判断乘数——若乘数当前位=1，则加被乘数；若=0，则加0。然后部分积右移一位。n位乘法需n次加法+移位。原码一位乘法的硬件：ACC(部分积高位)、MQ(乘数)、X(被乘数)。原码乘法简单但符号需单独处理，不统一。"}, {"t": "补码乘法——Booth算法", "c": "Booth算法允许用补码直接相乘，符号位参与运算。核心思想：考察乘数相邻两位(MQ最低位和附加位yn-1)。若两位=10(1→0)，部分积-[X]补；若=01(0→1)，部分积+[X]补；若=00或11，部分积+0。然后部分积和乘数联合右移一位（算术右移）。n位Booth乘法需n次判断+n次加法+n次移位。改进的两位Booth乘法一次判断两位乘数，运算次数减半。"}, {"t": "除法运算——原码恢复余数法", "c": "原码恢复余数法：(1)被除数（余数）左移一位；(2)试减除数（加[-Y]补），若余数≥0（够减），上商1；若余数<0（不够减），上商0且恢复余数(+Y，撤销刚才的减)；重复n次。恢复余数法的问题是：上商0时需要多一次恢复操作，效率不高。符号处理同乘法——异号得负。被除数位数需为除数两倍。"}, {"t": "除法运算——原码不恢复余数法(加减交替法)", "c": "不恢复余数法改进了恢复步骤：当余数<0时不上商0，而是直接上商0并让余数左移一位后加除数（而不是先恢复再减）。规律：余数Ri<0时，下一步做Ri左移1位+Y；余数Ri≥0时，下一步做Ri左移1位-Y。最后一步若余数<0则需要恢复。符号单独处理。这是实际CPU中最常用的除法算法——避免了恢复操作，n位除法仅需n次加减和n次移位。"}]}, {"title": "6.3 浮点运算", "points": [{"t": "浮点数的表示", "c": "浮点数格式：N=S×r^E。S为尾数(纯小数或规格化形式)，E为阶码(整数)，r为基数(通常r=2)。尾数位数决定精度，阶码位数决定表示范围。规格化：使尾数绝对值≥1/r且<1（二进制下尾数最高位=1），以充分利用尾数位数。浮点数的机内表示=阶符+阶码+数符+尾数。IEEE754标准：单精度(32位)=1位符号+8位阶码(移码偏127)+23位尾数(隐含最高位1)；双精度(64位)=1+11(偏1023)+52。真值=(-1)^S×2^(E-偏置)×1.M。"}, {"t": "IEEE754标准的特殊值", "c": "IEEE754巧妙利用阶码的全0和全1编码特殊值：(1)E全0且M全0→表示±0；(2)E全0且M≠0→非规格化数(逐渐下溢)，真值=(-1)^S×2^(1-偏置)×0.M；(3)E全1且M全0→±∞(溢出)；(4)E全1且M≠0→NaN(Not a Number，如0/0)。这种设计使浮点数能表示整个实数空间并优雅地处理异常情况。float范围≈±3.4×10^38，double范围≈±1.8×10^308。"}, {"t": "浮点数加减运算——对阶", "c": "浮点数加减步骤：(1)对阶——小阶向大阶对齐。阶差ΔE=E1-E2。若ΔE>0，将第二操作数尾数右移ΔE位，阶码+ΔE。尾数右移导致精度损失（移出的低位丢失），这是浮点误差的主要来源。(2)尾数加减——按定点数方式对两个尾数做加减。(3)结果规格化——若尾数溢出(绝对值≥2)，右规(尾数右移1位，阶码+1)；若尾数绝对值<1，左规(尾数左移至最高位=1，阶码减相应位数)。(4)舍入处理——0舍1入法/恒置1法/截断法，处理被移出的低位。(5)溢出判断——检查阶码是否溢出（>最大阶码则上溢）。"}, {"t": "浮点数乘除运算", "c": "乘法：阶码相加(J1+J2)，尾数相乘(S1×S2)，结果规格化。需特别注意阶码溢出——两正数相乘可能超过最大阶码。除法：阶码相减(J1-J2)，尾数相除(S1/S2)，结果规格化。浮点运算比定点复杂得多，往往需要专用的浮点运算单元(FPU)或多周期微程序实现。现代CPU集成硬件FPU，支持单/双精度浮点、SIMD向量浮点运算(SSE/AVX)。"}]}, {"title": "6.4 ALU设计", "points": [{"t": "算术逻辑单元ALU", "c": "ALU是CPU的运算核心，能完成算术运算(加减乘除)和逻辑运算(与或非异或)。核心是加法器电路。半加器：输入Ai、Bi，输出和Si=Ai⊕Bi、进位Ci=Ai·Bi（不能处理低位进位）。全加器：输入Ai、Bi、Ci-1(低位进位)，输出Si=Ai⊕Bi⊕Ci-1、Ci=Ai·Bi+(Ai⊕Bi)·Ci-1。n位加法器由n个全加器级联构成。"}, {"t": "并行进位加法器(先行进位CLA)", "c": "串行进位加法器延迟=每个全加器进位链延迟×n，速度慢。并行进位通过提前生成进位信号加速。定义：进位生成函数Gi=Ai·Bi（Ai和Bi均为1时必然产生进位），进位传递函数Pi=Ai⊕Bi（Pi=1时低位进位能传到本位）。则Ci=Gi+Pi·Ci-1。展开后Ci可以直接表示为Gi、Pi和C0的逻辑式，各级进位并行计算，延迟大幅减小。实际中通常采用分组并行进位——组内并行、组间串行，或两级并行（组内+组间都并行）。ALU就是基于并行进位加法器，加上逻辑运算电路和移位器构成。"}]}]}, {"id": "ch7", "n": 7, "nm": "指令系统", "pg": "261-336", "desc": "指令系统是软硬件接口，理解指令格式、寻址方式和RISC/CISC设计哲学，是理解CPU如何执行程序的关键。", "secs": [{"title": "7.1 指令格式", "points": [{"t": "指令的一般格式", "c": "一条指令由操作码(OP)和地址码(A)两部分组成。操作码指明指令功能（加/减/传送/转移等），地址码指明操作数的位置。按地址码个数分类：三地址指令(OP A1 A2 A3，A1←(A2)OP(A3))、二地址指令(OP A1 A2，A1←(A1)OP(A2))、一地址指令(OP A1，ACC←(ACC)OP(A1))、零地址指令(无操作数，如空操作NOP、返回RET)。地址码越少，指令越短，但编程灵活性降低。"}, {"t": "操作码的编码——定长与扩展", "c": "定长操作码：所有指令OP位数相同，n位可表示2^n种指令。简单规整，译码容易，但指令数上限固定。扩展操作码(Huffman编码思想)：短操作码给高频指令（如MOV、ADD），长操作码给低频指令（如DIV、浮点操作）。通过模式位区分操作码长度。优点：在有限指令字长内支持更多指令种类；缺点：增加译码复杂度。实际CPU多采用折中的扩展操作码方案。"}, {"t": "指令字长", "c": "指令字长是指令的总位数。可分为定长指令（如RISC的32位固定长度）和变长指令（如x86从1到15字节不等）。定长指令：规整，利于流水线和预取，但空间利用率低。变长指令：代码密度高(常用指令短)，但译码复杂，流水线难以处理。典型RISC如ARM(32位)、MIPS(32位)；CISC如x86变长。现代处理器中许多走向中间路线——ARM Thumb是16/32位混合。"}]}, {"title": "7.2-7.3 寻址方式", "points": [{"t": "立即寻址", "c": "操作数直接包含在指令中，形式地址A就是立即数。如ADD #5(将5加到ACC)。优点：取指令的同时就获取了操作数，无需额外访存，速度最快。缺点：操作数大小受限于地址码位数（通常受限范围）。用于常量操作，如循环计数初值、地址偏移量等。在指令格式中通常用#或$前缀标注立即数。"}, {"t": "直接寻址", "c": "指令地址码A给出操作数在主存中的有效地址EA=A。需一次访存取操作数。形式简单，但地址码宽度限制了可寻址空间——若A为16位，只能直接访问64K地址空间。适用于访问固定地址的数据（如外设端口）。(A)表示地址A中的内容，注意区分A(地址)和(A)(内容)。"}, {"t": "间接寻址", "c": "指令地址码A指向一个存储单元，该单元中存放的是操作数的有效地址(EA=(A))。需要两次或多次访存：第一次取地址，第二次取操作数。优点：(1)扩大了寻址范围——A虽小但(A)中可存完整地址；(2)便于实现指针和链表操作。缺点：多次访存降低了速度。可以有多重间接寻址（如(A)的值最高位=1则继续间址）。"}, {"t": "寄存器寻址与寄存器间接寻址", "c": "寄存器寻址：操作数在寄存器中，指令地址码指定寄存器编号。如ADD R1（ACC←(ACC)+(R1)）。无需访存，速度最快。寄存器数量通常为16/32/64个，编号只需4-6位。这是RISC指令最常用的寻址方式。寄存器间接寻址：寄存器内容作为操作数的有效地址EA=(Ri)。只需一次访存（与间接寻址不同，免去了取地址的访存）。通过改变寄存器内容可灵活访问不同地址，适合循环处理数组。"}, {"t": "变址寻址", "c": "变址寻址EA=(IX)+A。IX为变址寄存器(可多个)，A为形式地址（偏移量）。典型应用：数组访问——IX存数组基址，每循环一次IX加1指向下一元素。注意区分：变址寻址(IX由程序员或指令改变)vs基址寻址(BR通常不变，用于程序重定位)。变址寄存器的位数决定了可寻址范围，不再受限于指令中A的位数。"}, {"t": "基址寻址与相对寻址", "c": "基址寻址EA=(BR)+A。BR为基址寄存器，存放程序或数据段的起始地址。方便程序重定位——程序可以加载到主存任意位置，OS只需设置BR为该位置即可，程序中所有地址均相对于BR。相对寻址EA=(PC)+A。PC是程序计数器，A是位移量（补码表示，可正可负）。用于实现转移指令——计算目标地址=(PC)+位移量。优点是代码与位置无关，适合编写可重定位代码。"}]}, {"title": "7.4-7.5 指令类型与RISC/CISC", "points": [{"t": "指令类型", "c": "(1)数据传送类：MOV/LOAD/STORE/PUSH/POP，在主存-寄存器、寄存器-寄存器间传送数据。(2)算术逻辑类：ADD/SUB/MUL/DIV/INC/DEC/AND/OR/NOT/XOR/SHL/SHR。(3)转移类：JMP(无条件跳转)、JZ/JNZ/JC/JNC(条件跳转)、CALL(调用子程序，保存返回地址)、RET(返回)。(4)输入输出类：IN/OUT。(5)控制类：HLT/NOP/EI/DI(开/关中断)。(6)字符串操作类：MOVS/LODS/STOS等(CISC特色)。"}, {"t": "RISC精简指令集计算机", "c": "RISC核心特征：(1)指令种类少(~100条)；(2)指令定长(通常32位)，格式规整；(3)只有LOAD/STORE指令访问主存，所有运算类指令只在寄存器间操作（Load-Store架构）；(4)寻址方式简单(通常仅3-5种，以寄存器寻址为主)；(5)大量通用寄存器(32个以上)；(6)硬布线控制，便于流水线；(7)强调编译优化——复杂操作由编译器用多条简单指令组合实现。代表：MIPS、ARM、RISC-V。优势：设计简单、流水线高效、功耗低，现代移动和嵌入式领域占主导。"}, {"t": "CISC复杂指令集计算机", "c": "CISC特征：(1)指令丰富(200-300+条)；(2)指令变长，格式多样；(3)一条指令可完成复杂操作(如字符串处理、十进制运算)，减少编程指令数；(4)支持主存操作数(运算指令可直接访问主存)；(5)寻址方式多样(10+种)；(6)常用微程序控制（便于实现复杂指令）。代表：x86/x64。20世纪80年代的RISC革命推动了CISC吸收RISC思想——现代x86 CPU内部将CISC指令翻译为类RISC微操作执行，外CISC内RISC，融合了两者优势。"}, {"t": "RISC与CISC对比与趋势", "c": "||||||||||||||||||||||||||RISC|CISC|指令条数|~100|200-300+|指令长度|定长32位|变长1-15B|寻址方式|3-5种|10+种|主存访问|仅Load/Store|运算指令也可|控制方式|硬布线|微程序|流水线|易实现|较复杂|典型代表|ARM/MIPS/RISC-V|x86/x64。历史趋势：RISC在功耗效率上占优(移动/嵌入式)，CISC在兼容性上占优(PC/服务器)。实际界限已模糊——现代ARM也有复杂指令(NEON)，x86也采用RISC内核+微码翻译。RISC-V开源架构的出现进一步推动了RISC生态发展。"}]}]}, {"id": "ch8", "n": 8, "nm": "CPU的结构和功能", "pg": "337-374", "desc": "CPU是计算机的大脑，掌握其内部寄存器、指令周期、流水线技术和中断系统，理解程序执行的微观过程。", "secs": [{"title": "8.1 CPU的结构", "points": [{"t": "CPU的功能", "c": "CPU是计算机的运算和控制中心。主要功能：(1)指令控制——按程序顺序取指令、执行；(2)操作控制——将指令译码后产生控制信号；(3)时间控制——每个操作都有严格的时间次序；(4)数据加工——完成算术和逻辑运算；(5)中断处理——响应和处理异常及中断请求。这五大功能由CPU内部的运算器和控制器协作完成。现代CPU还集成了Cache、内存控制器、PCIe控制器等。"}, {"t": "CPU的寄存器组织", "c": "CPU寄存器分两类：(1)用户可见寄存器——程序员可通过指令访问。包括通用寄存器(存放操作数和结果)、数据寄存器(特定数据类型)、地址寄存器(存放地址，如变址/基址/栈指针)、条件码寄存器(标志位：ZF零标志/CF进位标志/OF溢出标志/SF符号标志)。(2)控制和状态寄存器——程序员通常不可直接访问。包括PC程序计数器、IR指令寄存器、MAR存储器地址寄存器、MDR存储器数据寄存器、PSW程序状态字(含条件码+控制位如中断允许)。"}]}, {"title": "8.2 指令周期", "points": [{"t": "指令周期的基本概念", "c": "指令周期是CPU取出并执行一条指令所需的全部时间。每条指令至少有取指周期(FE)+执行周期(EX)。有些指令还需要间址周期(IND，操作数间接寻址时)和中断周期(INT，响应中断时)。不同类型指令的执行周期长度不同：简单指令(MOV)1-2个时钟周期；复杂指令(MUL/DIV)数十个周期。指令周期用方框图表示各周期的衔接关系。PC的变化：取指后PC+1；转移指令执行时PC被修改为目标地址。"}, {"t": "指令周期的数据流——取指周期", "c": "取指周期的数据流：(1)PC→MAR（程序计数器值送地址寄存器）；(2)控制器发读命令Read→主存；(3)MAR→地址总线ABUS→主存地址译码；(4)主存将被选单元内容送数据总线DBUS→MDR；(5)MDR→IR（指令送指令寄存器）；(6)PC+1→PC（为下条指令准备）；(7)指令译码器对IR中OP译码，识别指令类型。取指周期是各类指令共有的，由CU中的取指微程序统一控制完成。"}, {"t": "指令周期的数据流——间址和执行周期", "c": "间址周期（如果指令使用间接寻址）：(1)IR中地址码Ad(IR)→MAR；(2)控制器发读命令；(3)M(MAR)→MDR；(4)MDR→Ad(IR)（更新为操作数有效地址）。执行周期：不同指令操作不同。以ADD X为例——(1)Ad(IR)→MAR；(2)Read→取X→MDR；(3)MDR→ALU的X输入；(4)ACC→ALU另一输入；(5)ALU做加法；(6)ALU结果→ACC。对于转移指令JMP：Ad(IR)→PC即可。这一切由CU根据IR中的操作码按节拍发出微操作信号。"}]}, {"title": "8.3 指令流水线", "points": [{"t": "指令流水的基本原理", "c": "指令流水将指令执行过程分成多个阶段，各阶段用独立硬件同时处理不同指令。经典五段流水：IF取指→ID译码/取数→EX执行→MEM访存→WB写回。在稳定状态下，每个时钟周期有一条指令完成，吞吐率接近每周期1条指令。流水线的时钟周期由最慢的阶段决定。例如：若每段延迟为τ，设五段流水，执行n条指令的时间为(5+n-1)τ（第一条填满流水线需5τ，后续每条+τ）。加速比=n×5τ/(5+n-1)τ→5(n→∞)。实际上受限于冒险和开销，加速比低于理论值。"}, {"t": "流水线的三种冒险(Hazard)", "c": "(1)结构冒险——硬件资源冲突，多个指令同时需要同一功能部件。如单端口存储器无法同时支持IF取指和MEM访存。解决：增加硬件资源(分离I-Cache/D-Cache)或流水线暂停(插入气泡)。(2)数据冒险——指令间存在数据依赖。分类：RAW(读后写，真相关)、WAW(写后写)、WAR(写后读，反相关)。解决：旁路/转发技术(ALU结果直接前递给下条指令，无需等写入寄存器)、流水线互锁(插入bubble)或编译器调度重排指令。(3)控制冒险——转移指令使预取指令无效。解决：分支预测(BTB/全局/混合预测器)、延迟转移(转移后紧跟的指令总是执行)。"}, {"t": "流水线性能指标", "c": "吞吐率TP=n/Tk（单位时间完成指令数），TPmax=1/max{Δti}(理想)。加速比S=顺序执行时间/流水执行时间。效率E=流水线各段设备利用率=S/k(k为段数)。实际流水线受冒险、气泡、转移损失影响，性能低于理想值。提升性能的技术：超标量(每周期发射多条指令)、超流水(更细粒度分段)、VLIW(编译器显式并行)、多核并行。现代高端CPU通常4-8发射超标量+深度流水(14-20级)。"}, {"t": "流水线中的多发技术", "c": "超标量(Superscalar)：多个指令并行发射到不同功能单元，每周期执行>1条指令。需要多个执行单元(整数/浮点/访存)，硬件复杂度高。超流水(Superpipeline)：将流水段分得更细，提高主频。深度流水带来时钟周期缩短但分支预测错误代价更大。超标量超流水结合：同时增加宽度和深度。多核(Multi-core)：多个完整CPU核心在单芯片上，任务级并行。SMT(同时多线程/Hyper-Threading)：一个核心同时执行多个线程的指令，提高功能单元利用率。"}]}, {"title": "8.4 中断系统", "points": [{"t": "中断概述", "c": "中断是CPU响应外部/内部事件的机制，暂停当前程序、执行服务程序后返回。分类：(1)内中断(异常)——CPU内部产生，如除零、溢出、非法指令、缺页；(2)外中断——CPU外部产生，如I/O完成、时钟定时、硬件故障。中断使CPU能及时响应突发事件（如网络数据到达）、实现多任务操作系统（时钟中断触发进程调度）、处理程序错误。"}, {"t": "中断响应与处理流程", "c": "完整中断处理流程：(1)中断源发请求→CPU在指令末检查；(2)判优(硬件排队器确定最高优先级)；(3)若CPU开中断且请求优先级>当前，响应：关中断（防止嵌套打断）、保存断点(PC和PSW入栈)、根据中断类型号取向量→PC；(4)执行中断服务程序(ISR)：保护现场(PUSH所有可能修改的寄存器)、执行服务处理、若允许多重中断则开中断(允许更高优先级打断)、恢复现场(POP寄存器)、IRET指令(恢复PC/PSW)返回主程序。x86的中断向量表(实模式：IVT在0-1023地址/保护模式：IDT)存放各中断号的服务程序入口地址。"}, {"t": "中断屏蔽与多重中断", "c": "多重中断允许高优先级中断打断低优先级中断服务。实现关键：(1)中断屏蔽字——每位对应一个中断源优先级，1表示屏蔽。当前服务程序设置屏蔽字禁止同级和低级中断，允许高级中断。(2)开中断点——在保护现场之后、执行服务核心逻辑之前开中断，使高级中断能及时响应。(3)中断优先级——故障(除零/缺页)最高，其次是DMA、时钟、I/O设备。通过屏蔽技术实现动态优先级管理，避免了高优先级中断被低优先级长时间阻塞的问题。"}]}]}, {"id": "ch9", "n": 9, "nm": "控制单元的功能", "pg": "375-394", "desc": "控制单元CU是指挥中心，理解微操作命令序列、多级时序系统和控制方式，是连接指令与硬件的桥梁。", "secs": [{"title": "9.1 微操作命令分析", "points": [{"t": "什么是微操作", "c": "微操作是计算机中最基本的不可再分的操作。一条机器指令的执行由一系列微操作完成。微操作分为：数据通路操作（数据在寄存器/总线/ALU间传送）、控制操作（发读/写命令、置位/复位触发器）。每个微操作由控制单元CU发出对应的控制信号来实现。例如：PC→MAR这个微操作需要CU发出PCout(打开PC的三态门驱动总线)和MARin(MAR锁存总线数据)两个控制信号。"}, {"t": "取指周期的微操作序列", "c": "取指周期是每条指令共有的，其微操作序列为：(1)T0: PC→MAR（PC值送地址寄存器）；(2)T1: 发出读命令Read，同时PC+1→PC（为下条指令准备）；(3)T2: M(MAR)→MDR（主存数据总线→数据寄存器）；(4)T3: MDR→IR（指令送指令寄存器）；(5)T4: 指令译码（ID对OP译码，CU根据译码结果决定执行周期的微操作序列）。这5个节拍完成一条指令的取出。对于定长指令CPU，取指周期固定为相同长度。"}, {"t": "间址周期的微操作序列", "c": "当指令使用间接寻址时，取指后需要间址周期获取操作数的有效地址：(1)T0: Ad(IR)→MAR（指令中地址码字段送MAR）；(2)T1: Read命令，主存将间址单元内容送MDR；(3)T2: MDR→Ad(IR)（将间址单元内容（即有效地址）写回IR的地址码字段）。之后进入执行周期，此时IR中的地址码已经是有效地址了。间址周期是否需要由指令的寻址方式特征位决定。"}, {"t": "执行周期的微操作——以加法为例", "c": "以ADD X(一地址指令，ACC←(ACC)+M(X))为例：(1)T0: Ad(IR)→MAR；(2)T1: Read，M(MAR)→MDR；(3)T2: MDR→ALU的Y输入端，同时ACC→ALU的X输入端；(4)T3: ALU做加法（控制信号选择加法功能），结果→ACC。另一例STA X(存数指令)：(1)T0: Ad(IR)→MAR；(2)T1: ACC→MDR；(3)T2: Write命令，MDR→M(MAR)。每个微操作都必须精确安排时序。"}, {"t": "中断周期的微操作序列", "c": "当CPU响应中断时，在中断周期完成：(1)T0: 关中断（置EINT=0，防止响应被打断）；(2)T1: SP-1→SP, SP→MAR（栈指针调整）；(3)T2: PC→MDR, Write（断点PC压入堆栈）；(4)T3: SP-1→SP, SP→MAR；(5)T4: PSW→MDR, Write（PSW压入堆栈）；(6)T5: 向量地址→PC（从中断控制器获得中断向量，转服务程序）。中断周期由硬件自动完成（中断隐指令），非程序指令。"}]}, {"title": "9.2 控制单元的功能", "points": [{"t": "控制单元的外特性", "c": "CU的输入信号：(1)时钟(CLK)——所有操作的时序基准；(2)指令寄存器IR——当前指令的操作码；(3)标志位(PSW中的条件码)——影响条件转移等指令的控制决策；(4)外部请求信号——中断请求INTR、总线请求HOLD等。CU的输出信号：(1)CPU内部控制信号——寄存器读/写使能、PC+1、ALU功能选择、数据通路选择等；(2)送到主存的控制信号——Read/Write；(3)送到I/O的控制信号——启动I/O、中断应答等。CU本质是一个有限状态机，根据当前状态(指令+标志)和输入产生控制信号序列。"}, {"t": "控制信号举例", "c": "以模型机CPU内部数据通路为例，控制信号包括：PCout、PCin(程序计数器输出/输入使能)，MARin(地址寄存器使能)，MDRout、MDRin，IRin(指令寄存器使能)，R0out-R3out、R0in-R3in(通用寄存器组读写)，ACCout、ACCin，ALU_ADD/SUB/MUL等(ALU功能选择)，Read、Write(主存读写命令)。每个节拍CU发出一组控制信号，这些信号的组合决定了数据通路上的数据流向和功能操作。"}, {"t": "多级时序系统", "c": "三级时序：(1)工作周期(机器周期)——取指周期/间址周期/执行周期/中断周期，由周期状态触发器指示当前处于哪个周期；(2)节拍——每个工作周期包含若干节拍T0,T1,...Tn，每个节拍完成一组微操作；(3)脉冲——每个节拍内有时钟脉冲触发寄存器的锁存。三级关系：工作周期包含多个节拍，每节拍包含若干时钟周期（或半个/一个时钟周期）。节拍数由最慢的微操作决定。定长机器周期：所有指令周期长度相同；不定长：不同指令周期含不同节拍数（通过周期结束标志控制）。"}, {"t": "控制方式", "c": "(1)同步控制：所有微操作由统一时钟信号同步，工作周期固定。又分定长机器周期（所有指令周期长相同，浪费快指令的时间）和不定长机器周期（加入周期结束检测，延长慢指令的周期）。(2)异步控制：无统一时钟，用「结束-启动」握手方式在前一操作完成后启动下一操作。优点是各操作按需耗时、无浪费，缺点是控制复杂、难以流水线化。(3)联合控制：大部分操作同步，对慢速操作(如主存访问)插入异步等待周期。这是现代CPU最常用的方式——以同步为主，通过WAIT_STATES处理慢速存储器和外设。"}]}, {"title": "9.3 时序系统实例分析", "points": [{"t": "模型机时序分析", "c": "以教材中模型机为例分析完整指令的执行时序。设机器周期=4个时钟周期(T0-T3)。取指周期(4T)：T0=PC→MAR，T1=Read&PC+1，T2=MDR→IR，T3=指令译码。若直接寻址，执行周期：T0=Ad→MAR，T1=Read，T2=MDR→操作部件，T3=执行并写结果。若间接寻址，间址周期：T0=Ad→MAR，T1=Read，T2=MDR→Ad，T3=空闲(或直接进入执行周期T0)。中断周期：T0=关中断，T1=保存PC，T2=保存PSW，T3=取向量地址。各周期之间通过周期触发器状态切换衔接。"}]}]}, {"id": "ch10", "n": 10, "nm": "控制单元的设计", "pg": "395-422", "desc": "掌握CU的两种设计方法——组合逻辑(硬布线)和微程序，理解RISC和CISC在控制单元设计上的差异根源。", "secs": [{"title": "10.1 组合逻辑设计", "points": [{"t": "组合逻辑控制原理", "c": "组合逻辑CU的核心思想：将控制信号看作当前状态（指令操作码、节拍、标志位）的布尔函数。Cn=f(IR, T, PSW)。用门电路（与、或、非门）实现这些逻辑函数，直接产生控制信号。它是纯硬件方案，没有任何存储控制字的存储器。由于控制信号逻辑表达式直接从指令执行需求推导，因此又称硬布线控制。优点：速度快（无取控制字的额外延迟）；缺点：设计复杂、不易修改、没有规整结构。RISC处理器普遍采用此方案。"}, {"t": "微操作的节拍安排", "c": "设计步骤：(1)列出所有指令在所有周期(取指/间址/执行/中断)的微操作序列；(2)将微操作分配到各节拍——需遵循原则：同一节拍内微操作应相容（不冲突），如不可同时将两个不同寄存器输出到同一总线；有数据依赖的微操作需放在不同节拍；(3)安排节拍数——由最慢指令所需的微操作步数决定，简单指令的剩余节拍做空操作(NOP)。合理安排微操作顺序可减少所需节拍数，提高效率。"}, {"t": "组合逻辑设计步骤", "c": "完整流程：(1)确定指令系统——指令格式、功能、寻址方式；(2)绘制CPU数据通路——明确各部件及连接关系；(3)列出每条指令的操作时间表——在哪些节拍需要哪些微操作；(4)写出每个控制信号的逻辑表达式——综合所有指令，对每个控制信号：Cn=∑(条件下各指令的该项为1)；(5)化简逻辑表达式——用卡诺图或逻辑化简工具减少门数；(6)用门电路实现。这一过程极其繁琐，修改一条指令可能导致大量表达式重推，这正是组合逻辑的痛点。"}]}, {"title": "10.2 微程序设计", "points": [{"t": "微程序设计思想的产生", "c": "微程序概念由Wilkes于1951年提出：将控制信号以二进制编码形式存储在只读存储器（称为控制存储器CM）中。每条机器指令的执行对应一段微程序（由若干条微指令组成），每条微指令在一个微周期内发出一组控制信号。微程序CU工作时，逐条从CM取出微指令执行。打个比方：机器指令是「任务」，微程序是「剧本」，微指令是「场次」，控制信号是「每个演员的动作」。微程序将控制的复杂性从硬件布线转移到了软件编程（写微代码），大大提高了灵活性和可维护性。"}, {"t": "微程序控制单元框图及工作原理", "c": "微程序CU核心部件：(1)控制存储器CM——存放所有微程序(微指令序列)，ROM实现；(2)微指令寄存器μIR——存放当前执行的微指令；(3)微地址寄存器μAR——存放下一条微指令在CM中的地址；(4)微地址形成电路——根据当前微指令的下址字段/转移条件/机器指令OP等形成下一条微指令地址。工作流程：取指微程序(公用的)→根据机器指令OP映射到对应微程序入口地址→执行该微程序→循环取下一条微指令直到微程序结束→返回取指微程序。每条微指令执行需一个微周期（通常=1个CPU时钟周期）。"}, {"t": "微指令的编码方式", "c": "(1)直接编码（水平型）：控制字段中每位对应一个控制信号，1表示发该信号。优点：并行性好，多位可同时有效，速度快。缺点：微指令字长很长（控制信号有数百个，则微指令数百位）。常用于追求速度的设计。(2)字段直接编码：将互斥的微操作分在同一字段（如ALU功能选择：4选1只需2位编码），字段间可并行。压缩了微指令长度，但增加译码延迟。(3)字段间接编码：某字段的编码含义由另一字段的值决定，进一步压缩但更复杂。(4)混合编码：部分位直接控制，部分位字段编码。实际设计在速度、字长、复杂度间折中。"}, {"t": "微指令序列地址的形成", "c": "下一条微指令地址如何确定：(1)计数器方式——设置微程序计数器μPC，顺序执行时μPC+1；转移时由转移地址字段提供目标地址。结构简单，类似机器指令的PC管理方式。(2)断定方式——微指令中设下址字段，直接指定下条微指令地址。无μPC，由多路选择器根据条件选地址源。优点是转移灵活，无额外转移周期；缺点是微指令增加下址字段，字长增加。(3)增量与断定结合——顺序执行用μPC+1，转移用下址字段。这是实际中最常用的方案。"}, {"t": "微指令格式——水平型 vs 垂直型", "c": "水平型微指令：长字长(100+位)，控制字段采用直接编码或短编码，并行度高，一条微指令可同时激活多个控制信号。执行速度快(微周期短)，但微程序长(微指令数少但每条占空间大)。类似于「宏指令」——一步到位。垂直型微指令：短字长(与机器指令相近)，采用类似机器指令的编码方式，包括微操作码、地址码等。并行度低(一次只能发少量信号)，微指令数多但CM总容量可能更小。速度慢但编程方便，类似于用低级语言写微程序。现代设计多为水平型（直接编码或少量字段编码），追求控制信号最大并行性。"}, {"t": "组合逻辑 vs 微程序——全面对比", "c": "(1)速度：组合逻辑快（控制信号直接由门产生无额外延迟）；微程序慢一级（需访问CM取微指令）。(2)规整性：微程序规整（CM的阵列结构），组合逻辑不规则（门电路杂乱连线）。(3)可修改性：微程序好（修改微代码即可，改CM内容），组合逻辑差（改一条指令可能导致重新设计整个逻辑网络）。(4)设计自动化：微程序容易（微汇编器），组合逻辑需要EDA综合。(5)成本：组合逻辑芯片面积小但设计NRE高，微程序CM占面积但设计快。(6)适用场景：RISC→组合逻辑(追求速度，指令简单)；CISC→微程序(指令复杂，便于实现和修改)。现代趋势：RISC-V、ARM Cortex均采用组合逻辑+部分微码辅助。"}, {"t": "毫微程序与动态微程序", "c": "毫微程序设计：在微程序之下再加一级控制——毫微指令。微指令调用毫微程序，毫微指令产生控制信号。进一步压缩CM容量（用垂直型微指令+水平型毫微指令）。动态微程序：运行时可通过写入WCS(可写控制存储器)修改微程序内容。常用于仿真其他指令集——通过加载不同的微程序，同一硬件可执行不同指令集。IBM System/360的微码层就通过此技术实现了不同型号间的指令兼容。这些高级技术在现代CPU中较少直接使用，但思想影响了微架构设计。"}]}]}];
+const QUIZ={"ch1": [["冯·诺依曼机最核心的思想是？", ["存储程序并按地址顺序执行", "使用二进制", "以运算器为中心", "使用电子管"], 0], ["五大部件不包括？", ["运算器", "控制器", "电源", "输入设备"], 2], ["MAR的位数决定了？", ["存储字长", "存储单元个数", "运算速度", "数据线宽度"], 1], ["MIPS=f/(CPI×10⁶)，若f=2GHz、CPI=4，MIPS=？", ["8000", "500", "2000", "1000"], 1], ["计算机层次结构中从底到顶排列？", ["高级语言→OS→机器语言→微程序", "微程序→机器语言→OS→高级语言", "OS→微程序→机器语言→高级语言", "机器语言→OS→微程序→高级语言"], 1], ["关于补码说法正确的是？", ["正数补码需取反+1", "0有+0和-0两种表示", "[-X]补=[X]补连同符号取反+1", "补码不能做减法"], 2], ["CPU时间=指令条数×CPI×时钟周期，要减少执行时间，无效的是？", ["减少指令条数", "降低CPI", "提高主频", "增加Cache"], 3], ["硬件和软件在逻辑功能上？", ["完全不同", "等效", "硬件一定更快", "软件一定更灵活"], 1]], "ch2": [["ENIAC诞生于？", ["1942", "1946", "1950", "1954"], 1], ["摩尔定律提出集成电路晶体管数约多久翻倍？", ["6个月", "12个月", "18个月", "36个月"], 2], ["第二代计算机核心器件？", ["电子管", "晶体管", "中小规模IC", "LSI"], 1], ["微型计算机核心是？", ["存储器", "微处理器", "操作系统", "总线"], 1], ["不属于计算机应用领域的是？", ["科学计算", "工业控制", "基因编辑", "虚拟现实"], 2], ["IBM System/360的重要意义？", ["第一台PC", "首次使用晶体管", "首次实现系列化兼容", "首次使用集成电路"], 2]], "ch3": [["系统总线中双向传输的是？", ["地址总线", "数据总线", "控制总线", "电源线"], 1], ["总线带宽=64位×100MHz=？", ["100MB/s", "800MB/s", "6400MB/s", "6.4GB/s"], 1], ["链式查询需几根控制线？", ["1", "2", "3", "n"], 2], ["计数器定时查询比链式查询多出什么线？", ["数据线", "设备地址线", "控制线", "中断线"], 1], ["异步通信全互锁方式共几步？", ["2", "3", "4", "5"], 2], ["不属于总线特性的是？", ["机械特性", "电气特性", "价格特性", "时间特性"], 2], ["PCIe属于哪种总线？", ["片内总线", "系统总线", "通信总线", "内存总线"], 1], ["独立请求方式每设备需几根独立控制线？", ["1", "2", "3", "4"], 1], ["总线复用指？", ["地址线和数据线共用", "多设备共享", "总线分时", "总线仲裁"], 0]], "ch4": [["Cache通常用哪种存储器实现？", ["DRAM", "SRAM", "Flash", "磁盘"], 1], ["DRAM需要刷新的原因是？", ["触发器漏电", "电容漏电", "磁介质退化", "光衰减"], 1], ["LRU替换策略含义？", ["最先进入的被替换", "最近最少使用的被替换", "随机的被替换", "最大的被替换"], 1], ["平均访存时间=？", ["h×tc+(1-h)×tm", "tc+tm", "(tc+tm)/2", "h×tm"], 0], ["直接映射Cache地址分为？", ["标记|行号|块内偏移", "标记|块号", "行号|偏移", "标记|组号|偏移"], 0], ["写回策略(Write Back)的特点是？", ["每写必同时更新主存", "替换时才写回主存", "不写主存", "写入另一个Cache"], 1], ["存储器层次从上到下？", ["辅存→主存→Cache→寄存器", "寄存器→Cache→主存→辅存", "Cache→寄存器→主存→辅存", "寄存器→主存→Cache→辅存"], 1], ["8体低位交叉编址主存，连续地址分布在？", ["同一体", "不同体", "第0体", "最后一"], 1], ["汉明码能？", ["检1纠2", "纠1检2", "只检不错", "只纠不错"], 1], ["不属于半导体存储器的是？", ["SRAM", "DRAM", "ROM", "磁盘"], 3]], "ch5": [["效率最低的I/O方式是？", ["程序查询", "程序中断", "DMA", "通道"], 0], ["DMA在什么时候响应总线请求？", ["指令结束", "存取周期结束", "中断周期结束", "任何时间"], 1], ["中断响应时先做什么？", ["关中断", "保存断点", "取向量", "执行服务"], 0], ["中断隐指令不包括？", ["关中断", "保存断点", "取向量", "数据传送"], 3], ["适用于磁盘高速大批量传送的是？", ["程序查询", "程序中断", "DMA", "人工"], 2], ["中断嵌套指？", ["多个中断同时处理", "高优先级可打断低优先级服务", "中断服务中再中断", "一种错误"], 1], ["不属于I/O接口功能的是？", ["选址", "传命令", "算术运算", "反映状态"], 2], ["中断屏蔽字的作用？", ["加速中断", "控制中断响应优先级", "关闭中断", "减少中断"], 1]], "ch6": [["[-X]补的求法？", ["原码取反", "[X]补连同符号取反+1", "符号不变其他取反", "取绝对值"], 1], ["溢出判断可用？", ["Cn⊕Cn-1", "Cn∧Cn-1", "Cn", "数值进位"], 0], ["IEEE754单精度阶码偏置？", ["64", "127", "128", "1023"], 1], ["双符号位01表示？", ["正数", "负数", "正溢出", "负溢出"], 2], ["Booth算法处理的是？", ["原码乘法", "补码乘法", "原码除法", "补码除法"], 1], ["浮点数对阶时？", ["大阶向小阶对齐", "小阶向大阶对齐", "任意对齐", "不需要对齐"], 1], ["8位补码范围？", ["0~255", "-127~+127", "-128~+127", "-127~+128"], 2], ["浮点数尾数位数决定？", ["表示范围", "精度", "速度", "功耗"], 1], ["IEEE754 NaN表示？", ["0/0", "1/0", "0/1", "1"], 0], ["全加器输入不包括？", ["Ai", "Bi", "Ci-1", "Si"], 3]], "ch7": [["变址寻址EA=？", ["(IX)+A", "(BR)+A", "(PC)+A", "A"], 0], ["RISC指令长度通常？", ["变长", "定长32位", "定长16位", "8位"], 1], ["最快寻址方式是？", ["间接寻址", "直接寻址", "寄存器寻址", "存储器寻址"], 2], ["三地址指令(A1)OP(A2)→A3中操作数个数？", ["1", "2", "3", "4"], 2], ["属于CISC特征的是？", ["定长指令", "仅Load/Store访存", "指令条数~100", "指令变长格式多样"], 3], ["相对寻址用于？", ["数组访问", "转移指令", "堆栈操作", "I/O操作"], 1], ["基址寻址EA=(BR)+A，BR通常存？", ["程序或数据段起始地址", "数组索引", "堆栈指针", "循环计数"], 0], ["操作码扩展目的是？", ["增加指令种类", "缩短高频指令", "增加低频指令", "缩短所有指令"], 1]], "ch8": [["k段流水线n→∞时加速比→？", ["k", "n", "1", "n/k"], 0], ["数据相关解决不含？", ["旁路技术", "插入气泡", "编译重排", "增加段数"], 3], ["五段流水不含？", ["IF取指", "ID译码", "WAIT等待", "WB写回"], 2], ["转移指令引起哪种冒险？", ["结构冒险", "数据冒险", "控制冒险", "写后写"], 2], ["中断响应时先保存什么到堆栈？", ["ACC", "PC和PSW", "R0", "IR"], 1], ["超标量处理器指？", ["每周期发射1条指令", "每周期发射多条指令", "只有1个执行单元", "时钟频率超高"], 1], ["不属于CPU内部寄存器的是？", ["PC", "IR", "MAR", "DRAM"], 3], ["指令周期包含？", ["只取指", "取指+执行", "取指+译码+执行+可能间址", "只执行"], 2]], "ch9": [["取指周期第一步微操作？", ["MDR→IR", "PC→MAR", "PC+1→PC", "ALU加"], 1], ["三级时序不包括？", ["工作周期", "节拍", "脉冲", "指令"], 3], ["微操作命令由谁发出？", ["ALU", "控制单元CU", "存储器", "I/O接口"], 1], ["间址周期目的？", ["取出操作码", "取出操作数有效地址", "执行运算", "保存结果"], 1], ["中断周期微操作包括？", ["关中断保存断点", "取操作数", "执行加法", "译码"], 0]], "ch10": [["组合逻辑设计优点？", ["速度快", "易修改", "规整", "省芯片"], 1], ["微程序控制存储器叫？", ["主存", "Cache", "CM", "ROM"], 2], ["水平型微指令特点？", ["短串行慢", "长并行快", "短并行快", "长串行慢"], 1], ["RISC常采用什么控制？", ["组合逻辑", "微程序", "毫微程序", "动态微程序"], 0], ["CM存放的是什么？", ["机器指令", "微指令", "数据", "地址"], 1], ["不属于微指令编码方式？", ["直接编码", "字段编码", "Huffman编码", "混合编码"], 2], ["动态微程序指？", ["运行时不可改", "运行时可通过WCS修改", "保存在ROM中", "速度最快"], 1], ["微地址形成方式不含？", ["计数器方式", "断定方式", "增量+断定", "DMA方式"], 3]]};
+const PARTS=[{"name": "📘 概论", "chs": ["ch1", "ch2"]}, {"name": "📙 硬件结构", "chs": ["ch3", "ch4", "ch5"]}, {"name": "📗 CPU", "chs": ["ch6", "ch7", "ch8"]}, {"name": "📕 控制单元", "chs": ["ch9", "ch10"]}];
+const QEXP={"ch1": ["存储程序并按地址顺序执行是冯·诺依曼机区别于其他计算机模型的最本质特征。其他选项虽也相关，但不是最核心思想。", "五大部件：运算器、控制器、存储器、输入设备、输出设备。\"电源\"是供电系统不是功能部件。", "MAR（存储器地址寄存器）的位数直接决定可寻址的存储单元个数=2^MAR位数。存储字长由MDR位数决定。", "MIPS = f/(CPI×10⁶) = 2×10⁹/(4×10⁶) = 500", "层次从底到顶：微程序→机器语言→OS→汇编→高级语言。底层是硬件实现，上层是软件抽象。", "补码中[-X]补=[X]补连同符号位取反+1。这是快速求相反数补码的方法。正数补码=原码，不需取反。", "CPU执行时间=指令条数×CPI×时钟周期。增加Cache不会直接改变这三个参数（Cache是通过降低平均访存时间间接提升，不在此公式范畴）。", "硬件和软件在逻辑功能上是等效的——同一功能既可用硬件实现也可用软件模拟，这叫软硬件逻辑等价性。"], "ch2": ["ENIAC于1946年2月在美国宾夕法尼亚大学问世，是第一台通用电子数字计算机。", "摩尔定律(Gordon Moore, 1965)：集成电路上晶体管数量约每18-24个月翻一番。", "第二代(1958-1964)以晶体管替代电子管，体积缩小、功耗降低、可靠性大幅提高。", "微型计算机的核心部件是微处理器(CPU芯片)。1971年Intel 4004标志微处理器时代开始。", "基因编辑属于生物技术领域，不是计算机的应用领域。科学计算、工业控制、虚拟现实都是计算机典型应用。", "IBM System/360(1964)首次实现了系列化兼容——不同型号的机器可运行相同的软件，是计算机历史上的里程碑。"], "ch3": ["数据总线是双向传输的——CPU可以从中读数据也可以写数据。地址总线是单向的（CPU发出），控制总线每根线有固定方向。", "总线带宽=总线宽度×总线频率=64bit×100MHz=8B×100M=800MB/s", "链式查询只需3根线：BS(总线忙)、BR(总线请求)、BG(总线同意)。BG线以菊花链方式串行连接所有设备。", "计数器定时查询方式取消了BG线，改用设备地址线，需要log₂n根额外控制线来传输设备地址。", "全互锁异步通信共4步：请求→应答→撤销请求→撤销应答，形成完整的握手闭环。", "总线四大特性：机械特性、电气特性、功能特性、时间特性。\"价格特性\"不存在。", "PCIe是通信总线，用于系统与高速外设之间的点对点串行通信。", "独立请求方式每台设备有独立的BR和BG两根线，共2根/设备。", "总线复用指地址线和数据线共用同一组物理连线，分时传送地址和数据，目的是减少引脚数。"]};
+const JUDGE={"ch1":[["冯·诺依曼机的核心思想是存储程序并按地址顺序执行。",1],["五大部件包括运算器、控制器、存储器、输出设备和电源。",0],["MDR的位数决定了存储字长。",1],["软硬件在逻辑功能上是完全不同的。",0],["MAR=16位时最多有65,536个存储单元。",1]],"ch2":[["ENIAC于1950年诞生。",0],["摩尔定律提出晶体管数量每年翻倍。",0],["晶体管是第三代计算机的核心器件。",0],["微型计算机的核心是微处理器。",1],["IBM System/360首次实现了系列化兼容。",1]],"ch3":[["数据总线是单向传输的。",0],["总线带宽=总线宽度×总线频率。",1],["链式查询方式共用5根控制线。",0],["异步通信全互锁方式需要4步握手。",1],["PCIe是一种并行总线。",0]]};
+const FILL={"ch1":[["计算机硬件由运算器、控制器、___、输入设备、输出设备五大部件组成。","存储器"],["MIPS=f/(CPI×___)。","10⁶"],["计算机系统层次从底到顶：___→机器语言→OS→高级语言。","微程序"],["冯·诺依曼机最核心的思想是___。","存储程序"],["机器字长指CPU一次能处理的___位数。","数据"]],"ch2":[["第二代计算机的核心器件是___。","晶体管"],["摩尔定律预测晶体管数量约每___个月翻一倍。","18"],["微型计算机的核心部件是___。","微处理器"],["ENIAC于___年问世。","1946"],["IBM System/360首次实现了___兼容。","系列化"]],"ch3":[["系统总线中___总线是双向的。","数据"],["总线带宽=总线宽度×___。","总线频率"],["链式查询需要___根控制线。","3"],["计数器定时查询比链式查询多了___线。","设备地址"],["PCIe是一种___通信总线。","串行"]]};
+
+
+// === INIT ===
+let curCh=null,curMode='notes',ans={};
+let prog=localStorage.getItem('coa_p');
+try{prog=JSON.parse(prog)||{};}catch(e){prog={};}
+
+function getCh(id){return CHS.find(c=>c.id===id);}
+function isMobile(){return window.innerWidth<768;}
+function toggleSidebar(){
+  const sb=document.querySelector('.sb');
+  const overlay=document.getElementById('sbOverlay');
+  if(isMobile()){
+    sb.classList.toggle('open');
+    overlay.classList.toggle('show');
+    document.body.style.overflow=sb.classList.contains('open')?'hidden':'';
+  }else{
+    sb.classList.toggle('collapsed');
+    document.querySelector('.mn').classList.toggle('expanded');
+  }
+}
+
+function updateProg(){
+  let total=CHS.length,dn=0;
+  CHS.forEach(c=>{if(prog[c.id]&&prog[c.id].read)dn++;});
+  let pct=Math.round(dn/total*100);
+  document.getElementById('pp').textContent=pct+'%';
+  document.getElementById('pf').style.width=pct+'%';
+}
+
+// === TREE ===
+function renderTree(){
+  let h='';
+  PARTS.forEach(p=>{
+    let chs=CHS.filter(c=>p.chs.includes(c.id));
+    let dn=chs.filter(c=>prog[c.id]&&prog[c.id].read).length;
+    h+=`<div class="tp"><div class="tp-h" onclick="this.parentElement.classList.toggle('cl')"><span class="ar">▼</span>${p.name} (${dn}/${chs.length})</div><div class="clst">`;
+    chs.forEach(c=>{
+      let cls=prog[c.id]&&prog[c.id].read?'dn':'';cls+=curCh===c.id?' ac':'';
+      h+=`<div class="ci ${cls}" onclick="selCh('${c.id}')"><span class="cn">Ch${c.n}</span><span class="cna">${c.nm}</span><span class="cd"></span></div>`;
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('chTree').innerHTML=h;updateProg();
+}
+
+// === CHAPTER SELECT ===
+function selCh(id){
+  curCh=id;
+  document.querySelectorAll('.ci').forEach(e=>e.classList.remove('ac'));
+  let el=document.querySelector('.ci[onclick*="'+id+'"]');
+  if(el)el.classList.add('ac');
+  if(isMobile()){document.querySelector('.sb').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');}
+  if(curMode==='notes')renderNotes();
+  else if(curMode==='quiz')renderQuiz();
+  else if(curMode==='sim')renderSim();
+  else if(curMode==='graph')renderGraph();
+  else if(curMode==='guide')renderGuide();
+}
+
+// === MODE SWITCH ===
+function setMode(m){
+  curMode=m;
+  document.querySelectorAll('.mb').forEach(b=>b.classList.toggle('ac',b.dataset.mode===m));
+  if(isMobile()){document.querySelector('.sb').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');}
+  if(!curCh){
+    document.getElementById('content').innerHTML='<div class="es"><div class="ic">👈</div><p>选择章节开始学习</p><p style="font-size:12px;margin-top:6px">全10章 · 200+知识点 · 6个交互模拟器 · 零基础可学</p></div>';
+    document.getElementById('cTitle').textContent='📚 选择章节开始学习';
+    return;
+  }
+  if(m==='notes')renderNotes();
+  else if(m==='quiz')renderQuiz();
+  else if(m==='sim')renderSim();
+  else if(m==='graph')renderGraph();
+  else if(m==='guide')renderGuide();
+}
+// 窗口大小变化时重置侧边栏状态
+window.addEventListener('resize',()=>{
+  const sb=document.querySelector('.sb');
+  const overlay=document.getElementById('sbOverlay');
+  if(!isMobile()){
+    sb.classList.remove('open');overlay.classList.remove('show');
+    document.body.style.overflow='';
+  }
+});
+
+// === NOTES MODE ===
+function renderNotes(){
+  let ch=getCh(curCh);if(!ch)return;
+  document.getElementById('cTitle').textContent='📒 '+ch.nm;
+  let ptCount=0;ch.secs.forEach(s=>ptCount+=s.points.length);
+  document.getElementById('cBadge').textContent=ptCount+'个知识点 · P'+ch.pg;
+  let h=`<div class="sec ac"><h3>第${ch.n}章 ${ch.nm}</h3><div class="chd">${ch.desc}</div>`;
+  ch.secs.forEach(s=>{
+    h+=`<div class="sect"><h4>${s.title}</h4>`;
+    s.points.forEach(p=>{
+      let hasSvg=p.svg&&p.svg.length>0;
+      let hasTip=p.tip&&p.tip.length>0;
+      h+=`<div class="pt${hasSvg||hasTip?' exp':''}"><div class="ptt" onclick="this.parentElement.classList.toggle('exp')">${p.t}</div>`;
+      if(hasSvg)h+=`<div class="svg-wrap">${p.svg}</div>`;
+      h+=`<div class="ptc">${p.c}</div>`;
+      if(hasTip)h+=`<div class="tip">${p.tip}</div>`;
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  h+=`<div style="margin-top:20px"><button class="bt pr" onclick="markRead('${ch.id}');setMode('quiz')">✅ 已学完，开始刷题 →</button></div></div>`;
+  document.getElementById('content').innerHTML=h;
+}
+
+function markRead(id){
+  if(!prog[id])prog[id]={read:true};else prog[id].read=true;
+  localStorage.setItem('coa_p',JSON.stringify(prog));renderTree();
+}
+
+// === QUIZ MODE (选择题+判断题+填空题) ===
+function renderQuiz(){
+  let ch=getCh(curCh);if(!ch)return;
+  let qs=QUIZ[ch.id]||[];
+  ans={};
+  document.getElementById('cTitle').textContent='✍️ '+ch.nm+' · 刷题';
+  document.getElementById('cBadge').textContent=qs.length+'题';
+  let h=`<div class="sec ac"><h3>第${ch.n}章 ${ch.nm} · 测验</h3><p class="st">共${qs.length}题 · 点击作答 · 交卷后显示解析</p>`;
+  qs.forEach((q,i)=>{
+    h+=`<div class="qc" id="q${i}"><div class="qn">第${i+1}题 · 单选</div><div class="qt">${q[0]}</div><div class="op">`;
+    q[1].forEach((o,j)=>h+=`<div class="ot" onclick="pickAns(${i},${j})">${String.fromCharCode(65+j)}. ${o}</div>`);
+    h+=`</div><div class="exp-box" id="exp${i}"></div></div>`;
+  });
+  h+=`<div class="qa"><button class="bt pr" onclick="submitQ('${ch.id}')">📝 交卷</button><button class="bt" onclick="renderQuiz()">🔄 重做</button><button class="bt danger" onclick="showWrongBook()">📋 错题本</button></div><div id="scoreArea"></div></div>`;
+  document.getElementById('content').innerHTML=h;
+}
+
+function pickAns(qid,oi){
+  if(qid.startsWith('cq')){
+    if(document.querySelector('#'+qid+' .ot.cr'))return;
+    ans[qid]=oi;
+    document.querySelectorAll('#'+qid+' .ot').forEach(e=>e.classList.remove('sl'));
+    document.querySelectorAll('#'+qid+' .ot')[oi].classList.add('sl');
+  }else if(qid.startsWith('jq')){
+    ans[qid]=oi;
+    document.getElementById(qid+'t').classList.toggle('ac',oi===1);
+    document.getElementById(qid+'f').classList.toggle('ac',oi===0);
+  }
+}
+
+function submitQ(chId){
+  let ch=getCh(chId);if(!ch)return;
+  let cqs=QUIZ[chId]||[], jqs=JUDGE[chId]||[], fqs=FILL[chId]||[];
+  let total=cqs.length+jqs.length+fqs.length,score=0;
+  let exps=QEXP[chId]||[];
+  let wrongs=localStorage.getItem('coa_wrong');
+  try{wrongs=JSON.parse(wrongs)||[];}catch(e){wrongs=[];}
+
+  function saveWrong(question,userAns,correctAns,exp,type){
+    wrongs.push({ch:chId,question:question,userAns:userAns,correctAns:correctAns,exp:exp||'',type:type,time:new Date().toLocaleString()});
+  }
+
+  // 选择题评分
+  cqs.forEach((q,i)=>{
+    let qid='cq'+i, a=ans[qid],correct=q[2];
+    let opts=document.querySelectorAll('#'+qid+' .ot');
+    opts.forEach(o=>o.style.pointerEvents='none');
+    opts[correct].classList.add('cr');
+    let exp=exps[i]||'';
+    if(a===correct)score++;
+    else if(a!==undefined){opts[a].classList.add('wr');saveWrong(q[0],String.fromCharCode(65+a),String.fromCharCode(65+correct),exp,'单选');}
+    else saveWrong(q[0],'未作答',String.fromCharCode(65+correct),exp,'单选');
+    // Explanation
+    let expBox=document.getElementById('exp'+qid);
+    if(exp&&expBox){expBox.innerHTML='<strong>📖 解析：</strong>'+exp;expBox.classList.add('show');}
+    let fb=document.createElement('div');
+    fb.className='fbk '+(a===correct?'ok':'er');
+    fb.textContent=a===correct?'✅ 正确':(a===undefined?'⚠️ 未作答':'❌ 正确答案 '+String.fromCharCode(65+correct));
+    document.getElementById(qid).appendChild(fb);
+  });
+
+  // 判断题评分
+  jqs.forEach((q,i)=>{
+    let qid='jq'+i, a=ans[qid],correct=q[1];
+    [document.getElementById(qid+'t'),document.getElementById(qid+'f')].forEach(b=>b&&(b.style.pointerEvents='none'));
+    if(a===correct)score++;
+    else{saveWrong(q[0],a===1?'正确':(a===0?'错误':'未作答'),correct?'正确':'错误','','判断');}
+    let fb=document.createElement('div');
+    fb.className='fbk '+(a===correct?'ok':'er');
+    fb.textContent=a===correct?'✅ 正确':(a===undefined?'⚠️ 未作答':'❌ 正确答案: '+(correct?'正确':'错误'));
+    document.getElementById(qid).appendChild(fb);
+  });
+
+  // 填空题评分
+  fqs.forEach((q,i)=>{
+    let qid='fq'+i, a=(ans[qid]||'').trim(),correct=q[1].trim();
+    if(a===correct)score++;
+    else{saveWrong(q[0],a||'未作答',correct,'','填空');}
+    let fb=document.createElement('div');
+    fb.className='fbk '+(a===correct?'ok':'er');
+    fb.textContent=a===correct?'✅ 正确':(a?'❌ 正确答案: '+correct:'⚠️ 未作答');
+    let inp=document.getElementById(qid+'in');if(inp){inp.disabled=true;if(a!==correct)inp.style.borderColor='var(--er)';}
+    document.getElementById(qid).appendChild(fb);
+  });
+
+  localStorage.setItem('coa_wrong',JSON.stringify(wrongs));
+  if(!prog[chId])prog[chId]={};prog[chId].quiz=true;prog[chId].read=true;
+  localStorage.setItem('coa_p',JSON.stringify(prog));
+  let pct=Math.round(score/total*100),cls=pct>=80?'gr':(pct>=60?'gd':'ok');
+  document.getElementById('scoreArea').innerHTML='<div class="sd"><div class="bs '+cls+'">'+score+'/'+total+'</div><div class="det">'+(score===total?'🎉 全对！':(pct>=80?'👍 优秀':(pct>=60?'📖 还需巩固':'💪 继续加油')))+' | 正确率 '+pct+'%</div></div>';
+  renderTree();
+}
+
+// === WRONG ANSWER BOOK ===
+function showWrongBook(){
+  let wrongs=localStorage.getItem('coa_wrong');
+  try{wrongs=JSON.parse(wrongs)||[];}catch(e){wrongs=[];}
+  document.getElementById('cTitle').textContent='📋 错题本';
+  document.getElementById('cBadge').textContent=wrongs.length+'题';
+  let h='<div class="sec ac"><h3>错题本</h3><p class="st">共'+wrongs.length+'道错题 · 反复回顾直到全对</p>';
+  if(wrongs.length===0){
+    h+='<div class="sd"><div class="bs gr">🎉</div><div class="det">暂无错题，继续保持！</div></div>';
+  }else{
+    wrongs.forEach((w,i)=>{
+      h+=`<div class="wb-item"><div class="wb-q">${i+1}. [${w.ch}] ${w.question}</div><div class="wb-my">你的答案：${w.userAns}</div><div class="wb-a">正确答案：${w.correctAns}${w.exp?' — '+w.exp:''}</div><div style="font-size:10px;color:var(--t2);margin-top:4px">${w.time}</div></div>`;
+    });
+    h+=`<div style="margin-top:16px"><button class="bt danger" onclick="if(confirm('确定清空所有错题？')){localStorage.removeItem('coa_wrong');showWrongBook();}">🗑️ 清空错题本</button></div>`;
+  }
+  h+='</div>';
+  document.getElementById('content').innerHTML=h;
+}
+
+// === GRAPH MODE ===
+function renderGraph(){
+  document.getElementById('cTitle').textContent='🗺️ 知识图谱';
+  document.getElementById('cBadge').textContent='全10章';
+  let h='<div class="sec ac"><h3>计算机组成原理 知识图谱</h3><div class="mp">';
+  PARTS.forEach(p=>{
+    h+=`<div class="mt">${p.name}</div>`;
+    CHS.filter(c=>p.chs.includes(c.id)).forEach(c=>h+=`<span class="mc" onclick="selCh('${c.id}');setMode('notes')">Ch${c.n} ${c.nm}</span>`);
+  });
+  h+='</div><div class="mp" style="margin-top:16px"><div class="mt">🧩 整体脉络</div>';
+  h+='<span class="mc">概论</span>→<span class="mc">硬件结构</span>→<span class="mc">CPU</span>→<span class="mc">控制单元</span><br>';
+  h+='<span style="font-size:12px;color:var(--t2)">自上而下：先整体→再部件→再核心→再控制</span></div></div>';
+  document.getElementById('content').innerHTML=h;
+}
+
+// === SIM MODE ===
+let simAnimId=null, simData={}; // shared animation state
+
+function renderSim(){
+  document.getElementById('cTitle').textContent='🎮 交互模拟器';
+  document.getElementById('cBadge').textContent='6个模拟器';
+  let h='<div class="sec ac"><h3>交互模拟器</h3><p class="st">选择模拟器进行交互练习</p>';
+  h+='<div class="sim-selector">';
+  ['数制转换','补码计算','IEEE 754 浮点数','五段流水线','Cache 映射','数据流演示'].forEach((s,i)=>{
+    h+='<button onclick="runSim('+i+')"'+(i===0?' class="ac"':'')+'>'+s+'</button>';
+  });
+  h+='</div><div class="sim" id="simContainer"><div class="sim-body"><canvas id="simCanvas" width="600" height="300"></canvas></div><div class="sim-info" id="simInfo"></div><div class="sim-ctrl" id="simCtrl"></div></div></div>';
+  document.getElementById('content').innerHTML=h;
+  simData={};
+  if(simAnimId){cancelAnimationFrame(simAnimId);simAnimId=null;}
+  runSim(0);
+}
+
+function runSim(n){
+  if(simAnimId){cancelAnimationFrame(simAnimId);simAnimId=null;}
+  document.querySelectorAll('.sim-selector button').forEach((b,i)=>b.classList.toggle('ac',i===n));
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  document.getElementById('simInfo').textContent='';
+  [sim0_render,sim1_render,sim2_render,sim3_render,sim4_render,sim5_render][n](canvas,ctx);
+}
+
+// -- Canvas helpers --
+function simClear(ctx,c,w,h){ctx.fillStyle='#111';ctx.fillRect(0,0,w||600,h||300);}
+function simText(ctx,x,y,t,c,s){ctx.fillStyle=c||'#8b8fa3';ctx.font=(s||13)+'px monospace';ctx.textAlign='left';ctx.fillText(t,x,y);}
+function simBox(ctx,x,y,w,h,c){ctx.strokeStyle=c||'var(--ac)';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);}
+function simFill(ctx,x,y,w,h,c){ctx.fillStyle=c||'#222';ctx.fillRect(x,y,w,h);}
+
+// ---- SIM 0: 数制转换器 ----
+function sim0_render(canvas,ctx){
+  simClear(ctx,600,300);
+  simText(ctx,20,30,'🔢 数制转换器','#4facfe',14);
+  ctx.strokeStyle='#333';ctx.beginPath();ctx.moveTo(20,40);ctx.lineTo(580,40);ctx.stroke();
+
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s0in" placeholder="输入十进制整数" value="'+((simData.v!=null)?simData.v:'42')+'" oninput="sim0_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)">';
+  if(simData.v==null)simData.v=42;
+  sim0_draw();
+}
+function sim0_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  simText(ctx,20,30,'🔢 数制转换器','#4facfe',14);
+  let v=parseInt(document.getElementById('s0in').value)||0; simData.v=v;
+  let bin=v.toString(2), hex=v.toString(16).toUpperCase();
+  simText(ctx,30,75,'十进制: '+v,'#fff',16);
+  simText(ctx,30,110,'二进制: '+bin,'#4facfe',14);
+  // bit grouping
+  let grouped=''; for(let i=bin.length-1,j=0;i>=0;i--,j++){grouped=bin[i]+grouped;if(j%4===3&&i>0)grouped=' '+grouped;}
+  simText(ctx,30,135,'  (分组) '+grouped,'#8b8fa3',12);
+  simText(ctx,30,170,'十六进制: 0x'+hex,'#ffa502',14);
+  simText(ctx,30,205,'八进制:   0'+v.toString(8),'#8b8fa3',14);
+  document.getElementById('simInfo').textContent=v<0?'提示：负数以补码形式表示':'输入任意十进制整数，实时查看各进制转换结果';
+}
+window.sim0_draw=sim0_draw;
+
+// ---- SIM 1: 补码计算器 ----
+function sim1_render(canvas,ctx){
+  simClear(ctx,600,300);
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s1in" placeholder="输入十进制数" value="'+((simData.v!=null)?simData.v:'-7')+'" onchange="sim1_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"> <select id="s1bw" onchange="sim1_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"><option>8</option><option>16</option><option>32</option></select> 位宽';
+  if(simData.v==null)simData.v=-7;
+  sim1_draw();
+}
+function sim1_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  simText(ctx,20,30,'🧮 补码计算器','#ffa502',14);
+  let v=parseInt(document.getElementById('s1in').value)||0, bw=parseInt(document.getElementById('s1bw').value); simData.v=v;
+  let mask=(1<<bw)-1, uv=v&mask; // unsigned interpretation
+  // original code
+  let orig=(v>=0)?v:(1<<(bw-1))|Math.abs(v);
+  let inv=(v>=0)?v:(orig^((1<<bw)-1-(1<<(bw-1))));
+  let comp=(v>=0)?v:inv+1;
+  let bits=s=>{let r=s.toString(2).padStart(bw,'0');let o='';for(let i=0;i<bw;i+=4)o+=r.slice(i,i+4)+' '; return o.trim();};
+
+  let y=65;
+  simText(ctx,30,y,'真值: '+v,'#fff',15); y+=35;
+  simBox(ctx,30,y,540,28,'#4facfe');
+  let bitStr=bits(orig);
+  for(let i=0;i<bw;i++){
+    let bx=30+(i*540/bw), c=orig&(1<<(bw-1-i))?'#4facfe':'#333';
+    simFill(ctx,bx,y,540/bw,28,c);
+  }
+  simText(ctx,38,y+20,'原码  '+bitStr,'#fff',12); y+=55;
+  simBox(ctx,30,y,540,28,'#ffa502');
+  bitStr=bits(inv);
+  for(let i=0;i<bw;i++){
+    let bx=30+(i*540/bw), c=inv&(1<<(bw-1-i))?'#ffa502':'#333';
+    simFill(ctx,bx,y,540/bw,28,c);
+  }
+  simText(ctx,38,y+20,'反码  '+bitStr,'#fff',12); y+=55;
+  simBox(ctx,30,y,540,28,'#26de81');
+  bitStr=bits(comp);
+  for(let i=0;i<bw;i++){
+    let bx=30+(i*540/bw), c=comp&(1<<(bw-1-i))?'#26de81':'#333';
+    simFill(ctx,bx,y,540/bw,28,c);
+  }
+  simText(ctx,38,y+20,'补码  '+bitStr,'#fff',12);
+  document.getElementById('simInfo').textContent=v>=0?'非负数：原码=反码=补码':'负数：原码符号位1、反码除符号位取反、补码=反码+1；颜色块表示该位为1';
+}
+window.sim1_draw=sim1_draw;
+
+// ---- SIM 2: IEEE 754 浮点数解析器 ----
+function sim2_render(canvas,ctx){
+  simClear(ctx,600,300);
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s2in" placeholder="输入浮点数" value="'+((simData.f!=null)?simData.f:'-12.375')+'" onchange="sim2_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)">';
+  if(simData.f==null)simData.f='-12.375';
+  sim2_draw();
+}
+function sim2_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  let fstr=document.getElementById('s2in').value, f=parseFloat(fstr); simData.f=fstr;
+  if(isNaN(f)){simText(ctx,230,150,'请输入有效浮点数','#ff4757',14);document.getElementById('simInfo').textContent='';return;}
+  // Convert to IEEE 754 SP binary
+  let buf=new ArrayBuffer(4); new DataView(buf).setFloat32(0,f,false); let raw=new Uint32Array(buf)[0];
+  let sign=(raw>>>31)&1, exp=((raw>>>23)&0xFF), mant=raw&0x7FFFFF;
+  let bias=127;
+
+  simText(ctx,20,30,'📐 IEEE 754 单精度浮点数','#26de81',14);
+  let bits24=[sign.toString()];
+  for(let i=7;i>=0;i--)bits24.push((exp>>i)&1);
+  for(let i=22;i>=0;i--)bits24.push((mant>>i)&1);
+
+  // Draw bit boxes
+  let y=55, x0=15, bw=17, h=22, gap=2;
+  // Sign bit
+  simFill(ctx,x0,y,bw+6,h,'#4facfe');simText(ctx,x0+9,y+16,'S','#fff',10);
+  // Exponent
+  for(let i=0;i<8;i++){
+    let bx=x0+bw+12+i*(bw+gap); simFill(ctx,bx,y,bw,h,'#ffa502');
+  }
+  simText(ctx,x0+bw+12+4,y+16,'E','#fff',10);
+  // Mantissa
+  for(let i=0;i<23;i++){
+    let bx=x0+bw+12+8*(bw+gap)+i*(bw-2); simFill(ctx,bx,y,bw-4,h,'#26de81');
+  }
+  simText(ctx,x0+bw+12+8*(bw+gap)+6,y+16,'M','#fff',10);
+
+  // Bit values row
+  y+=h+10;
+  for(let i=0;i<32;i++){
+    let bx=x0+(i<1?0:i<9?12+8*(bw+gap)+(i-1)*(bw+gap):12+8*(bw+gap)+(i-9)*(bw-2));
+    simText(ctx,bx+3,y,parseInt(bits24[i]),bits24[i]==='1'?'#fff':'#555',11);
+  }
+
+  y+=20;
+  let actualExp=exp-bias, mantVal=1+(mant/Math.pow(2,23));
+  simText(ctx,30,y,'符号位 S='+sign+' → '+(sign?'负数':'正数'),'#fff',13); y+=22;
+  simText(ctx,30,y,'阶码 E='+exp+' (移码) → 实际指数='+actualExp+' (bias='+bias+')','#ffa502',12); y+=22;
+  simText(ctx,30,y,'尾数 M='+mant.toString(16).toUpperCase().padStart(6,'0')+' → 1.'+mant.toString(2).padStart(23,'0')+' ≈ '+mantVal.toFixed(10),'#26de81',12); y+=25;
+  simText(ctx,30,y,'计算结果: ('+((sign?-1:1)*mantVal*Math.pow(2,actualExp)).toFixed(10)+')','#4facfe',13);
+  document.getElementById('simInfo').textContent='S(1bit)+E(8bit)+M(23bit)=32bit单精度格式；蓝色=S 橙色=E 绿色=M';
+}
+window.sim2_draw=sim2_draw;
+
+// ---- SIM 3: 五段流水线动画 ----
+function sim3_render(canvas,ctx){
+  simClear(ctx,600,300);
+  simData.pipe={stage:0, instrs:['ADD','SUB','MUL','LW','SW','AND','OR','JMP'], rows:[]};
+  document.getElementById('simCtrl').innerHTML='<button onclick="sim3_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 启动</button> <button onclick="sim3_pause()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">⏸ 暂停</button> <button onclick="sim3_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
+  sim3_reset();
+}
+function sim3_reset(){simData.pipe.rows=[{instr:simData.pipe.instrs[0],col:0,ticks:0}];simData.pipe.stage=0;sim3_draw();window._sim3_run=false;}
+function sim3_start(){window._sim3_run=true;sim3_loop();}
+function sim3_pause(){window._sim3_run=false;if(simAnimId){cancelAnimationFrame(simAnimId);simAnimId=null;}}
+function sim3_loop(){
+  if(!window._sim3_run)return;
+  let p=simData.pipe;
+  p.stage++;
+  // Move existing instructions
+  p.rows.forEach(r=>{if(r.col<4)r.col++;r.ticks++;});
+  // Remove completed
+  p.rows=p.rows.filter(r=>r.col<5);
+  // Add new instruction every other tick
+  if(p.stage%2===0&&p.rows.length<6){
+    let ni=p.instrs[(p.stage/2-1)%p.instrs.length];
+    p.rows.push({instr:ni,col:0,ticks:0});
+  }
+  sim3_draw();
+  simAnimId=setTimeout(()=>sim3_loop(),1000);
+}
+function sim3_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  simText(ctx,20,25,'⏱ 五段流水线 IF→ID→EX→MEM→WB','#4facfe',13);
+  let stages=['IF','ID','EX','MEM','WB'], cols=['#ff6b6b','#ffa502','#2ed573','#1e90ff','#a55eea'];
+  let sw=96, sh=30, sx=60, sy=50;
+  stages.forEach((s,i)=>{simFill(ctx,sx+i*sw,sy,sw,sh,cols[i]);simText(ctx,sx+i*sw+sw/2-8,sy+20,s,'#fff',13);});
+  // Instructions
+  let p=simData.pipe;
+  for(let ri=0;ri<Math.min(p.rows.length,5);ri++){
+    let r=p.rows[ri], ry=sy+sh+10+ri*38;
+    simText(ctx,10,ry+20,r.instr,'#ccc',12);
+    for(let ci=0;ci<r.col;ci++){
+      simFill(ctx,sx+ci*sw,ry,sw,30,'#222');
+      if(ci===r.col-1){
+        let alpha=Math.min(1,1-(r.ticks%2)*0.4);
+        simFill(ctx,sx+ci*sw,ry,sw,30,cols[ci].replace(')','')+',0.6)');
+        simText(ctx,sx+ci*sw+sw/2-8,ry+20,r.instr,'#fff',11);
+      }
+    }
+    if(r.col>=4)simFill(ctx,sx+4*sw,ry,sw,30,'#333');
+  }
+  document.getElementById('simInfo').textContent='时钟周期: '+p.stage+' | 流水线中的指令数: '+p.rows.length+' | IF取指→ID译码→EX执行→MEM访存→WB写回';
+}
+window.sim3_start=sim3_start; window.sim3_pause=sim3_pause; window.sim3_reset=sim3_reset;
+
+// ---- SIM 4: Cache 映射模拟器 ----
+function sim4_render(canvas,ctx){
+  simClear(ctx,600,300);
+  if(!simData.cache)simData.cache={addr:'0xA3F8',mode:0}; // 0=direct 1=2way 2=4way
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s4addr" placeholder="十六进制地址" value="'+simData.cache.addr+'" onchange="sim4_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"> <select id="s4mode" onchange="sim4_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"><option'+(simData.cache.mode===0?' selected':'')+'>直接映射</option><option'+(simData.cache.mode===1?' selected':'')+'>2路组相联</option><option'+(simData.cache.mode===2?' selected':'')+'>4路组相联</option></select>';
+  sim4_draw();
+}
+function sim4_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  simText(ctx,20,30,'🗂 Cache 地址映射','#ffa502',14);
+  let addrStr=document.getElementById('s4addr').value, modeEl=document.getElementById('s4mode');
+  simData.cache.addr=addrStr; simData.cache.mode=modeEl.selectedIndex;
+  let addr=parseInt(addrStr,16);
+  if(isNaN(addr)){simText(ctx,200,150,'请输入有效的十六进制地址','#ff4757',13);return;}
+
+  // Config: 32-bit addr, 64KB cache, 16B line -> 4096 lines
+  let offsetBits=4, lineBits=12, tagBits=16; // direct: tag=16, line=12, offset=4
+  let offset=addr&0xF, line=(addr>>4)&0xFFF, tag=(addr>>16)&0xFFFF;
+  let wayBits=simData.cache.mode===0?0:simData.cache.mode===1?1:2;
+  let setBits=lineBits-wayBits, set=(line>>wayBits), way=(line&((1<<wayBits)-1));
+
+  let y=60;
+  simText(ctx,30,y,'地址: 0x'+addr.toString(16).toUpperCase().padStart(8,'0')+' → 二进制: '+addr.toString(2).padStart(32,'0'),'#fff',12); y+=30;
+
+  // Draw bit fields
+  let fieldW=tagBits*10, fieldGap=8;
+  let fx=30, fh=30;
+  simFill(ctx,fx,y,tagBits*10,fh,'#4facfe'); simText(ctx,fx+5,y+20,'Tag ('+tagBits+'bit)','#fff',10);
+  fx+=tagBits*10+fieldGap;
+  simFill(ctx,fx,y,(lineBits-wayBits)*10,fh,'#ffa502');
+  simText(ctx,fx+5,y+20,'Set ('+(lineBits-wayBits)+'b)','#fff',10);
+  if(wayBits>0){
+    fx+=(lineBits-wayBits)*10+fieldGap;
+    simFill(ctx,fx,y,wayBits*10,fh,'#26de81'); simText(ctx,fx+5,y+20,'Way ('+wayBits+'b)','#fff',10);
+  }
+  fx+=Math.max(1,wayBits)*10+fieldGap;
+  simFill(ctx,fx,y,offsetBits*10,fh,'#a55eea'); simText(ctx,fx+5,y+20,'Off ('+offsetBits+'b)','#fff',10); y+=fh+18;
+
+  simText(ctx,30,y,'Tag=0x'+tag.toString(16).toUpperCase().padStart(4,'0')+', Set=0x'+set.toString(16).toUpperCase().padStart(3,'0')+', Offset=0x'+offset.toString(16).toUpperCase(),'#4facfe',13); y+=22;
+  if(wayBits>0)simText(ctx,30,y,'组号='+set+' 组内路号='+way,'#26de81',12);
+  y+=40;
+
+  // Cache mapping diagram
+  let numSets=1<<(lineBits-wayBits), ways=1<<wayBits;
+  simText(ctx,30,y,'Cache组织: '+numSets+'组 × '+ways+'路 = '+(numSets*ways)+'行 (每行16B)','#fff',12); y+=15;
+  // Mini diagram
+  for(let s=Math.max(0,set-2);s<Math.min(numSets,set+3);s++){
+    simFill(ctx,30,y,100,20,s===set?'#ffa502':'#333');
+    simText(ctx,38,y+15,'Set '+s+(s===set?' ←命中':'') ,s===set?'#fff':'#666',11);
+    for(let w=0;w<wayBits;w++){
+      simFill(ctx,140+w*80,y,70,20,s===set&&w===way?'#26de81':'#2a2a2a');
+    }
+    y+=24;
+  }
+  document.getElementById('simInfo').textContent=(simData.cache.mode===0?'直接映射':'组相联映射')+'：地址低'+offsetBits+'位为块内偏移，中间'+setBits+'位为组号，高'+tagBits+'位为标记位';
+}
+window.sim4_draw=sim4_draw;
+
+// ---- SIM 5: 数据流演示 ----
+function sim5_render(canvas,ctx){
+  simClear(ctx,600,300);
+  simData.dflow={tick:0,running:false};
+  document.getElementById('simCtrl').innerHTML='<button onclick="sim5_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 自动播放</button> <button onclick="sim5_step()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">▸ 单步</button> <button onclick="sim5_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
+  sim5_draw();
+}
+function sim5_draw(){
+  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  simClear(ctx,600,300);
+  simText(ctx,20,25,'🔗 取指周期数据通路','#4facfe',13);
+  let components=[
+    {label:'PC',x:40,y:60,w:50,h:30,color:'#ff6b6b'},
+    {label:'MAR',x:140,y:60,w:55,h:30,color:'#ffa502'},
+    {label:'存储器',x:250,y:50,w:80,h:50,color:'#2ed573'},
+    {label:'MDR',x:380,y:60,w:55,h:30,color:'#1e90ff'},
+    {label:'IR',x:490,y:60,w:50,h:30,color:'#a55eea'},
+    {label:'CU',x:490,y:130,w:50,h:30,color:'#ffa502'}
+  ];
+
+  // Draw components
+  components.forEach(c=>{
+    simFill(ctx,c.x,c.y,c.w,c.h,c.color);simText(ctx,c.x+8,c.y+20,c.label,'#fff',11);
+  });
+
+  // Bus lines
+  ctx.strokeStyle='#444';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(90,75);ctx.lineTo(140,75);ctx.stroke(); // PC→MAR
+  ctx.beginPath();ctx.moveTo(195,80);ctx.lineTo(250,80);ctx.stroke(); // MAR→Mem
+  ctx.beginPath();ctx.moveTo(330,80);ctx.lineTo(380,80);ctx.stroke(); // Mem→MDR
+  ctx.beginPath();ctx.moveTo(435,75);ctx.lineTo(490,75);ctx.stroke(); // MDR→IR
+  ctx.beginPath();ctx.moveTo(515,90);ctx.lineTo(515,130);ctx.stroke(); // IR→CU
+
+  // Animated arrows based on tick
+  let tick=simData.dflow.tick, alpha=1;
+  let arrows=[];
+  if(tick>=1)arrows.push({ax:130,ay:78,t:'PC→MAR\n发送地址',c:'#ff6b6b'});
+  if(tick>=2)arrows.push({ax:240,ay:85,t:'地址→MAR\n存储器读',c:'#ffa502'});
+  if(tick>=3)arrows.push({ax:360,ay:65,t:'MDR←Mem\n取数据',c:'#2ed573'});
+  if(tick>=4)arrows.push({ax:460,ay:78,t:'IR←MDR\n指令存IR',c:'#1e90ff'});
+  if(tick>=5)arrows.push({ax:490,ay:110,t:'CU←IR\n译码',c:'#a55eea'});
+
+  arrows.forEach((a,i)=>{
+    ctx.fillStyle=a.c.replace(')','');ctx.font='10px sans-serif';ctx.fillText(a.t,a.ax,a.ay);
+  });
+
+  simText(ctx,20,140,'步骤'+tick+'/5: ','#fff',12);
+  let steps=['PC→MAR(取指令地址)','MAR→存储器(地址发出)','存储器→MDR(读出指令)','MDR→IR(指令存入)','IR→CU(译码执行)'];
+  if(tick>0&&tick<=5)simText(ctx,100,140,steps[tick-1],'#4facfe',12);
+
+  document.getElementById('simInfo').textContent='取指周期五步骤：①PC→MAR ②地址→存储器 ③数据→MDR ④MDR→IR ⑤IR→CU';
+}
+function sim5_step(){simData.dflow.tick=(simData.dflow.tick%5)+1;sim5_draw();}
+function sim5_start(){
+  if(simData.dflow.running)return sim5_pause();
+  simData.dflow.running=true;document.querySelector('.sim-ctrl button').textContent='⏸ 暂停';
+  sim5_loop();
+}
+function sim5_pause(){simData.dflow.running=false;document.querySelector('.sim-ctrl button').textContent='▶ 自动播放';if(simAnimId){clearTimeout(simAnimId);simAnimId=null;}}
+function sim5_loop(){if(!simData.dflow.running)return;sim5_step();simAnimId=setTimeout(()=>sim5_loop(),1200);}
+function sim5_reset(){simData.dflow.tick=0;simData.dflow.running=false;document.querySelector('.sim-ctrl button').textContent='▶ 自动播放';if(simAnimId){clearTimeout(simAnimId);simAnimId=null;}sim5_draw();}
+window.sim5_start=sim5_start;window.sim5_pause=sim5_pause;window.sim5_step=sim5_step;window.sim5_reset=sim5_reset;
+
+// === GUIDE MODE ===
+function renderGuide(){
+  document.getElementById('cTitle').textContent='🧭 学习导引';
+  document.getElementById('cBadge').textContent='零基础友好';
+  let h='<div class="sec ac"><h3>零基础学习路线</h3><p class="st">按照以下路径循序渐进，零基础也能学会</p>';
+  // 4-stage path
+  let stages=[
+    {name:'第1篇 概论',chs:'Ch1-2',desc:'建立计算机整体认知。了解软硬件概念、冯·诺依曼结构、计算机发展与应用。这是所有后续知识的基础框架。',tips:'先通读不深究细节，重点是理解"计算机由哪些部分组成、如何工作"的大图景。'},
+    {name:'第2篇 硬件结构',chs:'Ch3-5',desc:'深入三大硬件：总线(Ch3)是连接各部件的高速公路、存储器(Ch4)是记忆核心、I/O系统(Ch5)是对外窗口。',tips:'Ch4存储器是重点章节，Cache原理和层次结构要彻底理解，考频极高。'},
+    {name:'第3篇 CPU核心',chs:'Ch6-8',desc:'进入CPU内部：Ch6运算方法是数学基础、Ch7指令系统是软硬接口、Ch8 CPU结构是执行引擎。',tips:'Ch6的补码运算和浮点数必须动手算！Ch8的流水线是难点也是重点，多看动画演示。'},
+    {name:'第4篇 控制单元',chs:'Ch9-10',desc:'CU是计算机的指挥中心。Ch9学习微操作序列和时序系统、Ch10掌握组合逻辑和微程序两种设计方法。',tips:'学到这里你会豁然开朗——前面零散的知识在这里全部串联起来了。'}
+  ];
+  h+='<div class="guide-card">';
+  stages.forEach((s,i)=>{
+    h+='<div class="gp-row">';
+    h+='<div class="gp-step'+(i<1?' dn':'')+'">'+(i+1)+'</div>';
+    h+='<div style="flex:1"><div class="gc-title">'+s.name+' <span style="font-size:10px;color:var(--t2)">'+s.chs+'</span></div><div class="gc-body">'+s.desc+'<br><span style="color:var(--or)">💡 '+s.tips+'</span></div></div>';
+    h+='</div>';
+    if(i<3)h+='<div class="gp-line'+(i<1?' dn':'')+'" style="margin-left:18px;height:20px;width:2px"></div>';
+  });
+  h+='</div>';
+  // Chapter highlights
+  h+='<div class="guide-card"><div class="gc-title">⭐ 各章重点速览</div><div class="gc-body">';
+  let highlights=[
+    ['Ch1 概论','冯·诺依曼六大特点、五大部件、层次结构、机器字长/MIPS指标'],
+    ['Ch2 发展应用','五代计算机、摩尔定律、各类应用领域'],
+    ['Ch3 系统总线','三种总线分类、总线带宽计算、三种仲裁方式、同步vs异步通信'],
+    ['Ch4 存储器','层次结构+局部性原理最核心！SRAM/DRAM区别、Cache三种映射'],
+    ['Ch5 I/O系统','四种控制方式（查询→中断→DMA）、中断流程、DMA过程'],
+    ['Ch6 运算方法','补码运算（重中之重）、Booth乘法、IEEE754、浮点加减、CLA加法器'],
+    ['Ch7 指令系统','七种寻址方式+应用场景、RISC vs CISC对比（高频考点）'],
+    ['Ch8 CPU结构','五段流水线、三种冒险及解决、超标量/超流水/多核'],
+    ['Ch9 CU功能','取指/间址/执行/中断四周期微操作序列、三级时序系统'],
+    ['Ch10 CU设计','组合逻辑vs微程序全面对比（高频考点）、微指令编码、CM结构']
+  ];
+  highlights.forEach(hl=>h+='<div style="margin:6px 0"><b>'+hl[0]+'：</b>'+hl[1]+'</div>');
+  h+='</div></div></div>';
+  document.getElementById('content').innerHTML=h;
+}
+
+// Tab buttons click handler
+document.querySelectorAll('.mb').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+// INIT
+renderTree();
+
+</script></body></html>

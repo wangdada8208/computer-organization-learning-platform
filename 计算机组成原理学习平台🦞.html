@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>计算机组成原理 完整学习平台🦞</title><style>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="description" content="计算机组成原理（唐朔飞第3版）完整学习平台，含200+知识点、6个交互模拟器、30+图解、刷题模块，零基础可学"><meta name="keywords" content="计算机组成原理,唐朔飞,学习平台,数字电路,CPU,指令系统,冯诺依曼,补码,Cache,流水线"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>"><title>计算机组成原理 完整学习平台🦞</title><style>
 :root{--bg:#0f1117;--bg2:#1a1d27;--bg3:#252836;--tx:#e1e4ed;--t2:#8b8fa3;--ac:#6c5ce7;--a2:#a29bfe;--gn:#00b894;--rd:#e17055;--or:#fdcb6e;--bd:#2d3143;--rdx:10px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;display:flex}
@@ -323,6 +323,8 @@ function submitQ(chId){
   let exps=QEXP[chId]||[];
   let wrongs=localStorage.getItem('coa_wrong');
   try{wrongs=JSON.parse(wrongs)||[];}catch(e){wrongs=[];}
+  // 先清除本章旧错题，避免重复堆积
+  wrongs=wrongs.filter(w=>w.ch!==chId);
 
   function saveWrong(question,userAns,correctAns,exp,type){
     wrongs.push({ch:chId,question:question,userAns:userAns,correctAns:correctAns,exp:exp||'',type:type,time:new Date().toLocaleString()});
@@ -339,7 +341,7 @@ function submitQ(chId){
     else if(a!==undefined){opts[a].classList.add('wr');saveWrong(q[0],String.fromCharCode(65+a),String.fromCharCode(65+correct),exp,'单选');}
     else saveWrong(q[0],'未作答',String.fromCharCode(65+correct),exp,'单选');
     // Explanation
-    let expBox=document.getElementById('exp'+qid);
+    let expBox=document.getElementById('exp'+i);
     if(exp&&expBox){expBox.innerHTML='<strong>📖 解析：</strong>'+exp;expBox.classList.add('show');}
     let fb=document.createElement('div');
     fb.className='fbk '+(a===correct?'ok':'er');
@@ -367,7 +369,7 @@ function submitQ(chId){
     let fb=document.createElement('div');
     fb.className='fbk '+(a===correct?'ok':'er');
     fb.textContent=a===correct?'✅ 正确':(a?'❌ 正确答案: '+correct:'⚠️ 未作答');
-    let inp=document.getElementById(qid+'in');if(inp){inp.disabled=true;if(a!==correct)inp.style.borderColor='var(--er)';}
+    let inp=document.getElementById(qid+'in');if(inp){inp.disabled=true;if(a!==correct)inp.style.borderColor='var(--rd)';}
     document.getElementById(qid).appendChild(fb);
   });
 
@@ -451,7 +453,7 @@ function sim0_render(canvas,ctx){
   simText(ctx,20,30,'🔢 数制转换器','#4facfe',14);
   ctx.strokeStyle='#333';ctx.beginPath();ctx.moveTo(20,40);ctx.lineTo(580,40);ctx.stroke();
 
-  document.getElementById('simCtrl').innerHTML='<input type="number" id="s0in" placeholder="输入十进制整数" value="'+((simData.v!=null)?simData.v:'42')+'" oninput="sim0_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)">';
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s0in" placeholder="输入十进制整数" value="'+((simData.v!=null)?simData.v:'42')+'" oninput="sim0_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)">';
   if(simData.v==null)simData.v=42;
   sim0_draw();
 }
@@ -475,7 +477,7 @@ window.sim0_draw=sim0_draw;
 // ---- SIM 1: 补码计算器 ----
 function sim1_render(canvas,ctx){
   simClear(ctx,600,300);
-  document.getElementById('simCtrl').innerHTML='<input type="number" id="s1in" placeholder="输入十进制数" value="'+((simData.v!=null)?simData.v:'-7')+'" onchange="sim1_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"> <select id="s1bw" onchange="sim1_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"><option>8</option><option>16</option><option>32</option></select> 位宽';
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s1in" placeholder="输入十进制数" value="'+((simData.v!=null)?simData.v:'-7')+'" onchange="sim1_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)"> <select id="s1bw" onchange="sim1_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)"><option>8</option><option>16</option><option>32</option></select> 位宽';
   if(simData.v==null)simData.v=-7;
   sim1_draw();
 }
@@ -521,7 +523,7 @@ window.sim1_draw=sim1_draw;
 // ---- SIM 2: IEEE 754 浮点数解析器 ----
 function sim2_render(canvas,ctx){
   simClear(ctx,600,300);
-  document.getElementById('simCtrl').innerHTML='<input type="text" id="s2in" placeholder="输入浮点数" value="'+((simData.f!=null)?simData.f:'-12.375')+'" onchange="sim2_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)">';
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s2in" placeholder="输入浮点数" value="'+((simData.f!=null)?simData.f:'-12.375')+'" onchange="sim2_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)">';
   if(simData.f==null)simData.f='-12.375';
   sim2_draw();
 }
@@ -576,7 +578,7 @@ window.sim2_draw=sim2_draw;
 function sim3_render(canvas,ctx){
   simClear(ctx,600,300);
   simData.pipe={stage:0, instrs:['ADD','SUB','MUL','LW','SW','AND','OR','JMP'], rows:[]};
-  document.getElementById('simCtrl').innerHTML='<button onclick="sim3_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 启动</button> <button onclick="sim3_pause()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">⏸ 暂停</button> <button onclick="sim3_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
+  document.getElementById('simCtrl').innerHTML='<button onclick="sim3_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 启动</button> <button onclick="sim3_pause()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--tx);border:1px solid var(--bd);cursor:pointer">⏸ 暂停</button> <button onclick="sim3_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--tx);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
   sim3_reset();
 }
 function sim3_reset(){simData.pipe.rows=[{instr:simData.pipe.instrs[0],col:0,ticks:0}];simData.pipe.stage=0;sim3_draw();window._sim3_run=false;}
@@ -628,7 +630,7 @@ window.sim3_start=sim3_start; window.sim3_pause=sim3_pause; window.sim3_reset=si
 function sim4_render(canvas,ctx){
   simClear(ctx,600,300);
   if(!simData.cache)simData.cache={addr:'0xA3F8',mode:0}; // 0=direct 1=2way 2=4way
-  document.getElementById('simCtrl').innerHTML='<input type="text" id="s4addr" placeholder="十六进制地址" value="'+simData.cache.addr+'" onchange="sim4_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"> <select id="s4mode" onchange="sim4_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--t1)"><option'+(simData.cache.mode===0?' selected':'')+'>直接映射</option><option'+(simData.cache.mode===1?' selected':'')+'>2路组相联</option><option'+(simData.cache.mode===2?' selected':'')+'>4路组相联</option></select>';
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s4addr" placeholder="十六进制地址" value="'+simData.cache.addr+'" onchange="sim4_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)"> <select id="s4mode" onchange="sim4_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx)"><option'+(simData.cache.mode===0?' selected':'')+'>直接映射</option><option'+(simData.cache.mode===1?' selected':'')+'>2路组相联</option><option'+(simData.cache.mode===2?' selected':'')+'>4路组相联</option></select>';
   sim4_draw();
 }
 function sim4_draw(){
@@ -687,7 +689,7 @@ window.sim4_draw=sim4_draw;
 function sim5_render(canvas,ctx){
   simClear(ctx,600,300);
   simData.dflow={tick:0,running:false};
-  document.getElementById('simCtrl').innerHTML='<button onclick="sim5_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 自动播放</button> <button onclick="sim5_step()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">▸ 单步</button> <button onclick="sim5_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--t1);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
+  document.getElementById('simCtrl').innerHTML='<button onclick="sim5_start()" style="padding:6px 16px;border-radius:6px;background:var(--ac);color:#fff;border:none;cursor:pointer">▶ 自动播放</button> <button onclick="sim5_step()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--tx);border:1px solid var(--bd);cursor:pointer">▸ 单步</button> <button onclick="sim5_reset()" style="padding:6px 16px;border-radius:6px;background:var(--bg3);color:var(--tx);border:1px solid var(--bd);cursor:pointer">↺ 重置</button>';
   sim5_draw();
 }
 function sim5_draw(){

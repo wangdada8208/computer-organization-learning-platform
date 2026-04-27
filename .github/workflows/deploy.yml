@@ -1,0 +1,22 @@
+name: 自动部署到服务器
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 配置 SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H 47.80.18.105 >> ~/.ssh/known_hosts
+
+      - name: 部署 HTML 到服务器
+        run: |
+          scp -i ~/.ssh/deploy_key "计算机组成原理学习平台🦞.html" root@47.80.18.105:/var/www/html/index.html

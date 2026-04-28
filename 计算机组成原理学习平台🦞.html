@@ -2150,21 +2150,23 @@ document.querySelectorAll('.mb').forEach(b=>b.onclick=()=>setMode(b.dataset.mode
     requestAnimationFrame(update);
   }
 
-  // Hook into welcome page rendering
-  const originalRenderContent=renderContent;
-  renderContent=function(){
-    originalRenderContent();
+  // Hook into setMode to trigger on welcome page
+  const originalSetModeForCountUp=setMode;
+  setMode=function(m){
+    originalSetModeForCountUp(m);
     setTimeout(()=>{
-      document.querySelectorAll('.stat .num').forEach(el=>{
-        const text=el.textContent;
-        const num=parseInt(text);
-        const suffix=text.replace(/[0-9]/g,'');
-        if(!isNaN(num)){
-          el.dataset.suffix=suffix;
-          el.textContent='0'+suffix;
-          countUp(el,num);
-        }
-      });
+      if(!curCh && m!=='sim' && m!=='graph' && m!=='guide'){
+        document.querySelectorAll('.stat .num').forEach(el=>{
+          const text=el.textContent;
+          const num=parseInt(text);
+          const suffix=text.replace(/[0-9]/g,'');
+          if(!isNaN(num)){
+            el.dataset.suffix=suffix;
+            el.textContent='0'+suffix;
+            countUp(el,num);
+          }
+        });
+      }
     },300);
   };
 })();

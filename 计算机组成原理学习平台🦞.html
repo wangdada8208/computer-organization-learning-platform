@@ -681,16 +681,17 @@ body{
 .qbtn{
   padding:14px 28px;
   border-radius:var(--r-full);
-  border:1px solid var(--edge);
-  background:var(--glass);
-  color:var(--moon);
+  border:1.5px solid var(--edge-bright);
+  background:linear-gradient(180deg,var(--surface),var(--depth));
+  color:var(--star);
   cursor:pointer;
   font-size:14px;
   font-weight:600;
   transition:all 0.3s var(--ease-spring);
   position:relative;
   overflow:hidden;
-  letter-spacing:0.01em;
+  letter-spacing:0.02em;
+  box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .qbtn::before{
@@ -703,15 +704,17 @@ body{
 }
 
 .qbtn:hover{
-  transform:translateY(-2px);
+  transform:translateY(-3px);
   border-color:var(--edge-aurora);
-  box-shadow:0 8px 32px rgba(139,92,246,0.1);
+  box-shadow:0 12px 40px rgba(139,92,246,0.15),inset 0 1px 0 rgba(255,255,255,0.1);
   color:var(--star);
 }
 
-.qbtn:hover::before{opacity:1}
+.qbtn:hover::before{opacity:0.6}
 
-.qbtn:active{transform:translateY(0) scale(0.98)}
+.qbtn:active{transform:translateY(-1px) scale(0.98)}
+
+.qbtn span{position:relative;z-index:1}
 
 /* ===== 笔记模式 ===== */
 .sec{
@@ -1216,13 +1219,13 @@ body{
 .fbk.er{background:var(--rose-soft);color:var(--rose);border:1px solid rgba(239,68,68,0.2)}
 
 .qa{display:flex;gap:var(--s-3);margin-top:var(--s-5);flex-wrap:wrap}
-.bt{padding:10px 20px;border-radius:var(--r-full);border:1px solid var(--edge);background:var(--glass);color:var(--moon);cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s var(--ease-smooth)}
-.bt:hover{border-color:var(--edge-bright);background:var(--frost);color:var(--star);transform:translateY(-1px)}
-.bt:active{transform:scale(0.98)}
-.bt.pr{background:linear-gradient(135deg,var(--aurora),var(--ocean));border-color:transparent;color:var(--void);font-weight:700}
-.bt.pr:hover{box-shadow:0 0 24px rgba(139,92,246,0.2);transform:translateY(-2px)}
-.bt.danger{border-color:rgba(239,68,68,0.3);color:var(--rose)}
-.bt.danger:hover{background:var(--rose-soft);transform:translateY(-1px)}
+.bt{padding:10px 20px;border-radius:var(--r-full);border:1.5px solid var(--edge-bright);background:linear-gradient(180deg,var(--surface),var(--depth));color:var(--star);cursor:pointer;font-size:13px;font-weight:600;transition:all 0.25s var(--ease-spring);box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,0.06)}
+.bt:hover{border-color:var(--edge-aurora);background:linear-gradient(180deg,var(--glass-hover),var(--surface));color:var(--star);transform:translateY(-2px);box-shadow:0 8px 28px rgba(139,92,246,0.1),inset 0 1px 0 rgba(255,255,255,0.08)}
+.bt:active{transform:translateY(-1px) scale(0.98)}
+.bt.pr{background:linear-gradient(135deg,var(--aurora),var(--ocean));border-color:transparent;color:var(--void);font-weight:700;box-shadow:0 4px 16px rgba(139,92,246,0.2)}
+.bt.pr:hover{box-shadow:0 8px 32px rgba(139,92,246,0.3);transform:translateY(-2px)}
+.bt.danger{border-color:rgba(239,68,68,0.4);color:var(--rose);background:linear-gradient(180deg,rgba(239,68,68,0.08),var(--depth))}
+.bt.danger:hover{background:linear-gradient(180deg,rgba(239,68,68,0.15),var(--surface));border-color:rgba(239,68,68,0.6);transform:translateY(-2px);box-shadow:0 8px 28px rgba(239,68,68,0.1)}
 
 .sd{padding:var(--s-6) var(--s-4);text-align:center}
 .sd .bs{font-size:48px;font-weight:800;background:linear-gradient(135deg,var(--aurora),var(--ocean));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}

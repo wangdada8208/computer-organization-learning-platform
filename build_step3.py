@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Step 3: Fix duplicates, add core JS logic, close HTML"""
-import re
+import re, os
 
-OUT = "/Users/wangdada/WorkBuddy/20260427114310/计算机组成原理学习平台🦞.html"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(SCRIPT_DIR, "计算机组成原理学习平台🦞.html")
 CUR = OUT  # read current file
 
 with open(CUR, 'r', encoding='utf-8') as f:

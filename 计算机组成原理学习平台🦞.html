@@ -720,6 +720,7 @@ body{
 .sec{
   max-width:800px;
   margin:0 auto;
+  padding:0;
   animation:contentIn 0.5s var(--ease-out) both;
 }
 
@@ -1184,7 +1185,6 @@ body{
 }
 
 /* ===== 兼容层：旧class映射到新设计系统 ===== */
-.sec{padding:0;animation:contentIn 0.5s var(--ease-out) both}
 .sec.ac{display:block}
 .sec h3{font-size:24px;font-weight:800;margin-bottom:var(--s-2);letter-spacing:-0.02em;background:linear-gradient(135deg,var(--star),var(--moon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .sec .chd{color:var(--dust);font-size:14px;margin-bottom:var(--s-8);line-height:1.7}
@@ -1258,9 +1258,9 @@ body{
 /* ===== 响应式 ===== */
 @media(max-width:768px){
   .sb{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform 0.4s var(--ease-out);z-index:100}
-  .sb.op{transform:translateX(0)}
+  .sb.open{transform:translateX(0)}
   .sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:99;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
-  .sb-overlay.vis{opacity:1;pointer-events:auto}
+  .sb-overlay.show{opacity:1;pointer-events:auto}
   .mn{width:100%}
   .stats{grid-template-columns:1fr}
   .welcome h2{font-size:32px}
@@ -1597,13 +1597,23 @@ function renderSim(){
   runSim(0);
 }
 
+// 缓存 Canvas 引用，避免 sim_draw 中重复查询
+let simCanvasEl=null, simCtx=null;
+function simGetCtx(){
+  if(!simCanvasEl){simCanvasEl=document.getElementById('simCanvas');simCtx=simCanvasEl.getContext('2d');}
+  return {canvas:simCanvasEl, ctx:simCtx};
+}
+
 function runSim(n){
   if(simAnimId){cancelAnimationFrame(simAnimId);simAnimId=null;}
   document.querySelectorAll('.sim-selector button').forEach((b,i)=>b.classList.toggle('ac',i===n));
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {canvas, ctx}=simGetCtx();
   document.getElementById('simInfo').textContent='';
   [sim0_render,sim1_render,sim2_render,sim3_render,sim4_render,sim5_render][n](canvas,ctx);
 }
+
+// -- HTML 转义（防 XSS）--
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // -- Canvas helpers --
 function simClear(ctx,c,w,h){ctx.fillStyle='#111';ctx.fillRect(0,0,w||600,h||300);}
@@ -1617,12 +1627,12 @@ function sim0_render(canvas,ctx){
   simText(ctx,20,30,'🔢 数制转换器','#4facfe',14);
   ctx.strokeStyle='#333';ctx.beginPath();ctx.moveTo(20,40);ctx.lineTo(580,40);ctx.stroke();
 
-  document.getElementById('simCtrl').innerHTML='<input type="number" id="s0in" placeholder="输入十进制整数" value="'+((simData.v!=null)?simData.v:'42')+'" oninput="sim0_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)">';
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s0in" placeholder="输入十进制整数" value="'+escHtml((simData.v!=null)?simData.v:'42')+'" oninput="sim0_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)">';
   if(simData.v==null)simData.v=42;
   sim0_draw();
 }
 function sim0_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   simText(ctx,20,30,'🔢 数制转换器','#4facfe',14);
   let v=parseInt(document.getElementById('s0in').value)||0; simData.v=v;
@@ -1641,12 +1651,12 @@ window.sim0_draw=sim0_draw;
 // ---- SIM 1: 补码计算器 ----
 function sim1_render(canvas,ctx){
   simClear(ctx,600,300);
-  document.getElementById('simCtrl').innerHTML='<input type="number" id="s1in" placeholder="输入十进制数" value="'+((simData.v!=null)?simData.v:'-7')+'" onchange="sim1_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"> <select id="s1bw" onchange="sim1_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"><option>8</option><option>16</option><option>32</option></select> 位宽';
+  document.getElementById('simCtrl').innerHTML='<input type="number" id="s1in" placeholder="输入十进制数" value="'+escHtml((simData.v!=null)?simData.v:'-7')+'" onchange="sim1_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"> <select id="s1bw" onchange="sim1_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"><option>8</option><option>16</option><option>32</option></select> 位宽';
   if(simData.v==null)simData.v=-7;
   sim1_draw();
 }
 function sim1_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   simText(ctx,20,30,'🧮 补码计算器','#ffa502',14);
   let v=parseInt(document.getElementById('s1in').value)||0, bw=parseInt(document.getElementById('s1bw').value); simData.v=v;
@@ -1687,12 +1697,12 @@ window.sim1_draw=sim1_draw;
 // ---- SIM 2: IEEE 754 浮点数解析器 ----
 function sim2_render(canvas,ctx){
   simClear(ctx,600,300);
-  document.getElementById('simCtrl').innerHTML='<input type="text" id="s2in" placeholder="输入浮点数" value="'+((simData.f!=null)?simData.f:'-12.375')+'" onchange="sim2_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)">';
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s2in" placeholder="输入浮点数" value="'+escHtml((simData.f!=null)?simData.f:'-12.375')+'" onchange="sim2_draw()" style="width:160px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)">';
   if(simData.f==null)simData.f='-12.375';
   sim2_draw();
 }
 function sim2_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   let fstr=document.getElementById('s2in').value, f=parseFloat(fstr); simData.f=fstr;
   if(isNaN(f)){simText(ctx,230,150,'请输入有效浮点数','#ff4757',14);document.getElementById('simInfo').textContent='';return;}
@@ -1765,7 +1775,7 @@ function sim3_loop(){
   simAnimId=setTimeout(()=>sim3_loop(),1000);
 }
 function sim3_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   simText(ctx,20,25,'⏱ 五段流水线 IF→ID→EX→MEM→WB','#4facfe',13);
   let stages=['IF','ID','EX','MEM','WB'], cols=['#ff6b6b','#ffa502','#2ed573','#1e90ff','#a55eea'];
@@ -1780,7 +1790,7 @@ function sim3_draw(){
       simFill(ctx,sx+ci*sw,ry,sw,30,'#222');
       if(ci===r.col-1){
         let alpha=Math.min(1,1-(r.ticks%2)*0.4);
-        simFill(ctx,sx+ci*sw,ry,sw,30,cols[ci].replace(')','')+',0.6)');
+        simFill(ctx,sx+ci*sw,ry,sw,30,cols[ci].replace(')','')+','+alpha+')');
         simText(ctx,sx+ci*sw+sw/2-8,ry+20,r.instr,'#fff',11);
       }
     }
@@ -1794,11 +1804,11 @@ window.sim3_start=sim3_start; window.sim3_pause=sim3_pause; window.sim3_reset=si
 function sim4_render(canvas,ctx){
   simClear(ctx,600,300);
   if(!simData.cache)simData.cache={addr:'0xA3F8',mode:0}; // 0=direct 1=2way 2=4way
-  document.getElementById('simCtrl').innerHTML='<input type="text" id="s4addr" placeholder="十六进制地址" value="'+simData.cache.addr+'" onchange="sim4_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"> <select id="s4mode" onchange="sim4_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"><option'+(simData.cache.mode===0?' selected':'')+'>直接映射</option><option'+(simData.cache.mode===1?' selected':'')+'>2路组相联</option><option'+(simData.cache.mode===2?' selected':'')+'>4路组相联</option></select>';
+  document.getElementById('simCtrl').innerHTML='<input type="text" id="s4addr" placeholder="十六进制地址" value="'+escHtml(simData.cache.addr)+'" onchange="sim4_draw()" style="width:140px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"> <select id="s4mode" onchange="sim4_draw()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-surface);color:var(--text-primary)"><option'+(simData.cache.mode===0?' selected':'')+'>直接映射</option><option'+(simData.cache.mode===1?' selected':'')+'>2路组相联</option><option'+(simData.cache.mode===2?' selected':'')+'>4路组相联</option></select>';
   sim4_draw();
 }
 function sim4_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   simText(ctx,20,30,'🗂 Cache 地址映射','#ffa502',14);
   let addrStr=document.getElementById('s4addr').value, modeEl=document.getElementById('s4mode');
@@ -1857,7 +1867,7 @@ function sim5_render(canvas,ctx){
   sim5_draw();
 }
 function sim5_draw(){
-  let canvas=document.getElementById('simCanvas'), ctx=canvas.getContext('2d');
+  let {ctx}=simGetCtx();
   simClear(ctx,600,300);
   simText(ctx,20,25,'🔗 取指周期数据通路','#4facfe',13);
   let components=[
@@ -2061,7 +2071,14 @@ document.querySelectorAll('.mb').forEach(b=>b.onclick=()=>setMode(b.dataset.mode
     ctx.stroke();
   }
 
+  let animPaused=false;
+  document.addEventListener('visibilitychange',()=>{
+    animPaused=document.hidden;
+    if(!animPaused) animate();
+  });
+
   function animate(){
+    if(animPaused) return;
     ctx.clearRect(0,0,w,h);
     drawWave();
     particles.forEach(p=>{p.update();p.draw();});
@@ -2078,7 +2095,14 @@ document.querySelectorAll('.mb').forEach(b=>b.onclick=()=>setMode(b.dataset.mode
   let mx=-100,my=-100,cx=-100,cy=-100;
   document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 
+  let glowPaused=false;
+  document.addEventListener('visibilitychange',()=>{
+    glowPaused=document.hidden;
+    if(!glowPaused) updateGlow();
+  });
+
   function updateGlow(){
+    if(glowPaused) return;
     cx+=(mx-cx)*0.1;
     cy+=(my-cy)*0.1;
     glow.style.cssText=`position:fixed;left:${cx-150}px;top:${cy-150}px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:none;`;

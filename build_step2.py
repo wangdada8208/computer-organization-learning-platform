@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Step 2: 提取原文件数据，增强后追加到输出HTML"""
-import json
-OUT = "/Users/wangdada/WorkBuddy/20260427114310/计算机组成原理学习平台🦞.html"
-ORIG = "/Users/wangdada/WorkBuddy/20260427103555/计算机组成原理学习平台🦞.html"
+import json, os
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(SCRIPT_DIR, "计算机组成原理学习平台🦞.html")
+ORIG = os.path.expanduser("~/WorkBuddy/20260427103555/计算机组成原理学习平台🦞.html")
 
 with open(ORIG, 'r', encoding='utf-8') as f:
     orig = f.read()

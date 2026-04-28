@@ -14,3 +14,12 @@ Thumbs.db
 # IDE
 .idea/
 .vscode/
+
+# 敏感文件（防止凭证泄露）
+.env
+.env.*
+*.pem
+*.key
+*credentials*
+*.token
+*.secret

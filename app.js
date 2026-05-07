@@ -533,7 +533,7 @@ function renderChapterView() {
         </article>
       </section>
 
-      ${chapter.sections.map((section) => renderSectionCard(chapter, section)).join('')}
+      ${chapter.sections.map((section, index) => renderSectionCard(chapter, section, index)).join('')}
 
       <section class="surface-panel summary-panel">
         <div class="section-heading">
@@ -556,12 +556,12 @@ function renderChapterView() {
   `;
 }
 
-function renderSectionCard(chapter, section) {
+function renderSectionCard(chapter, section, sectionIndex) {
   return `
     <section class="surface-panel section-block">
       <div class="section-heading spread align-start">
         <div>
-          <span class="eyebrow">分节学习</span>
+          <span class="eyebrow">分节学习 · 第 ${sectionIndex + 1} 节</span>
           <h3>${section.title}</h3>
           <p class="body-copy">${section.overview}</p>
         </div>
@@ -570,19 +570,22 @@ function renderSectionCard(chapter, section) {
           <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">做本节小测</button>
         </div>
       </div>
-      <div class="point-list">${section.points.map((point) => renderPointCard(chapter, section, point)).join('')}</div>
+      <div class="point-list">${section.points.map((point, pointIndex) => renderPointCard(chapter, section, point, pointIndex)).join('')}</div>
     </section>
   `;
 }
 
-function renderPointCard(chapter, section, point) {
+function renderPointCard(chapter, section, point, pointIndex) {
   const status = app.state.progress.points[point.id]?.status || 'unseen';
   return `
     <details class="point-card" ${app.state.progress.lastPointId === point.id ? 'open' : ''}>
       <summary data-action="focus-point" data-chapter-id="${chapter.id}" data-point-id="${point.id}">
         <div class="point-card-head">
           <div>
-            <span class="eyebrow">一句话结论</span>
+            <div class="point-label-row">
+              <span class="point-index">0${pointIndex + 1}</span>
+              <span class="eyebrow">一句话结论</span>
+            </div>
             <strong>${point.title}</strong>
           </div>
           <span class="status-pill ${status}">${statusLabel(status)}</span>

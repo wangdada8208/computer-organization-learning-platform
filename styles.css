@@ -542,6 +542,14 @@ ul { margin: 0; padding-left: 18px; }
   gap: 10px;
   flex-wrap: wrap;
 }
+.section-block {
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fafcfb 0%, #f4f7f5 100%);
+}
+.section-block + .section-block {
+  margin-top: 4px;
+}
 .training-hero {
   background: linear-gradient(180deg, #f6f8f7 0%, #edf2ef 100%);
 }
@@ -611,27 +619,54 @@ ul { margin: 0; padding-left: 18px; }
 .test-sheet {
   background: linear-gradient(180deg, #fbfcfb 0%, #f6f8f7 100%);
 }
-.point-card { padding: 0; overflow: hidden; background: #fafcfb; }
+.point-list {
+  gap: 16px;
+}
+.point-card {
+  padding: 0;
+  overflow: hidden;
+  background: #fcfdfc;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(36, 50, 58, 0.035);
+}
 .point-card summary {
   list-style: none;
   cursor: pointer;
   display: grid;
-  gap: 14px;
-  padding: 18px;
+  gap: 16px;
+  padding: 20px;
 }
 .point-card summary::-webkit-details-marker { display: none; }
 .point-card-head {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
 }
+.point-label-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.point-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #eff5f2 0%, #e1ebe6 100%);
+  color: var(--primary-strong);
+  font-size: 12px;
+  font-weight: 700;
+}
 .point-card-head strong {
   font-size: 18px;
   line-height: 1.35;
 }
 .point-conclusion {
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: #e7efeb;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #e8f0ec 0%, #eef4f1 100%);
   color: var(--primary-strong);
   font-weight: 600;
   line-height: 1.6;
@@ -639,6 +674,7 @@ ul { margin: 0; padding-left: 18px; }
 .point-excerpt {
   display: grid;
   gap: 6px;
+  padding: 2px 2px 0;
 }
 .point-excerpt span, .detail-label, .field-label {
   font-size: 12px;
@@ -654,19 +690,25 @@ ul { margin: 0; padding-left: 18px; }
   gap: 12px;
   color: var(--muted);
   font-size: 13px;
+  padding-top: 2px;
+  border-top: 1px dashed rgba(197, 208, 202, 0.9);
 }
 .point-detail-wrap {
   border-top: 1px solid var(--line);
-  padding: 0 18px 18px;
+  padding: 0 20px 20px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(245, 248, 246, 0.95) 0%, rgba(249, 251, 250, 0.95) 100%);
 }
-.point-detail-block { padding-top: 16px; }
+.point-detail-block {
+  padding-top: 18px;
+  border-top: 4px solid transparent;
+}
 .point-body { margin-top: 8px; line-height: 1.85; color: var(--ink); }
 .point-meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .point-tip, .point-compare {
-  padding: 14px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 12px;
   background: var(--surface-alt);
 }
 .point-tip p { margin-top: 8px; color: #8b5b18; line-height: 1.7; }

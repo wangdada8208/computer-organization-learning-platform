@@ -256,8 +256,8 @@ ul { margin: 0; padding-left: 18px; }
 
 .overview-hero {
   display: grid;
-  grid-template-columns: 1.3fr .8fr;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .85fr);
+  gap: 22px;
   align-items: stretch;
   background: linear-gradient(180deg, #f6f8f6 0%, #eef3f0 100%);
   border: 1px solid rgba(197, 208, 202, 0.9);
@@ -271,8 +271,60 @@ ul { margin: 0; padding-left: 18px; }
   line-height: 1.24;
   max-width: 14ch;
 }
-.hero-copy .body-copy { margin-top: 10px; max-width: 62ch; }
+.hero-copy {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+.hero-copy .body-copy { max-width: 62ch; }
+.overview-route {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+.route-step {
+  display: grid;
+  gap: 6px;
+  padding: 12px 13px;
+  border: 1px solid rgba(197, 208, 202, 0.85);
+  border-radius: 12px;
+  background: rgba(248, 250, 248, 0.74);
+}
+.route-step strong {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+.route-step span {
+  font-size: 13px;
+  color: var(--muted-strong);
+  line-height: 1.5;
+}
 .hero-side { display: flex; align-items: stretch; }
+.hero-note {
+  width: 100%;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  background: rgba(248, 250, 248, 0.78);
+}
+.hero-note-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.hero-note-head h4 {
+  margin-top: 6px;
+  font-size: 18px;
+  line-height: 1.35;
+}
 .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .metric-grid.single-column { grid-template-columns: 1fr; width: 100%; }
 .metric-card {
@@ -286,7 +338,30 @@ ul { margin: 0; padding-left: 18px; }
 .metric-card span { color: var(--muted); font-size: 12px; }
 .metric-card strong { font-size: 24px; font-weight: 700; }
 .hero-meta-grid { display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 12px; }
-.workspace-grid { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 18px; }
+.workspace-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .85fr); gap: 18px; align-items: start; }
+.overview-main, .overview-side { display: grid; gap: 18px; }
+.overview-stat-list {
+  display: grid;
+  gap: 12px;
+}
+.overview-stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(197, 208, 202, 0.75);
+}
+.overview-stat-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.overview-stat-row:first-child { padding-top: 0; }
+.overview-stat-row span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.overview-stat-row strong {
+  font-size: 15px;
+  color: var(--ink);
+}
 .wrong-grid, .chapter-overview-grid, .guide-grid, .summary-board { display: grid; gap: 18px; }
 .wrong-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .chapter-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -528,7 +603,7 @@ ul { margin: 0; padding-left: 18px; }
 }
 
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
 }
@@ -555,7 +630,9 @@ ul { margin: 0; padding-left: 18px; }
   .page { padding: 14px; }
   .topbar h2 { font-size: 21px; }
   .hero-title { font-size: 26px; }
+  .overview-hero { padding: 20px; }
   .hero-meta-grid, .metric-grid, .point-meta-grid { grid-template-columns: 1fr; }
   .section-heading { flex-direction: column; align-items: flex-start; }
+  .hero-note-head, .overview-stat-row { flex-direction: column; align-items: flex-start; }
   .score-box { flex-direction: column; align-items: flex-start; }
 }

@@ -296,54 +296,88 @@ function renderDashboard() {
           <span class="eyebrow">学习总览</span>
           <h3 class="hero-title">计算机组成原理学习平台</h3>
           <p class="body-copy">以章节学习为主线，结合练习、测试、错题复习与模拟器强化，帮助梳理知识结构并持续巩固重点概念。</p>
+          <div class="overview-route" aria-label="学习路径">
+            <div class="route-step"><strong>1</strong><span>进入章节</span></div>
+            <div class="route-step"><strong>2</strong><span>阅读知识点</span></div>
+            <div class="route-step"><strong>3</strong><span>完成训练</span></div>
+            <div class="route-step"><strong>4</strong><span>回看错题</span></div>
+          </div>
           <div class="action-row">
             <button class="btn primary" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续学习 ${continueChapter.title}</button>
             <button class="btn subtle" data-action="switch-view" data-view="chapter">查看章节目录</button>
           </div>
         </div>
-        <div class="hero-side surface-panel compact-panel">
-          <div class="metric-grid single-column">
-            <div class="metric-card"><span>总体掌握度</span><strong>${stats.percent}%</strong></div>
-            <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong></div>
-            <div class="metric-card"><span>最近测试记录</span><strong>${app.state.quizHistory.length}</strong></div>
+        <div class="hero-side">
+          <div class="surface-panel compact-panel hero-note">
+            <div class="hero-note-head">
+              <div>
+                <span class="eyebrow">本次学习</span>
+                <h4>${getContinueLabel()}</h4>
+              </div>
+              <span class="soft-badge">推荐任务</span>
+            </div>
+            <p class="body-copy">${recommendation.text}</p>
+            <div class="metric-grid single-column">
+              <div class="metric-card"><span>总体掌握度</span><strong>${stats.percent}%</strong></div>
+              <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong></div>
+              <div class="metric-card"><span>最近测试记录</span><strong>${app.state.quizHistory.length}</strong></div>
+            </div>
           </div>
         </div>
       </section>
 
       <section class="workspace-grid">
-        <article class="surface-panel emphasis-panel">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">继续学习</span>
-              <h3>${getContinueLabel()}</h3>
+        <div class="overview-main">
+          <article class="surface-panel emphasis-panel">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">继续学习</span>
+                <h3>${getContinueLabel()}</h3>
+              </div>
+              <span class="soft-badge">当前入口</span>
             </div>
-            <span class="soft-badge">推荐下一步</span>
-          </div>
-          <p class="body-copy">${recommendation.text}</p>
-          <div class="action-row">${recommendation.actions}</div>
-        </article>
+            <p class="body-copy">${recommendation.text}</p>
+            <div class="action-row">${recommendation.actions}</div>
+          </article>
 
-        <article class="surface-panel">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">最近训练</span>
-              <h3>把成绩和错题放在一起看</h3>
+          <article class="surface-panel">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">最近训练</span>
+                <h3>训练记录与得分变化</h3>
+              </div>
             </div>
-          </div>
-          ${history.length ? `<div class="timeline-list">${history.map((item) => `<div class="timeline-item"><strong>${item.chapterTitle}</strong><span>${item.mode === 'test' ? '综合测试' : '练习'} · ${item.score}/${item.total}</span><small>${formatDate(item.completedAt)}</small></div>`).join('')}</div>` : '<div class="empty-state">暂时还没有测试记录，可从任一章节开始综合测试，逐步形成训练记录。</div>'}
-        </article>
+            ${history.length ? `<div class="timeline-list">${history.map((item) => `<div class="timeline-item"><strong>${item.chapterTitle}</strong><span>${item.mode === 'test' ? '综合测试' : '练习'} · ${item.score}/${item.total}</span><small>${formatDate(item.completedAt)}</small></div>`).join('')}</div>` : '<div class="empty-state">暂时还没有测试记录，可从任一章节开始综合测试，逐步形成训练记录。</div>'}
+          </article>
+        </div>
 
-        <article class="surface-panel">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">薄弱章节</span>
-              <h3>优先修最容易失分的地方</h3>
+        <aside class="overview-side">
+          <article class="surface-panel">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">学习概况</span>
+                <h3>当前掌握状态</h3>
+              </div>
             </div>
-          </div>
-          <div class="dense-list">
-            ${weakChapters.map((chapter) => `<button class="dense-row" data-action="open-chapter" data-chapter-id="${chapter.id}"><div><strong>第 ${chapter.number} 章 · ${chapter.title}</strong><span>${chapter.progress.mastered}/${chapter.progress.total} 已掌握</span></div><em>${chapter.progress.percent}%</em></button>`).join('')}
-          </div>
-        </article>
+            <div class="overview-stat-list">
+              <div class="overview-stat-row"><span>已掌握知识点</span><strong>${stats.masteredPoints}/${stats.totalPoints}</strong></div>
+              <div class="overview-stat-row"><span>待复习知识点</span><strong>${stats.reviewPoints}</strong></div>
+              <div class="overview-stat-row"><span>最近学习章节</span><strong>第 ${continueChapter.number} 章</strong></div>
+            </div>
+          </article>
+
+          <article class="surface-panel">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">薄弱章节</span>
+                <h3>优先修补失分区域</h3>
+              </div>
+            </div>
+            <div class="dense-list">
+              ${weakChapters.map((chapter) => `<button class="dense-row" data-action="open-chapter" data-chapter-id="${chapter.id}"><div><strong>第 ${chapter.number} 章 · ${chapter.title}</strong><span>${chapter.progress.mastered}/${chapter.progress.total} 已掌握</span></div><em>${chapter.progress.percent}%</em></button>`).join('')}
+            </div>
+          </article>
+        </aside>
       </section>
 
       <section class="surface-panel">

@@ -579,7 +579,7 @@ function renderAccountPanel() {
       ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">最近生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
       <div class="danger-box">
         <span class="eyebrow">危险操作</span>
-        <p class="body-copy">重置后会同时清空当前账号的云端进度和这台设备上的本地学习记录，不能恢复。</p>
+        <p class="body-copy">重置后会清空当前账号中的全部学习进度，不能恢复。</p>
         <div class="action-row">
           <button class="btn tiny danger" data-action="reset-progress">重置学习进度</button>
         </div>
@@ -1863,7 +1863,7 @@ async function handleLogout() {
 
 async function handleResetProgress() {
   if (!app.auth.user) return;
-  const ok = window.confirm('确定要重置这个账号的全部学习进度吗？本地和云端都会被清空。');
+  const ok = window.confirm('确定要重置这个账号中的全部学习进度吗？重置后不能恢复。');
   if (!ok) return;
   try {
     app.auth.syncStatus = 'syncing';

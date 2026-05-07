@@ -261,7 +261,7 @@ function renderSidebarTree() {
 
 function renderTopbar() {
   const titleMap = {
-    dashboard: ['学习总览', '汇总最近学习、训练记录和下一步建议。'],
+    dashboard: ['学习总览', '汇总学习进度、训练记录与推荐任务。'],
     chapter: ['章节学习', '按导览、知识点、整理、训练的顺序稳定推进。'],
     practice: ['训练强化', '在同一页完成章节练习、综合测试、错题复习和模拟器强化。'],
   };
@@ -295,7 +295,7 @@ function renderDashboard() {
         <div class="hero-copy">
           <span class="eyebrow">学习工作台</span>
           <h3 class="hero-title">聚焦下一步任务，让学习持续稳定推进。</h3>
-          <p class="body-copy">首页聚合当前进度、训练记录和下一步建议，帮助快速回到学习状态。</p>
+          <p class="body-copy">首页集中展示学习进度、训练记录与推荐任务，用更短路径回到学习节奏。</p>
           <div class="action-row">
             <button class="btn primary" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续学习 ${continueChapter.title}</button>
             <button class="btn subtle" data-action="switch-view" data-view="practice">进入训练强化</button>
@@ -330,7 +330,7 @@ function renderDashboard() {
               <h3>把成绩和错题放在一起看</h3>
             </div>
           </div>
-          ${history.length ? `<div class="timeline-list">${history.map((item) => `<div class="timeline-item"><strong>${item.chapterTitle}</strong><span>${item.mode === 'test' ? '综合测试' : '练习'} · ${item.score}/${item.total}</span><small>${formatDate(item.completedAt)}</small></div>`).join('')}</div>` : '<div class="empty-state">当前还没有测试记录，可从任一章节进入综合测试开始积累训练反馈。</div>'}
+          ${history.length ? `<div class="timeline-list">${history.map((item) => `<div class="timeline-item"><strong>${item.chapterTitle}</strong><span>${item.mode === 'test' ? '综合测试' : '练习'} · ${item.score}/${item.total}</span><small>${formatDate(item.completedAt)}</small></div>`).join('')}</div>` : '<div class="empty-state">暂时还没有测试记录，可从任一章节开始综合测试，逐步形成训练记录。</div>'}
         </article>
 
         <article class="surface-panel">
@@ -350,11 +350,11 @@ function renderDashboard() {
         <div class="section-heading">
           <div>
             <span class="eyebrow">错题摘要</span>
-            <h3>需要回看的概念，直接跳回知识点</h3>
+            <h3>需要回看的概念与对应入口</h3>
           </div>
           <button class="text-link" data-action="switch-view" data-view="practice">去训练强化</button>
         </div>
-        ${recentWrongs.length ? `<div class="wrong-grid">${recentWrongs.map((item) => `<article class="wrong-card"><strong>${item.chapterTitle}</strong><p>${item.stem}</p><div class="wrong-meta">错 ${item.wrongCount} 次 · ${formatDate(item.lastWrongAt)}</div><div class="action-row small">${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">回到知识点</button>` : ''}${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">打开模拟器</button>` : ''}</div></article>`).join('')}</div>` : '<div class="empty-state">当前还没有错题记录，可继续进入章节练习或综合测试。</div>'}
+        ${recentWrongs.length ? `<div class="wrong-grid">${recentWrongs.map((item) => `<article class="wrong-card"><strong>${item.chapterTitle}</strong><p>${item.stem}</p><div class="wrong-meta">错 ${item.wrongCount} 次 · ${formatDate(item.lastWrongAt)}</div><div class="action-row small">${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">回到知识点</button>` : ''}${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">打开模拟器</button>` : ''}</div></article>`).join('')}</div>` : '<div class="empty-state">暂时还没有错题记录，可进入章节练习或综合测试建立复习清单。</div>'}
       </section>
 
       <section class="surface-panel">
@@ -527,8 +527,8 @@ function renderPracticeView() {
         <div class="section-heading spread">
           <div>
             <span class="eyebrow">训练强化</span>
-            <h3>围绕第 ${chapter.number} 章 · ${chapter.title} 继续强化</h3>
-            <p class="body-copy">先选择章节，再按需要切换练习、测试、错题复习或模拟器强化。</p>
+            <h3>第 ${chapter.number} 章 · ${chapter.title} 训练中枢</h3>
+            <p class="body-copy">先选择章节，再切换章节练习、综合测试、错题复习或模拟器强化。</p>
           </div>
           <div class="hero-meta-grid">
             <div class="metric-card"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
@@ -624,7 +624,7 @@ function renderChapterTest(chapter, bundle) {
         <div>
           <span class="eyebrow">综合测试</span>
           <h3>${chapter.title}</h3>
-          <p class="body-copy">按整章交卷评分，适合用来检查这章是否已经能稳定拿分。</p>
+          <p class="body-copy">按整章交卷评分，用于检验本章知识点的整体掌握情况。</p>
         </div>
       </div>
       <div class="quiz-list">${bundle.chapterTest.map((question, index) => renderTestQuestion(question, index)).join('')}</div>
@@ -675,7 +675,7 @@ function renderWrongbook(chapter, wrongs) {
         <div>
           <span class="eyebrow">错题复习</span>
           <h3>${chapter.title}</h3>
-          <p class="body-copy">先回到概念，再决定是否用模拟器把理解补齐。</p>
+          <p class="body-copy">先回看对应概念，再结合模拟器补强理解薄弱点。</p>
         </div>
       </div>
       ${wrongs.length ? `<div class="wrongbook-list">${wrongs.map((item) => `
@@ -691,7 +691,7 @@ function renderWrongbook(chapter, wrongs) {
             ${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">回到知识点</button>` : ''}
             ${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">打开相关模拟器</button>` : ''}
           </div>
-        </article>`).join('')}</div><div class="action-row"><button class="btn subtle" data-action="clear-wrongbook" data-chapter-id="${chapter.id}">清空本章错题</button></div>` : '<div class="empty-state">本章目前没有错题，可以直接做综合测试或者切回章节练习。</div>'}
+        </article>`).join('')}</div><div class="action-row"><button class="btn subtle" data-action="clear-wrongbook" data-chapter-id="${chapter.id}">清空本章错题</button></div>` : '<div class="empty-state">本章目前没有错题记录，可切换到章节练习或综合测试继续训练。</div>'}
     </section>
   `;
 }
@@ -973,19 +973,19 @@ function getContinueChapter() {
 function getContinueLabel() {
   const chapter = getContinueChapter();
   const point = app.state.progress.lastPointId ? findPointById(app.state.progress.lastPointId) : null;
-  return point ? `${chapter.title} · ${point.title}` : `${chapter.title} · 从上次位置继续`;
+  return point ? `${chapter.title} · ${point.title}` : `${chapter.title} · 延续上次进度`;
 }
 
 function getRecommendation() {
   if (getWrongbookCount() > 0) {
     return {
-      text: `当前优先任务为错题回看。建议先处理最近 ${Math.min(3, getWrongbookCount())} 道错题，再进入综合测试。`,
-      actions: `<button class="btn primary" data-action="switch-view" data-view="practice">打开错题复习</button><button class="btn subtle" data-action="open-test" data-chapter-id="${getContinueChapter().id}">做综合测试</button>`,
+      text: `当前推荐任务为错题回看。可先处理最近 ${Math.min(3, getWrongbookCount())} 道错题，再安排综合测试。`,
+      actions: `<button class="btn primary" data-action="switch-view" data-view="practice">进入错题复习</button><button class="btn subtle" data-action="open-test" data-chapter-id="${getContinueChapter().id}">开始综合测试</button>`,
     };
   }
   return {
-    text: '当前错题压力较低，建议继续章节学习，并结合相关模拟器巩固抽象概念。',
-    actions: `<button class="btn primary" data-action="open-chapter" data-chapter-id="${getContinueChapter().id}">进入当前章节</button><button class="btn subtle" data-action="open-simulator" data-simulator-id="${getContinueChapter().relatedSimulatorIds[0] || SIMULATORS[0].id}">查看相关模拟器</button>`,
+    text: '当前错题记录较少，适合继续推进章节学习，并结合相关模拟器巩固抽象概念。',
+    actions: `<button class="btn primary" data-action="open-chapter" data-chapter-id="${getContinueChapter().id}">进入章节学习</button><button class="btn subtle" data-action="open-simulator" data-simulator-id="${getContinueChapter().relatedSimulatorIds[0] || SIMULATORS[0].id}">查看相关模拟器</button>`,
   };
 }
 

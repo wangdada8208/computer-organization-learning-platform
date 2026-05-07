@@ -577,6 +577,7 @@ function renderSectionCard(chapter, section, sectionIndex) {
 
 function renderPointCard(chapter, section, point, pointIndex) {
   const status = app.state.progress.points[point.id]?.status || 'unseen';
+  const excerpt = getPointExcerpt(point);
   return `
     <details class="point-card" ${app.state.progress.lastPointId === point.id ? 'open' : ''}>
       <summary data-action="focus-point" data-chapter-id="${chapter.id}" data-point-id="${point.id}">
@@ -591,7 +592,7 @@ function renderPointCard(chapter, section, point, pointIndex) {
           <span class="status-pill ${status}">${statusLabel(status)}</span>
         </div>
         <div class="point-conclusion">${getPointConclusion(point)}</div>
-        <div class="point-excerpt"><span>精炼解释</span><p>${getPointExcerpt(point)}</p></div>
+        ${excerpt ? `<div class="point-excerpt"><span>核心解释</span><p>${excerpt}</p></div>` : ''}
         <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
       <div class="point-detail-wrap">
@@ -1169,10 +1170,12 @@ function getPointExcerpt(point) {
   if (detail && conclusion) {
     source = stripLeadingDuplicate(detail, conclusion);
   }
-  if (!source) source = summary || conclusion;
+  if (!source && summary && summary !== conclusion) source = summary;
+  if (!source || source === conclusion) return '';
 
-  const trimmed = source.trim();
-  return trimmed.length > 92 ? `${trimmed.slice(0, 92)}...` : trimmed;
+  const sentence = firstMeaningfulSentence(source);
+  if (!sentence || sentence === conclusion) return '';
+  return sentence.length > 64 ? `${sentence.slice(0, 64)}...` : sentence;
 }
 
 function sanitizePointText(text) {
@@ -1183,6 +1186,13 @@ function stripLeadingDuplicate(detail, lead) {
   const escaped = lead.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const stripped = detail.replace(new RegExp(`^${escaped}[，。、；：:,.!！?？\\s-]*`), '').trim();
   return stripped || detail;
+}
+
+function firstMeaningfulSentence(text) {
+  const normalized = sanitizePointText(text);
+  if (!normalized) return '';
+  const match = normalized.match(/^(.{8,80}?[。；;!！?？]|.{8,64})/);
+  return match ? match[1].trim() : normalized;
 }
 
 function getConfusionHints(chapter, point) {

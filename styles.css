@@ -262,9 +262,9 @@ ul { margin: 0; padding-left: 18px; }
 }
 .hero-title {
   margin-top: 10px;
-  font-size: 40px;
-  line-height: 1.08;
-  max-width: 12ch;
+  font-size: 32px;
+  line-height: 1.18;
+  max-width: 16ch;
 }
 .hero-copy .body-copy { margin-top: 10px; max-width: 62ch; }
 .hero-side { display: flex; align-items: stretch; }

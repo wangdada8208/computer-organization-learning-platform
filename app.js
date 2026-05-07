@@ -293,12 +293,12 @@ function renderDashboard() {
     <div class="overview-stack">
       <section class="overview-hero">
         <div class="hero-copy">
-          <span class="eyebrow">学习工作台</span>
-          <h3 class="hero-title">聚焦下一步任务，让学习持续稳定推进。</h3>
-          <p class="body-copy">首页集中展示学习进度、训练记录与推荐任务，用更短路径回到学习节奏。</p>
+          <span class="eyebrow">学习总览</span>
+          <h3 class="hero-title">计算机组成原理学习平台</h3>
+          <p class="body-copy">以章节学习为主线，结合练习、测试、错题复习与模拟器强化，帮助梳理知识结构并持续巩固重点概念。</p>
           <div class="action-row">
             <button class="btn primary" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续学习 ${continueChapter.title}</button>
-            <button class="btn subtle" data-action="switch-view" data-view="practice">进入训练强化</button>
+            <button class="btn subtle" data-action="switch-view" data-view="chapter">查看章节目录</button>
           </div>
         </div>
         <div class="hero-side surface-panel compact-panel">

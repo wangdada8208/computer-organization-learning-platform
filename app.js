@@ -12,8 +12,8 @@ const authLayerEl = document.createElement('div');
 authLayerEl.className = 'auth-layer';
 document.body.appendChild(authLayerEl);
 
-const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice', 'teacher'];
-const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator'];
+const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
+const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator', 'teacher'];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
   { label: '处理器执行', ids: ['sim-pipeline', 'sim-fetch'] },
@@ -241,7 +241,6 @@ function renderView() {
     dashboard: renderDashboard,
     chapter: renderChapterView,
     practice: renderPracticeView,
-    teacher: renderTeacherView,
   };
   views[app.state.view]?.();
   renderAuthLayer();
@@ -251,7 +250,7 @@ function renderView() {
 
 function renderSidebar() {
   const stats = getProgressStats();
-  if (app.state.view === 'dashboard' || app.state.view === 'teacher') {
+  if (app.state.view === 'dashboard') {
     sidebarEl.className = 'sidebar sidebar-empty';
     sidebarEl.innerHTML = '';
     return;
@@ -345,7 +344,6 @@ function renderTopbar() {
     dashboard: ['学习总览', '用教材学习轨建立理解，用过线冲刺轨先把及格盘稳住。'],
     chapter: ['章节学习', '先抓每章必会，再顺着知识点把概念真正读懂。'],
     practice: ['训练强化', '先过线，再提分；做题、错题和模拟器放在同一条补强回路里。'],
-    teacher: ['老师题库', '把老师发过的题单独拎出来刷，优先吃透课堂高频题和原题表达。'],
   };
   const [title, subtitle] = titleMap[app.state.view];
   topbarEl.innerHTML = `
@@ -360,7 +358,7 @@ function renderTopbar() {
       </div>
       <div class="topbar-right">
         <nav class="primary-tabs" aria-label="主导航">
-          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化'], ['teacher', '老师题库']]
+          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
             .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
         </nav>
         <div class="account-bar">
@@ -972,6 +970,7 @@ function renderPracticeView() {
               ${renderModeTab('section', '章节练习')}
               ${renderModeTab('test', '综合测试')}
               ${renderModeTab('wrongbook', '错题复习')}
+              ${renderModeTab('teacher', '老师题')}
               ${renderModeTab('simulator', '模拟器')}
             </div>
           </div>
@@ -989,6 +988,7 @@ function renderPracticeView() {
         ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
         ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
         ${app.state.practiceMode === 'wrongbook' ? renderWrongbook(chapter, wrongs) : ''}
+        ${app.state.practiceMode === 'teacher' ? renderTeacherPractice(chapter) : ''}
         ${app.state.practiceMode === 'simulator' ? renderSimulatorWorkbench(chapter) : ''}
       </section>
     </div>
@@ -999,43 +999,36 @@ function renderPracticeView() {
   }
 }
 
-function renderTeacherView() {
+function renderTeacherPractice(chapter) {
   const questions = getFilteredTeacherQuestions();
   const chapterOptions = [{ value: 'all', label: '全部章节' }].concat(
     app.data.chapters
-      .filter((chapter) => getTeacherQuestionsByChapter(chapter.id).length)
-      .map((chapter) => ({ value: chapter.id, label: `第 ${chapter.number} 章 · ${chapter.title}` })),
+      .filter((item) => getTeacherQuestionsByChapter(item.id).length)
+      .map((item) => ({ value: item.id, label: `第 ${item.number} 章 · ${item.title}` })),
   );
   const sourceOptions = [{ value: 'all', label: '全部来源' }].concat(
     app.data.teacherSources.map((source) => ({ value: source.id, label: source.label })),
   );
   const stats = getTeacherStats();
-  pageEl.innerHTML = `
-    <div class="page-stack teacher-stack">
-      <section class="teacher-hero surface-panel">
-        <div class="teacher-hero-layout">
-          <div class="teacher-hero-copy">
-            <span class="eyebrow">老师题库</span>
-            <h3>把老师发过的题单独刷透</h3>
-            <p class="body-copy">这里只放老师测试题和课件重点题，没有混入普通题库。先熟悉老师常用问法，再回到章节学习补概念，会更接近真实考试。</p>
-            <div class="training-hero-tags">
-              <span>${stats.total} 道老师题</span>
-              <span>${stats.chapters} 个章节</span>
-              <span>${stats.sources} 个来源</span>
-              <span>${stats.fills} 道填空题</span>
-            </div>
+  return `
+      <section class="training-panel training-panel-sheet teacher-sheet">
+        <div class="section-heading training-panel-head">
+          <div>
+            <span class="eyebrow">老师题</span>
+            <h3>${chapter.title} · 老师重点题</h3>
+            <p class="body-copy">老师测试题和课件重点题都收在这里。默认还是以当前章节为主刷，需要时也可以切到全部章节。</p>
           </div>
-          <div class="hero-meta-grid training-hero-metrics">
-            <div class="metric-card"><span>当前筛选结果</span><strong>${questions.length}</strong></div>
-            <div class="metric-card"><span>雨课堂测试</span><strong>${stats.rainclassroom}</strong></div>
-            <div class="metric-card"><span>课件重点题</span><strong>${stats.courseware}</strong></div>
-            <div class="metric-card"><span>建议顺序</span><strong>1 → 3 → 4 章</strong></div>
-          </div>
+          <span class="soft-badge">${questions.length} 题</span>
         </div>
-      </section>
 
-      <section class="surface-panel teacher-filter-shell">
-        <div class="toolbar-grid teacher-toolbar">
+        <div class="passline-summary-strip teacher-summary-strip">
+          <div><span>老师题总量</span><strong>${stats.total}</strong></div>
+          <div><span>雨课堂题</span><strong>${stats.rainclassroom}</strong></div>
+          <div><span>课件重点题</span><strong>${stats.courseware}</strong></div>
+        </div>
+
+        <div class="teacher-filter-shell">
+          <div class="toolbar-grid teacher-toolbar">
           <div>
             <label class="field-label">章节</label>
             <select class="select" data-change="teacher-chapter">
@@ -1057,23 +1050,17 @@ function renderTeacherView() {
             </select>
           </div>
         </div>
-        <div class="teacher-source-list">
-          ${app.data.teacherSources.map((source) => `<div class="teacher-source-item"><strong>${source.label}</strong><span>${source.description || ''}</span></div>`).join('')}
-        </div>
-      </section>
-
-      <section class="surface-panel training-panel teacher-question-shell">
-        <div class="section-heading training-panel-head">
-          <div>
-            <span class="eyebrow">老师原题</span>
-            <h3>只刷老师题，不混其他题</h3>
-            <p class="body-copy">题目支持即时反馈。做错后照样会进入错题本，你可以直接回知识点或回模拟器。</p>
+          <div class="teacher-source-pills">
+            ${app.data.teacherSources.map((source) => `<span class="tiny-pill ${app.state.teacherSource === source.id ? 'active' : ''}">${source.label}</span>`).join('')}
           </div>
-          <span class="soft-badge">${questions.length} 题</span>
+        </div>
+
+        <div class="teacher-helper-note">
+          <span class="eyebrow">当前模式</span>
+          <p class="body-copy">这里只显示老师题，不混普通题库。做错后照样会进入错题本，也能回知识点继续补。</p>
         </div>
         ${questions.length ? `<div class="quiz-list teacher-quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>` : '<div class="empty-state">当前筛选条件下还没有题目，可切换章节或来源查看。</div>'}
       </section>
-    </div>
   `;
 }
 
@@ -1277,6 +1264,7 @@ function modeSummaryLabel() {
     section: '当前处于章节练习',
     test: '当前处于综合测试',
     wrongbook: '当前处于错题复习',
+    teacher: '当前处于老师题模式',
     simulator: '当前处于模拟器强化',
   };
   return labels[app.state.practiceMode] || '当前训练中';
@@ -1297,6 +1285,10 @@ function modeSummaryText(chapter, section, wrongs) {
     return wrongs.length
       ? `本章已有 ${wrongs.length} 道错题，可依次回看知识点并补齐薄弱概念。`
       : '本章暂时没有错题记录，可以转入章节练习或综合测试继续训练。';
+  }
+  if (app.state.practiceMode === 'teacher') {
+    const teacherQuestions = getFilteredTeacherQuestions();
+    return `这里只显示老师发过的 ${teacherQuestions.length} 道题，适合临考前按老师原题表达快速刷一遍。`;
   }
   return `${chapter.relatedSimulatorIds.length} 个相关模拟器已关联到本章，可配合概念复习一起使用。`;
 }
@@ -1367,10 +1359,13 @@ function handleClick(event) {
       renderView();
       break;
     case 'open-teacher':
-      app.state.view = 'teacher';
+      app.state.view = 'practice';
+      app.state.practiceMode = 'teacher';
+      app.state.activeTrack = 'textbook';
       app.state.mobileSidebarOpen = false;
-      app.state.teacherChapterId = d.chapterId || app.state.teacherChapterId || 'all';
+      app.state.teacherChapterId = d.chapterId || app.state.selectedChapterId || app.state.teacherChapterId || 'all';
       app.state.teacherSource = d.sourceId || 'all';
+      app.state.teacherType = 'all';
       if (d.chapterId) app.state.selectedChapterId = d.chapterId;
       resetPracticeSession();
       touchState();
@@ -1798,7 +1793,7 @@ function getSelectedPracticeSection(chapter, bundle) {
   return bundle.practiceSections.find((item) => item.sectionId === app.state.selectedSectionId) || bundle.practiceSections[0];
 }
 function getPracticeQuestions() {
-  if (app.state.view === 'teacher') return getFilteredTeacherQuestions();
+  if (app.state.practiceMode === 'teacher') return getFilteredTeacherQuestions();
   if (app.state.practiceMode === 'passline') return getPasslineQuestionSet(getSelectedChapter().id);
   return getSelectedPracticeSection(getSelectedChapter(), getQuizBundle(getSelectedChapter().id)).questions;
 }
@@ -1943,9 +1938,11 @@ function applySyncedState(nextState) {
     chapterWeakness: { ...(incoming.chapterWeakness || {}) },
     lastPasslineScore: { ...(incoming.lastPasslineScore || {}) },
     quizHistory: Array.isArray(incoming.quizHistory) ? incoming.quizHistory : [],
+    view: incoming.view === 'teacher' ? 'practice' : (incoming.view || defaults.view),
     teacherChapterId: incoming.teacherChapterId || defaults.teacherChapterId,
     teacherSource: incoming.teacherSource || defaults.teacherSource,
     teacherType: incoming.teacherType || defaults.teacherType,
+    practiceMode: incoming.view === 'teacher' ? 'teacher' : (incoming.practiceMode || defaults.practiceMode),
     meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
   };
 }

@@ -605,7 +605,7 @@ function renderAuthForm() {
         <input class="input" type="password" data-change="auth-password" value="${escapeHtml(app.session.authDraft.password)}" placeholder="密码可以简单一点，但别留空"/>
       </label>
       ${app.auth.error ? `<div class="feedback wrong">${app.auth.error}</div>` : ''}
-      ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">已自动生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
+      ${isRegister && app.auth.generated ? `<div class="generated-box"><span class="eyebrow">已自动生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
       <div class="action-row">
         <button class="btn primary" data-action="${isRegister ? 'register' : 'login'}">${isRegister ? '注册并登录' : '登录'}</button>
         ${isRegister ? '<button class="btn subtle" data-action="register-auto">自动生成账号密码</button>' : '<button class="btn subtle" data-action="open-auth-modal" data-mode="register">去注册</button>'}
@@ -1174,6 +1174,7 @@ function handleClick(event) {
       app.auth.modalOpen = true;
       app.auth.modalMode = d.mode || 'login';
       app.auth.error = '';
+      if (app.auth.modalMode === 'login') app.auth.generated = null;
       renderView();
       break;
     case 'close-auth-modal':

@@ -646,6 +646,13 @@ function renderAccountPanel() {
         <div class="auth-info-row"><span>本机待上传</span><strong>${app.auth.pendingChanges ? '有变更' : '已同步'}</strong></div>
       </div>
       ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">最近生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
+      <div class="danger-box">
+        <span class="eyebrow">危险操作</span>
+        <p class="body-copy">重置后会同时清空当前账号的云端进度和这台设备上的本地学习记录，不能恢复。</p>
+        <div class="action-row">
+          <button class="btn tiny danger" data-action="reset-progress">重置学习进度</button>
+        </div>
+      </div>
       <div class="action-row">
         <button class="btn subtle" data-action="sync-now">立即同步</button>
         <button class="btn subtle" data-action="logout">退出登录</button>
@@ -1254,6 +1261,9 @@ function handleClick(event) {
       break;
     case 'logout':
       handleLogout();
+      break;
+    case 'reset-progress':
+      handleResetProgress();
       break;
     case 'sync-now':
       flushSyncNow(true);
@@ -1928,6 +1938,39 @@ async function handleLogout() {
   app.auth.error = '';
   app.syncMeta.pending = false;
   renderView();
+}
+
+async function handleResetProgress() {
+  if (!app.auth.user) return;
+  const ok = window.confirm('确定要重置这个账号的全部学习进度吗？本地和云端都会被清空。');
+  if (!ok) return;
+  try {
+    app.auth.syncStatus = 'syncing';
+    app.auth.error = '';
+    renderView();
+    const result = await apiFetch('/api/progress/reset', { method: 'POST' });
+    clearLegacyLocalProgress();
+    applySyncedState(result.state);
+    app.auth.lastSyncedAt = result.meta?.updatedAt || nowIso();
+    app.auth.syncStatus = 'synced';
+    app.auth.pendingChanges = false;
+    app.syncMeta.pending = false;
+    app.syncMeta.lastSuccessfulStateAt = app.state.meta.updatedAt;
+    app.state.view = 'dashboard';
+    app.auth.modalMode = 'account';
+    renderView();
+  } catch (error) {
+    console.error(error);
+    app.auth.syncStatus = 'sync-error';
+    app.auth.error = error.message || '重置失败';
+    renderView();
+  }
+}
+
+function clearLegacyLocalProgress() {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(LEGACY_PROGRESS_KEY);
+  localStorage.removeItem(LEGACY_WRONG_KEY);
 }
 
 async function copyGeneratedCredentials() {

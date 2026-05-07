@@ -332,6 +332,14 @@ ul { margin: 0; padding-left: 18px; }
   color: var(--ink);
   font-size: 14px;
 }
+.danger-box {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fbf4f5;
+  border: 1px solid rgba(157, 97, 106, 0.2);
+}
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -864,6 +872,11 @@ ul { margin: 0; padding-left: 18px; }
   background: var(--green-soft);
   border-color: transparent;
   color: var(--green);
+}
+.btn.danger {
+  background: var(--rose-soft);
+  border-color: rgba(157, 97, 106, 0.22);
+  color: var(--rose);
 }
 .btn.active { outline: 2px solid rgba(63, 109, 104, 0.12); }
 .btn.tiny { padding: 9px 12px; font-size: 13px; }

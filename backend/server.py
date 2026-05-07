@@ -123,6 +123,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return self.handle_get_progress()
             if route == "/api/progress" and method == "PUT":
                 return self.handle_put_progress()
+            if route == "/api/progress/reset" and method == "POST":
+                return self.handle_reset_progress()
             if route == "/api/progress/merge" and method == "POST":
                 return self.handle_merge_progress()
             return self.respond_error(HTTPStatus.NOT_FOUND, "接口不存在")
@@ -239,6 +241,12 @@ class ApiHandler(BaseHTTPRequestHandler):
         merged = merge_progress_states(local_state, remote_state)
         meta = self.save_progress(user["id"], merged)
         return self.respond_json({"state": merged, "meta": meta})
+
+    def handle_reset_progress(self):
+        _token, user = self.require_auth()
+        state = normalize_state({})
+        meta = self.save_progress(user["id"], state)
+        return self.respond_json({"state": state, "meta": meta})
 
     def unique_generated_credentials(self):
         conn = self.server.db()

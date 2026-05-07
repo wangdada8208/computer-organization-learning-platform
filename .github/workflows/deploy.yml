@@ -28,7 +28,16 @@ jobs:
       - name: 同步站点文件到服务器
         shell: bash
         run: |
-          rsync -avz --delete             -e "ssh -i ~/.ssh/deploy_key"             "$GITHUB_WORKSPACE/index.html"             "$GITHUB_WORKSPACE/app.js"             "$GITHUB_WORKSPACE/styles.css"             "$GITHUB_WORKSPACE/simulators.js"             "$GITHUB_WORKSPACE/sw.js"             "$GITHUB_WORKSPACE/manifest.json"             "$GITHUB_WORKSPACE/robots.txt"             "$GITHUB_WORKSPACE/sitemap.xml"             "$GITHUB_WORKSPACE/favicon.ico"             "$GITHUB_WORKSPACE/data"             "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            "$GITHUB_WORKSPACE/index.html" \
+            "$GITHUB_WORKSPACE/app.js" \
+            "$GITHUB_WORKSPACE/styles.css" \
+            "$GITHUB_WORKSPACE/simulators.js" \
+            "$GITHUB_WORKSPACE/sw.js" \
+            "$GITHUB_WORKSPACE/manifest.json" \
+            "$GITHUB_WORKSPACE/data" \
+            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
 
       - name: 校验线上目录
         shell: bash

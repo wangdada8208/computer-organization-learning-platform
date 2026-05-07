@@ -1,0 +1,4734 @@
+[
+  {
+    "chapterId": "ch1",
+    "chapterTitle": "计算机系统概论",
+    "practiceSections": [
+      {
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "questions": [
+          {
+            "id": "ch1-ch1-s1-single-1",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s1",
+            "sectionTitle": "1.1 计算机系统简介",
+            "mode": "practice",
+            "type": "single",
+            "stem": "冯·诺依曼机最核心的思想是？",
+            "options": [
+              "存储程序并按地址顺序执行",
+              "使用二进制",
+              "以运算器为中心",
+              "使用电子管"
+            ],
+            "answerIndex": 0,
+            "explanation": "存储程序并按地址顺序执行是冯·诺依曼机区别于其他计算机模型的最本质特征。其他选项虽也相关，但不是最核心思想。",
+            "relatedTopicId": "ch1-s1-p1",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch1-ch1-s1-single-2",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s1",
+            "sectionTitle": "1.1 计算机系统简介",
+            "mode": "practice",
+            "type": "single",
+            "stem": "MIPS=f/(CPI×10⁶)，若f=2GHz、CPI=4，MIPS=？",
+            "options": [
+              "8000",
+              "500",
+              "2000",
+              "1000"
+            ],
+            "answerIndex": 1,
+            "explanation": "MIPS = f/(CPI×10⁶) = 2×10⁹/(4×10⁶) = 500",
+            "relatedTopicId": "ch1-s1-p2",
+            "relatedSimulatorId": "sim-base"
+          },
+          {
+            "id": "ch1-ch1-s1-single-3",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s1",
+            "sectionTitle": "1.1 计算机系统简介",
+            "mode": "practice",
+            "type": "single",
+            "stem": "CPU时间=指令条数×CPI×时钟周期，要减少执行时间，无效的是？",
+            "options": [
+              "减少指令条数",
+              "降低CPI",
+              "提高主频",
+              "增加Cache"
+            ],
+            "answerIndex": 3,
+            "explanation": "CPU执行时间=指令条数×CPI×时钟周期。增加Cache不会直接改变这三个参数（Cache是通过降低平均访存时间间接提升，不在此公式范畴）。",
+            "relatedTopicId": "ch1-s1-p3",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "questions": [
+          {
+            "id": "ch1-ch1-s2-single-1",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s2",
+            "sectionTitle": "1.2 计算机的基本组成",
+            "mode": "practice",
+            "type": "single",
+            "stem": "五大部件不包括？",
+            "options": [
+              "运算器",
+              "控制器",
+              "电源",
+              "输入设备"
+            ],
+            "answerIndex": 2,
+            "explanation": "五大部件：运算器、控制器、存储器、输入设备、输出设备。\"电源\"是供电系统不是功能部件。",
+            "relatedTopicId": "ch1-s2-p1",
+            "relatedSimulatorId": "sim-base"
+          },
+          {
+            "id": "ch1-ch1-s2-single-2",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s2",
+            "sectionTitle": "1.2 计算机的基本组成",
+            "mode": "practice",
+            "type": "single",
+            "stem": "计算机层次结构中从底到顶排列？",
+            "options": [
+              "高级语言→OS→机器语言→微程序",
+              "微程序→机器语言→OS→高级语言",
+              "OS→微程序→机器语言→高级语言",
+              "机器语言→OS→微程序→高级语言"
+            ],
+            "answerIndex": 1,
+            "explanation": "层次从底到顶：微程序→机器语言→OS→汇编→高级语言。底层是硬件实现，上层是软件抽象。",
+            "relatedTopicId": "ch1-s2-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch1-ch1-s2-single-3",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s2",
+            "sectionTitle": "1.2 计算机的基本组成",
+            "mode": "practice",
+            "type": "single",
+            "stem": "硬件和软件在逻辑功能上？",
+            "options": [
+              "完全不同",
+              "等效",
+              "硬件一定更快",
+              "软件一定更灵活"
+            ],
+            "answerIndex": 1,
+            "explanation": "硬件和软件在逻辑功能上是等效的——同一功能既可用硬件实现也可用软件模拟，这叫软硬件逻辑等价性。",
+            "relatedTopicId": "ch1-s2-p3",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch1-s3",
+        "sectionTitle": "1.3 计算机硬件的主要技术指标",
+        "questions": [
+          {
+            "id": "ch1-ch1-s3-single-1",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s3",
+            "sectionTitle": "1.3 计算机硬件的主要技术指标",
+            "mode": "practice",
+            "type": "single",
+            "stem": "MAR的位数决定了？",
+            "options": [
+              "存储字长",
+              "存储单元个数",
+              "运算速度",
+              "数据线宽度"
+            ],
+            "answerIndex": 1,
+            "explanation": "MAR（存储器地址寄存器）的位数直接决定可寻址的存储单元个数=2^MAR位数。存储字长由MDR位数决定。",
+            "relatedTopicId": "ch1-s3-p1",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch1-ch1-s3-single-2",
+            "chapterId": "ch1",
+            "sectionId": "ch1-s3",
+            "sectionTitle": "1.3 计算机硬件的主要技术指标",
+            "mode": "practice",
+            "type": "single",
+            "stem": "关于补码说法正确的是？",
+            "options": [
+              "正数补码需取反+1",
+              "0有+0和-0两种表示",
+              "[-X]补=[X]补连同符号取反+1",
+              "补码不能做减法"
+            ],
+            "answerIndex": 2,
+            "explanation": "补码中[-X]补=[X]补连同符号位取反+1。这是快速求相反数补码的方法。正数补码=原码，不需取反。",
+            "relatedTopicId": "ch1-s3-p2",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch1-test-single-1",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "single",
+        "stem": "冯·诺依曼机最核心的思想是？",
+        "options": [
+          "存储程序并按地址顺序执行",
+          "使用二进制",
+          "以运算器为中心",
+          "使用电子管"
+        ],
+        "answerIndex": 0,
+        "explanation": "存储程序并按地址顺序执行是冯·诺依曼机区别于其他计算机模型的最本质特征。其他选项虽也相关，但不是最核心思想。",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-single-2",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "single",
+        "stem": "五大部件不包括？",
+        "options": [
+          "运算器",
+          "控制器",
+          "电源",
+          "输入设备"
+        ],
+        "answerIndex": 2,
+        "explanation": "五大部件：运算器、控制器、存储器、输入设备、输出设备。\"电源\"是供电系统不是功能部件。",
+        "relatedTopicId": "ch1-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-single-3",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s3",
+        "sectionTitle": "1.3 计算机硬件的主要技术指标",
+        "mode": "test",
+        "type": "single",
+        "stem": "MAR的位数决定了？",
+        "options": [
+          "存储字长",
+          "存储单元个数",
+          "运算速度",
+          "数据线宽度"
+        ],
+        "answerIndex": 1,
+        "explanation": "MAR（存储器地址寄存器）的位数直接决定可寻址的存储单元个数=2^MAR位数。存储字长由MDR位数决定。",
+        "relatedTopicId": "ch1-s3-p3",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-single-4",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "single",
+        "stem": "MIPS=f/(CPI×10⁶)，若f=2GHz、CPI=4，MIPS=？",
+        "options": [
+          "8000",
+          "500",
+          "2000",
+          "1000"
+        ],
+        "answerIndex": 1,
+        "explanation": "MIPS = f/(CPI×10⁶) = 2×10⁹/(4×10⁶) = 500",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-single-5",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "single",
+        "stem": "计算机层次结构中从底到顶排列？",
+        "options": [
+          "高级语言→OS→机器语言→微程序",
+          "微程序→机器语言→OS→高级语言",
+          "OS→微程序→机器语言→高级语言",
+          "机器语言→OS→微程序→高级语言"
+        ],
+        "answerIndex": 1,
+        "explanation": "层次从底到顶：微程序→机器语言→OS→汇编→高级语言。底层是硬件实现，上层是软件抽象。",
+        "relatedTopicId": "ch1-s2-p5",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-single-6",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s3",
+        "sectionTitle": "1.3 计算机硬件的主要技术指标",
+        "mode": "test",
+        "type": "single",
+        "stem": "关于补码说法正确的是？",
+        "options": [
+          "正数补码需取反+1",
+          "0有+0和-0两种表示",
+          "[-X]补=[X]补连同符号取反+1",
+          "补码不能做减法"
+        ],
+        "answerIndex": 2,
+        "explanation": "补码中[-X]补=[X]补连同符号位取反+1。这是快速求相反数补码的方法。正数补码=原码，不需取反。",
+        "relatedTopicId": "ch1-s3-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-single-7",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "single",
+        "stem": "CPU时间=指令条数×CPI×时钟周期，要减少执行时间，无效的是？",
+        "options": [
+          "减少指令条数",
+          "降低CPI",
+          "提高主频",
+          "增加Cache"
+        ],
+        "answerIndex": 3,
+        "explanation": "CPU执行时间=指令条数×CPI×时钟周期。增加Cache不会直接改变这三个参数（Cache是通过降低平均访存时间间接提升，不在此公式范畴）。",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-single-8",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "single",
+        "stem": "硬件和软件在逻辑功能上？",
+        "options": [
+          "完全不同",
+          "等效",
+          "硬件一定更快",
+          "软件一定更灵活"
+        ],
+        "answerIndex": 1,
+        "explanation": "硬件和软件在逻辑功能上是等效的——同一功能既可用硬件实现也可用软件模拟，这叫软硬件逻辑等价性。",
+        "relatedTopicId": "ch1-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-judge-1",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "judge",
+        "stem": "冯·诺依曼机的核心思想是存储程序并按地址顺序执行。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-judge-2",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "judge",
+        "stem": "五大部件包括运算器、控制器、存储器、输出设备和电源。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch1-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-judge-3",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s3",
+        "sectionTitle": "1.3 计算机硬件的主要技术指标",
+        "mode": "test",
+        "type": "judge",
+        "stem": "MDR的位数决定了存储字长。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch1-s3-p3",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-judge-4",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "judge",
+        "stem": "软硬件在逻辑功能上是完全不同的。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-judge-5",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "judge",
+        "stem": "MAR=16位时最多有65,536个存储单元。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch1-s2-p5",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-fill-1",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "fill",
+        "stem": "计算机硬件由运算器、控制器、___、输入设备、输出设备五大部件组成。",
+        "answer": "存储器",
+        "explanation": "",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-fill-2",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "fill",
+        "stem": "MIPS=f/(CPI×___)。",
+        "answer": "10⁶",
+        "explanation": "",
+        "relatedTopicId": "ch1-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch1-test-fill-3",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s3",
+        "sectionTitle": "1.3 计算机硬件的主要技术指标",
+        "mode": "test",
+        "type": "fill",
+        "stem": "计算机系统层次从底到顶：___→机器语言→OS→高级语言。",
+        "answer": "微程序",
+        "explanation": "",
+        "relatedTopicId": "ch1-s3-p3",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-fill-4",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s1",
+        "sectionTitle": "1.1 计算机系统简介",
+        "mode": "test",
+        "type": "fill",
+        "stem": "冯·诺依曼机最核心的思想是___。",
+        "answer": "存储程序",
+        "explanation": "",
+        "relatedTopicId": "ch1-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch1-test-fill-5",
+        "chapterId": "ch1",
+        "sectionId": "ch1-s2",
+        "sectionTitle": "1.2 计算机的基本组成",
+        "mode": "test",
+        "type": "fill",
+        "stem": "机器字长指CPU一次能处理的___位数。",
+        "answer": "数据",
+        "explanation": "",
+        "relatedTopicId": "ch1-s2-p5",
+        "relatedSimulatorId": "sim-cache"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch2",
+    "chapterTitle": "计算机的发展及应用",
+    "practiceSections": [
+      {
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "questions": [
+          {
+            "id": "ch2-ch2-s1-single-1",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s1",
+            "sectionTitle": "2.1 计算机的产生和发展",
+            "mode": "practice",
+            "type": "single",
+            "stem": "ENIAC诞生于？",
+            "options": [
+              "1942",
+              "1946",
+              "1950",
+              "1954"
+            ],
+            "answerIndex": 1,
+            "explanation": "ENIAC于1946年2月在美国宾夕法尼亚大学问世，是第一台通用电子数字计算机。",
+            "relatedTopicId": "ch2-s1-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch2-ch2-s1-single-2",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s1",
+            "sectionTitle": "2.1 计算机的产生和发展",
+            "mode": "practice",
+            "type": "single",
+            "stem": "第二代计算机核心器件？",
+            "options": [
+              "电子管",
+              "晶体管",
+              "中小规模IC",
+              "LSI"
+            ],
+            "answerIndex": 1,
+            "explanation": "第二代(1958-1964)以晶体管替代电子管，体积缩小、功耗降低、可靠性大幅提高。",
+            "relatedTopicId": "ch2-s1-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch2-ch2-s1-single-3",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s1",
+            "sectionTitle": "2.1 计算机的产生和发展",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于计算机应用领域的是？",
+            "options": [
+              "科学计算",
+              "工业控制",
+              "基因编辑",
+              "虚拟现实"
+            ],
+            "answerIndex": 2,
+            "explanation": "基因编辑属于生物技术领域，不是计算机的应用领域。科学计算、工业控制、虚拟现实都是计算机典型应用。",
+            "relatedTopicId": "ch2-s1-p3",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "questions": [
+          {
+            "id": "ch2-ch2-s2-single-1",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s2",
+            "sectionTitle": "2.2 计算机的应用",
+            "mode": "practice",
+            "type": "single",
+            "stem": "摩尔定律提出集成电路晶体管数约多久翻倍？",
+            "options": [
+              "6个月",
+              "12个月",
+              "18个月",
+              "36个月"
+            ],
+            "answerIndex": 2,
+            "explanation": "摩尔定律(Gordon Moore, 1965)：集成电路上晶体管数量约每18-24个月翻一番。",
+            "relatedTopicId": "ch2-s2-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch2-ch2-s2-single-2",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s2",
+            "sectionTitle": "2.2 计算机的应用",
+            "mode": "practice",
+            "type": "single",
+            "stem": "微型计算机核心是？",
+            "options": [
+              "存储器",
+              "微处理器",
+              "操作系统",
+              "总线"
+            ],
+            "answerIndex": 1,
+            "explanation": "微型计算机的核心部件是微处理器(CPU芯片)。1971年Intel 4004标志微处理器时代开始。",
+            "relatedTopicId": "ch2-s2-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch2-ch2-s2-single-3",
+            "chapterId": "ch2",
+            "sectionId": "ch2-s2",
+            "sectionTitle": "2.2 计算机的应用",
+            "mode": "practice",
+            "type": "single",
+            "stem": "IBM System/360的重要意义？",
+            "options": [
+              "第一台PC",
+              "首次使用晶体管",
+              "首次实现系列化兼容",
+              "首次使用集成电路"
+            ],
+            "answerIndex": 2,
+            "explanation": "IBM System/360(1964)首次实现了系列化兼容——不同型号的机器可运行相同的软件，是计算机历史上的里程碑。",
+            "relatedTopicId": "ch2-s2-p3",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch2-test-single-1",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "single",
+        "stem": "ENIAC诞生于？",
+        "options": [
+          "1942",
+          "1946",
+          "1950",
+          "1954"
+        ],
+        "answerIndex": 1,
+        "explanation": "ENIAC于1946年2月在美国宾夕法尼亚大学问世，是第一台通用电子数字计算机。",
+        "relatedTopicId": "ch2-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-single-2",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "single",
+        "stem": "摩尔定律提出集成电路晶体管数约多久翻倍？",
+        "options": [
+          "6个月",
+          "12个月",
+          "18个月",
+          "36个月"
+        ],
+        "answerIndex": 2,
+        "explanation": "摩尔定律(Gordon Moore, 1965)：集成电路上晶体管数量约每18-24个月翻一番。",
+        "relatedTopicId": "ch2-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-single-3",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "single",
+        "stem": "第二代计算机核心器件？",
+        "options": [
+          "电子管",
+          "晶体管",
+          "中小规模IC",
+          "LSI"
+        ],
+        "answerIndex": 1,
+        "explanation": "第二代(1958-1964)以晶体管替代电子管，体积缩小、功耗降低、可靠性大幅提高。",
+        "relatedTopicId": "ch2-s1-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-single-4",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "single",
+        "stem": "微型计算机核心是？",
+        "options": [
+          "存储器",
+          "微处理器",
+          "操作系统",
+          "总线"
+        ],
+        "answerIndex": 1,
+        "explanation": "微型计算机的核心部件是微处理器(CPU芯片)。1971年Intel 4004标志微处理器时代开始。",
+        "relatedTopicId": "ch2-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-single-5",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于计算机应用领域的是？",
+        "options": [
+          "科学计算",
+          "工业控制",
+          "基因编辑",
+          "虚拟现实"
+        ],
+        "answerIndex": 2,
+        "explanation": "基因编辑属于生物技术领域，不是计算机的应用领域。科学计算、工业控制、虚拟现实都是计算机典型应用。",
+        "relatedTopicId": "ch2-s1-p5",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-single-6",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "single",
+        "stem": "IBM System/360的重要意义？",
+        "options": [
+          "第一台PC",
+          "首次使用晶体管",
+          "首次实现系列化兼容",
+          "首次使用集成电路"
+        ],
+        "answerIndex": 2,
+        "explanation": "IBM System/360(1964)首次实现了系列化兼容——不同型号的机器可运行相同的软件，是计算机历史上的里程碑。",
+        "relatedTopicId": "ch2-s2-p6",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-judge-1",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "judge",
+        "stem": "ENIAC于1950年诞生。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-judge-2",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "judge",
+        "stem": "摩尔定律提出晶体管数量每年翻倍。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch2-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-judge-3",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "judge",
+        "stem": "晶体管是第三代计算机的核心器件。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-judge-4",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "judge",
+        "stem": "微型计算机的核心是微处理器。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch2-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-judge-5",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "judge",
+        "stem": "IBM System/360首次实现了系列化兼容。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p5",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-fill-1",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "fill",
+        "stem": "第二代计算机的核心器件是___。",
+        "answer": "晶体管",
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-fill-2",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "fill",
+        "stem": "摩尔定律预测晶体管数量约每___个月翻一倍。",
+        "answer": "18",
+        "explanation": "",
+        "relatedTopicId": "ch2-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-fill-3",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "fill",
+        "stem": "微型计算机的核心部件是___。",
+        "answer": "微处理器",
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-fill-4",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s2",
+        "sectionTitle": "2.2 计算机的应用",
+        "mode": "test",
+        "type": "fill",
+        "stem": "ENIAC于___年问世。",
+        "answer": "1946",
+        "explanation": "",
+        "relatedTopicId": "ch2-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch2-test-fill-5",
+        "chapterId": "ch2",
+        "sectionId": "ch2-s1",
+        "sectionTitle": "2.1 计算机的产生和发展",
+        "mode": "test",
+        "type": "fill",
+        "stem": "IBM System/360首次实现了___兼容。",
+        "answer": "系列化",
+        "explanation": "",
+        "relatedTopicId": "ch2-s1-p5",
+        "relatedSimulatorId": "sim-cache"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch3",
+    "chapterTitle": "系统总线",
+    "practiceSections": [
+      {
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "questions": [
+          {
+            "id": "ch3-ch3-s1-single-1",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s1",
+            "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+            "mode": "practice",
+            "type": "single",
+            "stem": "系统总线中双向传输的是？",
+            "options": [
+              "地址总线",
+              "数据总线",
+              "控制总线",
+              "电源线"
+            ],
+            "answerIndex": 1,
+            "explanation": "数据总线是双向传输的——CPU可以从中读数据也可以写数据。地址总线是单向的（CPU发出），控制总线每根线有固定方向。",
+            "relatedTopicId": "ch3-s1-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch3-ch3-s1-single-2",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s1",
+            "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+            "mode": "practice",
+            "type": "single",
+            "stem": "异步通信全互锁方式共几步？",
+            "options": [
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "answerIndex": 2,
+            "explanation": "全互锁异步通信共4步：请求→应答→撤销请求→撤销应答，形成完整的握手闭环。",
+            "relatedTopicId": "ch3-s1-p2",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch3-ch3-s1-single-3",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s1",
+            "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+            "mode": "practice",
+            "type": "single",
+            "stem": "总线复用指？",
+            "options": [
+              "地址线和数据线共用",
+              "多设备共享",
+              "总线分时",
+              "总线仲裁"
+            ],
+            "answerIndex": 0,
+            "explanation": "总线复用指地址线和数据线共用同一组物理连线，分时传送地址和数据，目的是减少引脚数。",
+            "relatedTopicId": "ch3-s1-p3",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch3-s2",
+        "sectionTitle": "3.3 总线特性及性能指标",
+        "questions": [
+          {
+            "id": "ch3-ch3-s2-single-1",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s2",
+            "sectionTitle": "3.3 总线特性及性能指标",
+            "mode": "practice",
+            "type": "single",
+            "stem": "总线带宽=64位×100MHz=？",
+            "options": [
+              "100MB/s",
+              "800MB/s",
+              "6400MB/s",
+              "6.4GB/s"
+            ],
+            "answerIndex": 1,
+            "explanation": "总线带宽=总线宽度×总线频率=64bit×100MHz=8B×100M=800MB/s",
+            "relatedTopicId": "ch3-s2-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch3-ch3-s2-single-2",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s2",
+            "sectionTitle": "3.3 总线特性及性能指标",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于总线特性的是？",
+            "options": [
+              "机械特性",
+              "电气特性",
+              "价格特性",
+              "时间特性"
+            ],
+            "answerIndex": 2,
+            "explanation": "总线四大特性：机械特性、电气特性、功能特性、时间特性。\"价格特性\"不存在。",
+            "relatedTopicId": "ch3-s2-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch3-s3",
+        "sectionTitle": "3.4 总线结构",
+        "questions": [
+          {
+            "id": "ch3-ch3-s3-single-1",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s3",
+            "sectionTitle": "3.4 总线结构",
+            "mode": "practice",
+            "type": "single",
+            "stem": "链式查询需几根控制线？",
+            "options": [
+              "1",
+              "2",
+              "3",
+              "n"
+            ],
+            "answerIndex": 2,
+            "explanation": "链式查询只需3根线：BS(总线忙)、BR(总线请求)、BG(总线同意)。BG线以菊花链方式串行连接所有设备。",
+            "relatedTopicId": "ch3-s3-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch3-ch3-s3-single-2",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s3",
+            "sectionTitle": "3.4 总线结构",
+            "mode": "practice",
+            "type": "single",
+            "stem": "PCIe属于哪种总线？",
+            "options": [
+              "片内总线",
+              "系统总线",
+              "通信总线",
+              "内存总线"
+            ],
+            "answerIndex": 1,
+            "explanation": "PCIe是通信总线，用于系统与高速外设之间的点对点串行通信。",
+            "relatedTopicId": "ch3-s3-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch3-s4",
+        "sectionTitle": "3.5 总线控制",
+        "questions": [
+          {
+            "id": "ch3-ch3-s4-single-1",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s4",
+            "sectionTitle": "3.5 总线控制",
+            "mode": "practice",
+            "type": "single",
+            "stem": "计数器定时查询比链式查询多出什么线？",
+            "options": [
+              "数据线",
+              "设备地址线",
+              "控制线",
+              "中断线"
+            ],
+            "answerIndex": 1,
+            "explanation": "计数器定时查询方式取消了BG线，改用设备地址线，需要log₂n根额外控制线来传输设备地址。",
+            "relatedTopicId": "ch3-s4-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch3-ch3-s4-single-2",
+            "chapterId": "ch3",
+            "sectionId": "ch3-s4",
+            "sectionTitle": "3.5 总线控制",
+            "mode": "practice",
+            "type": "single",
+            "stem": "独立请求方式每设备需几根独立控制线？",
+            "options": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "answerIndex": 1,
+            "explanation": "独立请求方式每台设备有独立的BR和BG两根线，共2根/设备。",
+            "relatedTopicId": "ch3-s4-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch3-test-single-1",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "single",
+        "stem": "系统总线中双向传输的是？",
+        "options": [
+          "地址总线",
+          "数据总线",
+          "控制总线",
+          "电源线"
+        ],
+        "answerIndex": 1,
+        "explanation": "数据总线是双向传输的——CPU可以从中读数据也可以写数据。地址总线是单向的（CPU发出），控制总线每根线有固定方向。",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-2",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s2",
+        "sectionTitle": "3.3 总线特性及性能指标",
+        "mode": "test",
+        "type": "single",
+        "stem": "总线带宽=64位×100MHz=？",
+        "options": [
+          "100MB/s",
+          "800MB/s",
+          "6400MB/s",
+          "6.4GB/s"
+        ],
+        "answerIndex": 1,
+        "explanation": "总线带宽=总线宽度×总线频率=64bit×100MHz=8B×100M=800MB/s",
+        "relatedTopicId": "ch3-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-3",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s3",
+        "sectionTitle": "3.4 总线结构",
+        "mode": "test",
+        "type": "single",
+        "stem": "链式查询需几根控制线？",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "n"
+        ],
+        "answerIndex": 2,
+        "explanation": "链式查询只需3根线：BS(总线忙)、BR(总线请求)、BG(总线同意)。BG线以菊花链方式串行连接所有设备。",
+        "relatedTopicId": "ch3-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-4",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s4",
+        "sectionTitle": "3.5 总线控制",
+        "mode": "test",
+        "type": "single",
+        "stem": "计数器定时查询比链式查询多出什么线？",
+        "options": [
+          "数据线",
+          "设备地址线",
+          "控制线",
+          "中断线"
+        ],
+        "answerIndex": 1,
+        "explanation": "计数器定时查询方式取消了BG线，改用设备地址线，需要log₂n根额外控制线来传输设备地址。",
+        "relatedTopicId": "ch3-s4-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-5",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "single",
+        "stem": "异步通信全互锁方式共几步？",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "answerIndex": 2,
+        "explanation": "全互锁异步通信共4步：请求→应答→撤销请求→撤销应答，形成完整的握手闭环。",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-6",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s2",
+        "sectionTitle": "3.3 总线特性及性能指标",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于总线特性的是？",
+        "options": [
+          "机械特性",
+          "电气特性",
+          "价格特性",
+          "时间特性"
+        ],
+        "answerIndex": 2,
+        "explanation": "总线四大特性：机械特性、电气特性、功能特性、时间特性。\"价格特性\"不存在。",
+        "relatedTopicId": "ch3-s2-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-7",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s3",
+        "sectionTitle": "3.4 总线结构",
+        "mode": "test",
+        "type": "single",
+        "stem": "PCIe属于哪种总线？",
+        "options": [
+          "片内总线",
+          "系统总线",
+          "通信总线",
+          "内存总线"
+        ],
+        "answerIndex": 1,
+        "explanation": "PCIe是通信总线，用于系统与高速外设之间的点对点串行通信。",
+        "relatedTopicId": "ch3-s3-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-8",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s4",
+        "sectionTitle": "3.5 总线控制",
+        "mode": "test",
+        "type": "single",
+        "stem": "独立请求方式每设备需几根独立控制线？",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "answerIndex": 1,
+        "explanation": "独立请求方式每台设备有独立的BR和BG两根线，共2根/设备。",
+        "relatedTopicId": "ch3-s4-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-single-9",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "single",
+        "stem": "总线复用指？",
+        "options": [
+          "地址线和数据线共用",
+          "多设备共享",
+          "总线分时",
+          "总线仲裁"
+        ],
+        "answerIndex": 0,
+        "explanation": "总线复用指地址线和数据线共用同一组物理连线，分时传送地址和数据，目的是减少引脚数。",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-judge-1",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "judge",
+        "stem": "数据总线是单向传输的。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-judge-2",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s2",
+        "sectionTitle": "3.3 总线特性及性能指标",
+        "mode": "test",
+        "type": "judge",
+        "stem": "总线带宽=总线宽度×总线频率。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch3-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-judge-3",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s3",
+        "sectionTitle": "3.4 总线结构",
+        "mode": "test",
+        "type": "judge",
+        "stem": "链式查询方式共用5根控制线。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch3-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-judge-4",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s4",
+        "sectionTitle": "3.5 总线控制",
+        "mode": "test",
+        "type": "judge",
+        "stem": "异步通信全互锁方式需要4步握手。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch3-s4-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-judge-5",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "judge",
+        "stem": "PCIe是一种并行总线。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-fill-1",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "fill",
+        "stem": "系统总线中___总线是双向的。",
+        "answer": "数据",
+        "explanation": "",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-fill-2",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s2",
+        "sectionTitle": "3.3 总线特性及性能指标",
+        "mode": "test",
+        "type": "fill",
+        "stem": "总线带宽=总线宽度×___。",
+        "answer": "总线频率",
+        "explanation": "",
+        "relatedTopicId": "ch3-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-fill-3",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s3",
+        "sectionTitle": "3.4 总线结构",
+        "mode": "test",
+        "type": "fill",
+        "stem": "链式查询需要___根控制线。",
+        "answer": "3",
+        "explanation": "",
+        "relatedTopicId": "ch3-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-fill-4",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s4",
+        "sectionTitle": "3.5 总线控制",
+        "mode": "test",
+        "type": "fill",
+        "stem": "计数器定时查询比链式查询多了___线。",
+        "answer": "设备地址",
+        "explanation": "",
+        "relatedTopicId": "ch3-s4-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch3-test-fill-5",
+        "chapterId": "ch3",
+        "sectionId": "ch3-s1",
+        "sectionTitle": "3.1-3.2 总线的基本概念与分类",
+        "mode": "test",
+        "type": "fill",
+        "stem": "PCIe是一种___通信总线。",
+        "answer": "串行",
+        "explanation": "",
+        "relatedTopicId": "ch3-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch4",
+    "chapterTitle": "存储器",
+    "practiceSections": [
+      {
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "questions": [
+          {
+            "id": "ch4-ch4-s1-single-1",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s1",
+            "sectionTitle": "4.1 存储器概述",
+            "mode": "practice",
+            "type": "single",
+            "stem": "Cache通常用哪种存储器实现？",
+            "options": [
+              "DRAM",
+              "SRAM",
+              "Flash",
+              "磁盘"
+            ],
+            "answerIndex": 1,
+            "explanation": "Cache用SRAM实现——速度快但集成度低成本高。DRAM速度慢但容量大，用作主存。Flash和磁盘是辅存。",
+            "relatedTopicId": "ch4-s1-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s1-single-2",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s1",
+            "sectionTitle": "4.1 存储器概述",
+            "mode": "practice",
+            "type": "single",
+            "stem": "直接映射Cache地址分为？",
+            "options": [
+              "标记|行号|块内偏移",
+              "标记|块号",
+              "行号|偏移",
+              "标记|组号|偏移"
+            ],
+            "answerIndex": 0,
+            "explanation": "直接映射Cache地址分三段：标记(tag)用于区分不同主存块映射到同一行的情况，行号(index)确定Cache行位置，块内偏移(offset)定位块内具体字节。",
+            "relatedTopicId": "ch4-s1-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s1-single-3",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s1",
+            "sectionTitle": "4.1 存储器概述",
+            "mode": "practice",
+            "type": "single",
+            "stem": "汉明码能？",
+            "options": [
+              "检1纠2",
+              "纠1检2",
+              "只检不错",
+              "只纠不错"
+            ],
+            "answerIndex": 1,
+            "explanation": "汉明码能纠正1位错、检测2位错。通过插入k个校验位（位置在2的幂次方），使n+k位编码中任意两个合法码字距离≥3。纠错时重新计算校验位的奇偶性，得到的指误字指出出错位位置。",
+            "relatedTopicId": "ch4-s1-p3",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "questions": [
+          {
+            "id": "ch4-ch4-s2-single-1",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s2",
+            "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+            "mode": "practice",
+            "type": "single",
+            "stem": "DRAM需要刷新的原因是？",
+            "options": [
+              "触发器漏电",
+              "电容漏电",
+              "磁介质退化",
+              "光衰减"
+            ],
+            "answerIndex": 1,
+            "explanation": "DRAM存储元是电容+MOS管，电容会缓慢漏电，必须定期刷新（读出后重写）才能保持数据。SRAM用双稳态触发器，不需要刷新。",
+            "relatedTopicId": "ch4-s2-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s2-single-2",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s2",
+            "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+            "mode": "practice",
+            "type": "single",
+            "stem": "写回策略(Write Back)的特点是？",
+            "options": [
+              "每写必同时更新主存",
+              "替换时才写回主存",
+              "不写主存",
+              "写入另一个Cache"
+            ],
+            "answerIndex": 1,
+            "explanation": "写回策略：写入时只更新Cache不更新主存，当该块被替换出Cache时才写回主存（需脏位标记是否被修改过）。优点是速度快，缺点是主存数据可能过时。",
+            "relatedTopicId": "ch4-s2-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s2-single-3",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s2",
+            "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于半导体存储器的是？",
+            "options": [
+              "SRAM",
+              "DRAM",
+              "ROM",
+              "磁盘"
+            ],
+            "answerIndex": 3,
+            "explanation": "磁盘属于磁表面存储器，不是半导体存储器。半导体存储器包括SRAM、DRAM和各种ROM（PROM/EPROM/EEPROM/Flash）。",
+            "relatedTopicId": "ch4-s2-p3",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch4-s3",
+        "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+        "questions": [
+          {
+            "id": "ch4-ch4-s3-single-1",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s3",
+            "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+            "mode": "practice",
+            "type": "single",
+            "stem": "LRU替换策略含义？",
+            "options": [
+              "最先进入的被替换",
+              "最近最少使用的被替换",
+              "随机的被替换",
+              "最大的被替换"
+            ],
+            "answerIndex": 1,
+            "explanation": "LRU（Least Recently Used）替换近期最少使用的块。基于局部性原理：最近未用的块将来也不太可能被使用。这是命中率最高的替换策略。",
+            "relatedTopicId": "ch4-s3-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s3-single-2",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s3",
+            "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+            "mode": "practice",
+            "type": "single",
+            "stem": "存储器层次从上到下？",
+            "options": [
+              "辅存→主存→Cache→寄存器",
+              "寄存器→Cache→主存→辅存",
+              "Cache→寄存器→主存→辅存",
+              "寄存器→主存→Cache→辅存"
+            ],
+            "answerIndex": 1,
+            "explanation": "存储器层次结构从上到下：寄存器(速度最快容量最小)→Cache→主存(DRAM)→辅存(磁盘/SSD，速度最慢容量最大)。",
+            "relatedTopicId": "ch4-s3-p2",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch4-s4",
+        "sectionTitle": "4.4 辅助存储器",
+        "questions": [
+          {
+            "id": "ch4-ch4-s4-single-1",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s4",
+            "sectionTitle": "4.4 辅助存储器",
+            "mode": "practice",
+            "type": "single",
+            "stem": "平均访存时间=？",
+            "options": [
+              "h×tc+(1-h)×tm",
+              "tc+tm",
+              "(tc+tm)/2",
+              "h×tm"
+            ],
+            "answerIndex": 0,
+            "explanation": "平均访存时间=h×tc+(1-h)×tm。h为命中率（CPU在Cache中找到数据的概率），tc为Cache访问时间，tm为主存访问时间。若h=0.95、tc=5ns、tm=50ns，则平均=7.25ns。",
+            "relatedTopicId": "ch4-s4-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch4-ch4-s4-single-2",
+            "chapterId": "ch4",
+            "sectionId": "ch4-s4",
+            "sectionTitle": "4.4 辅助存储器",
+            "mode": "practice",
+            "type": "single",
+            "stem": "8体低位交叉编址主存，连续地址分布在？",
+            "options": [
+              "同一体",
+              "不同体",
+              "第0体",
+              "最后一"
+            ],
+            "answerIndex": 1,
+            "explanation": "8体低位交叉编址：连续地址分布在不同体中（体号=地址%8），可实现流水线方式访问不同体，带宽理论上提升8倍。",
+            "relatedTopicId": "ch4-s4-p2",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch4-test-single-1",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "single",
+        "stem": "Cache通常用哪种存储器实现？",
+        "options": [
+          "DRAM",
+          "SRAM",
+          "Flash",
+          "磁盘"
+        ],
+        "answerIndex": 1,
+        "explanation": "Cache用SRAM实现——速度快但集成度低成本高。DRAM速度慢但容量大，用作主存。Flash和磁盘是辅存。",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-2",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "mode": "test",
+        "type": "single",
+        "stem": "DRAM需要刷新的原因是？",
+        "options": [
+          "触发器漏电",
+          "电容漏电",
+          "磁介质退化",
+          "光衰减"
+        ],
+        "answerIndex": 1,
+        "explanation": "DRAM存储元是电容+MOS管，电容会缓慢漏电，必须定期刷新（读出后重写）才能保持数据。SRAM用双稳态触发器，不需要刷新。",
+        "relatedTopicId": "ch4-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-3",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s3",
+        "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+        "mode": "test",
+        "type": "single",
+        "stem": "LRU替换策略含义？",
+        "options": [
+          "最先进入的被替换",
+          "最近最少使用的被替换",
+          "随机的被替换",
+          "最大的被替换"
+        ],
+        "answerIndex": 1,
+        "explanation": "LRU（Least Recently Used）替换近期最少使用的块。基于局部性原理：最近未用的块将来也不太可能被使用。这是命中率最高的替换策略。",
+        "relatedTopicId": "ch4-s3-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-4",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s4",
+        "sectionTitle": "4.4 辅助存储器",
+        "mode": "test",
+        "type": "single",
+        "stem": "平均访存时间=？",
+        "options": [
+          "h×tc+(1-h)×tm",
+          "tc+tm",
+          "(tc+tm)/2",
+          "h×tm"
+        ],
+        "answerIndex": 0,
+        "explanation": "平均访存时间=h×tc+(1-h)×tm。h为命中率（CPU在Cache中找到数据的概率），tc为Cache访问时间，tm为主存访问时间。若h=0.95、tc=5ns、tm=50ns，则平均=7.25ns。",
+        "relatedTopicId": "ch4-s4-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-5",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "single",
+        "stem": "直接映射Cache地址分为？",
+        "options": [
+          "标记|行号|块内偏移",
+          "标记|块号",
+          "行号|偏移",
+          "标记|组号|偏移"
+        ],
+        "answerIndex": 0,
+        "explanation": "直接映射Cache地址分三段：标记(tag)用于区分不同主存块映射到同一行的情况，行号(index)确定Cache行位置，块内偏移(offset)定位块内具体字节。",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-6",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "mode": "test",
+        "type": "single",
+        "stem": "写回策略(Write Back)的特点是？",
+        "options": [
+          "每写必同时更新主存",
+          "替换时才写回主存",
+          "不写主存",
+          "写入另一个Cache"
+        ],
+        "answerIndex": 1,
+        "explanation": "写回策略：写入时只更新Cache不更新主存，当该块被替换出Cache时才写回主存（需脏位标记是否被修改过）。优点是速度快，缺点是主存数据可能过时。",
+        "relatedTopicId": "ch4-s2-p6",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch4-test-single-7",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s3",
+        "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+        "mode": "test",
+        "type": "single",
+        "stem": "存储器层次从上到下？",
+        "options": [
+          "辅存→主存→Cache→寄存器",
+          "寄存器→Cache→主存→辅存",
+          "Cache→寄存器→主存→辅存",
+          "寄存器→主存→Cache→辅存"
+        ],
+        "answerIndex": 1,
+        "explanation": "存储器层次结构从上到下：寄存器(速度最快容量最小)→Cache→主存(DRAM)→辅存(磁盘/SSD，速度最慢容量最大)。",
+        "relatedTopicId": "ch4-s3-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-8",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s4",
+        "sectionTitle": "4.4 辅助存储器",
+        "mode": "test",
+        "type": "single",
+        "stem": "8体低位交叉编址主存，连续地址分布在？",
+        "options": [
+          "同一体",
+          "不同体",
+          "第0体",
+          "最后一"
+        ],
+        "answerIndex": 1,
+        "explanation": "8体低位交叉编址：连续地址分布在不同体中（体号=地址%8），可实现流水线方式访问不同体，带宽理论上提升8倍。",
+        "relatedTopicId": "ch4-s4-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-9",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "single",
+        "stem": "汉明码能？",
+        "options": [
+          "检1纠2",
+          "纠1检2",
+          "只检不错",
+          "只纠不错"
+        ],
+        "answerIndex": 1,
+        "explanation": "汉明码能纠正1位错、检测2位错。通过插入k个校验位（位置在2的幂次方），使n+k位编码中任意两个合法码字距离≥3。纠错时重新计算校验位的奇偶性，得到的指误字指出出错位位置。",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-single-10",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于半导体存储器的是？",
+        "options": [
+          "SRAM",
+          "DRAM",
+          "ROM",
+          "磁盘"
+        ],
+        "answerIndex": 3,
+        "explanation": "磁盘属于磁表面存储器，不是半导体存储器。半导体存储器包括SRAM、DRAM和各种ROM（PROM/EPROM/EEPROM/Flash）。",
+        "relatedTopicId": "ch4-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-judge-1",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "judge",
+        "stem": "SRAM需要定期刷新才能保持数据。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-judge-2",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "mode": "test",
+        "type": "judge",
+        "stem": "DRAM的读操作是非破坏性的。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch4-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-judge-3",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s3",
+        "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+        "mode": "test",
+        "type": "judge",
+        "stem": "Cache与主存的地址映射方式只有直接映射一种。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch4-s3-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-judge-4",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s4",
+        "sectionTitle": "4.4 辅助存储器",
+        "mode": "test",
+        "type": "judge",
+        "stem": "写回策略在被替换时才将数据写回主存。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch4-s4-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-judge-5",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "judge",
+        "stem": "存储器层次结构中，寄存器位于最底层。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-fill-1",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "fill",
+        "stem": "Cache通常用___（存储类型）实现。",
+        "answer": "SRAM",
+        "explanation": "",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-fill-2",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s2",
+        "sectionTitle": "4.2 主存储器——SRAM与DRAM",
+        "mode": "test",
+        "type": "fill",
+        "stem": "DRAM需要定期___以保持数据不丢失。",
+        "answer": "刷新",
+        "explanation": "",
+        "relatedTopicId": "ch4-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-fill-3",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s3",
+        "sectionTitle": "4.3 高速缓冲存储器(Cache)",
+        "mode": "test",
+        "type": "fill",
+        "stem": "LRU的完整英文是Least___Used。",
+        "answer": "Recently",
+        "explanation": "",
+        "relatedTopicId": "ch4-s3-p3",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-fill-4",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s4",
+        "sectionTitle": "4.4 辅助存储器",
+        "mode": "test",
+        "type": "fill",
+        "stem": "写回策略中，被修改的Cache块用___位标记。",
+        "answer": "脏",
+        "explanation": "",
+        "relatedTopicId": "ch4-s4-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch4-test-fill-5",
+        "chapterId": "ch4",
+        "sectionId": "ch4-s1",
+        "sectionTitle": "4.1 存储器概述",
+        "mode": "test",
+        "type": "fill",
+        "stem": "汉明码能纠正___位错、检测2位错。",
+        "answer": "1",
+        "explanation": "",
+        "relatedTopicId": "ch4-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch5",
+    "chapterTitle": "输入输出系统",
+    "practiceSections": [
+      {
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "questions": [
+          {
+            "id": "ch5-ch5-s1-single-1",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s1",
+            "sectionTitle": "5.1 I/O接口",
+            "mode": "practice",
+            "type": "single",
+            "stem": "效率最低的I/O方式是？",
+            "options": [
+              "程序查询",
+              "程序中断",
+              "DMA",
+              "通道"
+            ],
+            "answerIndex": 0,
+            "explanation": "程序查询方式CPU主动循环检测设备状态，CPU与外设完全串行工作——CPU大量时间浪费在等待查询上，效率最低。中断和DMA都实现了CPU与I/O的并行。",
+            "relatedTopicId": "ch5-s1-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch5-ch5-s1-single-2",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s1",
+            "sectionTitle": "5.1 I/O接口",
+            "mode": "practice",
+            "type": "single",
+            "stem": "适用于磁盘高速大批量传送的是？",
+            "options": [
+              "程序查询",
+              "程序中断",
+              "DMA",
+              "人工"
+            ],
+            "answerIndex": 2,
+            "explanation": "DMA（直接存储器访问）最适合磁盘等高速大批量数据传送——在主存和I/O间建立直接通路，CPU仅在传送开始和结束时介入，传输过程完全由DMA控制器硬件完成。",
+            "relatedTopicId": "ch5-s1-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch5-s2",
+        "sectionTitle": "5.2 程序查询方式",
+        "questions": [
+          {
+            "id": "ch5-ch5-s2-single-1",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s2",
+            "sectionTitle": "5.2 程序查询方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "DMA在什么时候响应总线请求？",
+            "options": [
+              "指令结束",
+              "存取周期结束",
+              "中断周期结束",
+              "任何时间"
+            ],
+            "answerIndex": 1,
+            "explanation": "DMA在存取周期结束时响应总线请求。区别于中断在指令执行结束时响应——DMA响应更及时，可以在当前总线周期结束后立即获得总线控制权。",
+            "relatedTopicId": "ch5-s2-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch5-ch5-s2-single-2",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s2",
+            "sectionTitle": "5.2 程序查询方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断嵌套指？",
+            "options": [
+              "多个中断同时处理",
+              "高优先级可打断低优先级服务",
+              "中断服务中再中断",
+              "一种错误"
+            ],
+            "answerIndex": 1,
+            "explanation": "中断嵌套指高优先级中断可以打断正在执行的低优先级中断服务程序，先去处理更紧急的高优先级事件，完成后返回继续低优先级服务。这是通过中断屏蔽技术实现的。",
+            "relatedTopicId": "ch5-s2-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch5-s3",
+        "sectionTitle": "5.3 程序中断方式",
+        "questions": [
+          {
+            "id": "ch5-ch5-s3-single-1",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s3",
+            "sectionTitle": "5.3 程序中断方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断响应时先做什么？",
+            "options": [
+              "关中断",
+              "保存断点",
+              "取向量",
+              "执行服务"
+            ],
+            "answerIndex": 0,
+            "explanation": "中断响应第一步：关中断（置EINT=0），防止响应过程中被新的中断请求干扰。然后才是保存断点（PC和PSW入栈）。这三步由硬件自动完成（中断隐指令）。",
+            "relatedTopicId": "ch5-s3-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch5-ch5-s3-single-2",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s3",
+            "sectionTitle": "5.3 程序中断方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于I/O接口功能的是？",
+            "options": [
+              "选址",
+              "传命令",
+              "算术运算",
+              "反映状态"
+            ],
+            "answerIndex": 2,
+            "explanation": "I/O接口的四大功能：选址、传送命令、传送数据、反映设备状态。算术运算是CPU（ALU）的功能，不是I/O接口的任务。",
+            "relatedTopicId": "ch5-s3-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch5-s4",
+        "sectionTitle": "5.4 DMA方式",
+        "questions": [
+          {
+            "id": "ch5-ch5-s4-single-1",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s4",
+            "sectionTitle": "5.4 DMA方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断隐指令不包括？",
+            "options": [
+              "关中断",
+              "保存断点",
+              "取向量",
+              "数据传送"
+            ],
+            "answerIndex": 3,
+            "explanation": "中断隐指令包括：关中断、保存断点(PC/PSW入栈)、形成中断服务程序入口地址（取向量）。数据传送是中断服务程序的事，不是隐指令的内容。",
+            "relatedTopicId": "ch5-s4-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch5-ch5-s4-single-2",
+            "chapterId": "ch5",
+            "sectionId": "ch5-s4",
+            "sectionTitle": "5.4 DMA方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断屏蔽字的作用？",
+            "options": [
+              "加速中断",
+              "控制中断响应优先级",
+              "关闭中断",
+              "减少中断"
+            ],
+            "answerIndex": 1,
+            "explanation": "中断屏蔽字：每位对应一个中断源优先级。CPU可以编程设置屏蔽字——1表示屏蔽该级及更低级中断。这样低优先级无法打断高优先级服务，实现了灵活的动态优先级管理。",
+            "relatedTopicId": "ch5-s4-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch5-test-single-1",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "single",
+        "stem": "效率最低的I/O方式是？",
+        "options": [
+          "程序查询",
+          "程序中断",
+          "DMA",
+          "通道"
+        ],
+        "answerIndex": 0,
+        "explanation": "程序查询方式CPU主动循环检测设备状态，CPU与外设完全串行工作——CPU大量时间浪费在等待查询上，效率最低。中断和DMA都实现了CPU与I/O的并行。",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-2",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s2",
+        "sectionTitle": "5.2 程序查询方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "DMA在什么时候响应总线请求？",
+        "options": [
+          "指令结束",
+          "存取周期结束",
+          "中断周期结束",
+          "任何时间"
+        ],
+        "answerIndex": 1,
+        "explanation": "DMA在存取周期结束时响应总线请求。区别于中断在指令执行结束时响应——DMA响应更及时，可以在当前总线周期结束后立即获得总线控制权。",
+        "relatedTopicId": "ch5-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-3",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s3",
+        "sectionTitle": "5.3 程序中断方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断响应时先做什么？",
+        "options": [
+          "关中断",
+          "保存断点",
+          "取向量",
+          "执行服务"
+        ],
+        "answerIndex": 0,
+        "explanation": "中断响应第一步：关中断（置EINT=0），防止响应过程中被新的中断请求干扰。然后才是保存断点（PC和PSW入栈）。这三步由硬件自动完成（中断隐指令）。",
+        "relatedTopicId": "ch5-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-4",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s4",
+        "sectionTitle": "5.4 DMA方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断隐指令不包括？",
+        "options": [
+          "关中断",
+          "保存断点",
+          "取向量",
+          "数据传送"
+        ],
+        "answerIndex": 3,
+        "explanation": "中断隐指令包括：关中断、保存断点(PC/PSW入栈)、形成中断服务程序入口地址（取向量）。数据传送是中断服务程序的事，不是隐指令的内容。",
+        "relatedTopicId": "ch5-s4-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch5-test-single-5",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "single",
+        "stem": "适用于磁盘高速大批量传送的是？",
+        "options": [
+          "程序查询",
+          "程序中断",
+          "DMA",
+          "人工"
+        ],
+        "answerIndex": 2,
+        "explanation": "DMA（直接存储器访问）最适合磁盘等高速大批量数据传送——在主存和I/O间建立直接通路，CPU仅在传送开始和结束时介入，传输过程完全由DMA控制器硬件完成。",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-6",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s2",
+        "sectionTitle": "5.2 程序查询方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断嵌套指？",
+        "options": [
+          "多个中断同时处理",
+          "高优先级可打断低优先级服务",
+          "中断服务中再中断",
+          "一种错误"
+        ],
+        "answerIndex": 1,
+        "explanation": "中断嵌套指高优先级中断可以打断正在执行的低优先级中断服务程序，先去处理更紧急的高优先级事件，完成后返回继续低优先级服务。这是通过中断屏蔽技术实现的。",
+        "relatedTopicId": "ch5-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-7",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s3",
+        "sectionTitle": "5.3 程序中断方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于I/O接口功能的是？",
+        "options": [
+          "选址",
+          "传命令",
+          "算术运算",
+          "反映状态"
+        ],
+        "answerIndex": 2,
+        "explanation": "I/O接口的四大功能：选址、传送命令、传送数据、反映设备状态。算术运算是CPU（ALU）的功能，不是I/O接口的任务。",
+        "relatedTopicId": "ch5-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-single-8",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s4",
+        "sectionTitle": "5.4 DMA方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断屏蔽字的作用？",
+        "options": [
+          "加速中断",
+          "控制中断响应优先级",
+          "关闭中断",
+          "减少中断"
+        ],
+        "answerIndex": 1,
+        "explanation": "中断屏蔽字：每位对应一个中断源优先级。CPU可以编程设置屏蔽字——1表示屏蔽该级及更低级中断。这样低优先级无法打断高优先级服务，实现了灵活的动态优先级管理。",
+        "relatedTopicId": "ch5-s4-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-judge-1",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "judge",
+        "stem": "程序查询方式下CPU与I/O设备可并行工作。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-judge-2",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s2",
+        "sectionTitle": "5.2 程序查询方式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "中断方式下CPU在每条指令执行结束时检查中断请求。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch5-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-judge-3",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s3",
+        "sectionTitle": "5.3 程序中断方式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "DMA方式下数据传送完全不需要CPU干预。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch5-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-judge-4",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s4",
+        "sectionTitle": "5.4 DMA方式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "DMA传送期间不需要占用总线。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch5-s4-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch5-test-judge-5",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "judge",
+        "stem": "中断屏蔽字可以动态改变中断响应优先级。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-fill-1",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "fill",
+        "stem": "效率最低的I/O控制方式是___。",
+        "answer": "程序查询",
+        "explanation": "",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-fill-2",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s2",
+        "sectionTitle": "5.2 程序查询方式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "DMA的中文全称是___。",
+        "answer": "直接存储器访问",
+        "explanation": "",
+        "relatedTopicId": "ch5-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-fill-3",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s3",
+        "sectionTitle": "5.3 程序中断方式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "中断响应时的第一步是___。",
+        "answer": "关中断",
+        "explanation": "",
+        "relatedTopicId": "ch5-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch5-test-fill-4",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s4",
+        "sectionTitle": "5.4 DMA方式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "中断隐指令由___自动完成。",
+        "answer": "硬件",
+        "explanation": "",
+        "relatedTopicId": "ch5-s4-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch5-test-fill-5",
+        "chapterId": "ch5",
+        "sectionId": "ch5-s1",
+        "sectionTitle": "5.1 I/O接口",
+        "mode": "test",
+        "type": "fill",
+        "stem": "适用于高速大批量数据传送的I/O方式是___。",
+        "answer": "DMA",
+        "explanation": "",
+        "relatedTopicId": "ch5-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch6",
+    "chapterTitle": "计算机的运算方法",
+    "practiceSections": [
+      {
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "questions": [
+          {
+            "id": "ch6-ch6-s1-single-1",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s1",
+            "sectionTitle": "6.1 数制与码制",
+            "mode": "practice",
+            "type": "single",
+            "stem": "[-X]补的求法？",
+            "options": [
+              "原码取反",
+              "[X]补连同符号取反+1",
+              "符号不变其他取反",
+              "取绝对值"
+            ],
+            "answerIndex": 1,
+            "explanation": "[-X]补的快速求法：[X]补连同符号位一起取反再加1。例如[+5]补=0101，[-5]补=1011。这是补码最重要的性质之一。",
+            "relatedTopicId": "ch6-s1-p1",
+            "relatedSimulatorId": "sim-base"
+          },
+          {
+            "id": "ch6-ch6-s1-single-2",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s1",
+            "sectionTitle": "6.1 数制与码制",
+            "mode": "practice",
+            "type": "single",
+            "stem": "Booth算法处理的是？",
+            "options": [
+              "原码乘法",
+              "补码乘法",
+              "原码除法",
+              "补码除法"
+            ],
+            "answerIndex": 1,
+            "explanation": "Booth算法是补码乘法的标准算法——不需要将补码转回原码，符号位参与运算。通过检查乘数相邻两位决定+[X]补、-[X]补或+0。",
+            "relatedTopicId": "ch6-s1-p2",
+            "relatedSimulatorId": "sim-complement"
+          },
+          {
+            "id": "ch6-ch6-s1-single-3",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s1",
+            "sectionTitle": "6.1 数制与码制",
+            "mode": "practice",
+            "type": "single",
+            "stem": "IEEE754 NaN表示？",
+            "options": [
+              "0/0",
+              "1/0",
+              "0/1",
+              "1"
+            ],
+            "answerIndex": 0,
+            "explanation": "IEEE754中NaN（Not a Number）表示非数值结果。阶码全1且尾数M≠0时表示NaN，典型如0/0、∞-∞等未定义运算。1/0得±∞（阶码全1尾数全0）。",
+            "relatedTopicId": "ch6-s1-p3",
+            "relatedSimulatorId": "sim-complement"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "questions": [
+          {
+            "id": "ch6-ch6-s2-single-1",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s2",
+            "sectionTitle": "6.2 定点运算",
+            "mode": "practice",
+            "type": "single",
+            "stem": "溢出判断可用？",
+            "options": [
+              "Cn⊕Cn-1",
+              "Cn∧Cn-1",
+              "Cn",
+              "数值进位"
+            ],
+            "answerIndex": 0,
+            "explanation": "溢出判断可用Cn⊕Cn-1：符号位进位与最高数值位进位异或。若两个进位不同→溢出。例如双符号位法用00正常/01正溢出/10负溢出；进位判断法看同号相加结果变号。",
+            "relatedTopicId": "ch6-s2-p1",
+            "relatedSimulatorId": "sim-complement"
+          },
+          {
+            "id": "ch6-ch6-s2-single-2",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s2",
+            "sectionTitle": "6.2 定点运算",
+            "mode": "practice",
+            "type": "single",
+            "stem": "浮点数对阶时？",
+            "options": [
+              "大阶向小阶对齐",
+              "小阶向大阶对齐",
+              "任意对齐",
+              "不需要对齐"
+            ],
+            "answerIndex": 1,
+            "explanation": "浮点数加减第一步是对阶——小阶向大阶对齐。将阶码小的数的尾数右移，阶码增加至与大阶相同。小阶向大阶可保证较大数的精度不损失。",
+            "relatedTopicId": "ch6-s2-p2",
+            "relatedSimulatorId": "sim-complement"
+          },
+          {
+            "id": "ch6-ch6-s2-single-3",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s2",
+            "sectionTitle": "6.2 定点运算",
+            "mode": "practice",
+            "type": "single",
+            "stem": "全加器输入不包括？",
+            "options": [
+              "Ai",
+              "Bi",
+              "Ci-1",
+              "Si"
+            ],
+            "answerIndex": 3,
+            "explanation": "全加器输入三个：Ai、Bi、Ci-1（低位进位）。输出两个：Si（和）=Ai⊕Bi⊕Ci-1，Ci（进位）=AiBi+(Ai⊕Bi)Ci-1。Si是输出不是输入。",
+            "relatedTopicId": "ch6-s2-p3",
+            "relatedSimulatorId": "sim-complement"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch6-s3",
+        "sectionTitle": "6.3 浮点运算",
+        "questions": [
+          {
+            "id": "ch6-ch6-s3-single-1",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s3",
+            "sectionTitle": "6.3 浮点运算",
+            "mode": "practice",
+            "type": "single",
+            "stem": "IEEE754单精度阶码偏置？",
+            "options": [
+              "64",
+              "127",
+              "128",
+              "1023"
+            ],
+            "answerIndex": 1,
+            "explanation": "IEEE754单精度浮点数：1位符号+8位阶码(移码偏127)+23位尾数(隐含1)。阶码真值=E-127。双精度偏置1023。",
+            "relatedTopicId": "ch6-s3-p1",
+            "relatedSimulatorId": "sim-base"
+          },
+          {
+            "id": "ch6-ch6-s3-single-2",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s3",
+            "sectionTitle": "6.3 浮点运算",
+            "mode": "practice",
+            "type": "single",
+            "stem": "8位补码范围？",
+            "options": [
+              "0~255",
+              "-127~+127",
+              "-128~+127",
+              "-127~+128"
+            ],
+            "answerIndex": 2,
+            "explanation": "8位补码整数范围：-2⁷ ~ 2⁷-1 = -128 ~ +127。注意负数比正数多一个（-128没有对应的正数+128）。",
+            "relatedTopicId": "ch6-s3-p2",
+            "relatedSimulatorId": "sim-complement"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch6-s4",
+        "sectionTitle": "6.4 ALU设计",
+        "questions": [
+          {
+            "id": "ch6-ch6-s4-single-1",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s4",
+            "sectionTitle": "6.4 ALU设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "双符号位01表示？",
+            "options": [
+              "正数",
+              "负数",
+              "正溢出",
+              "负溢出"
+            ],
+            "answerIndex": 2,
+            "explanation": "双符号位：00正常正数，11正常负数，01正溢出（两个正数相加超出了表示范围），10负溢出（两个负数相加超出范围）。双符号位01表示上溢。",
+            "relatedTopicId": "ch6-s4-p1",
+            "relatedSimulatorId": "sim-complement"
+          },
+          {
+            "id": "ch6-ch6-s4-single-2",
+            "chapterId": "ch6",
+            "sectionId": "ch6-s4",
+            "sectionTitle": "6.4 ALU设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "浮点数尾数位数决定？",
+            "options": [
+              "表示范围",
+              "精度",
+              "速度",
+              "功耗"
+            ],
+            "answerIndex": 1,
+            "explanation": "浮点数中尾数位数决定精度（有效数字的位数），阶码位数决定表示范围（能表示的最大最小数值）。",
+            "relatedTopicId": "ch6-s4-p2",
+            "relatedSimulatorId": "sim-complement"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch6-test-single-1",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "single",
+        "stem": "[-X]补的求法？",
+        "options": [
+          "原码取反",
+          "[X]补连同符号取反+1",
+          "符号不变其他取反",
+          "取绝对值"
+        ],
+        "answerIndex": 1,
+        "explanation": "[-X]补的快速求法：[X]补连同符号位一起取反再加1。例如[+5]补=0101，[-5]补=1011。这是补码最重要的性质之一。",
+        "relatedTopicId": "ch6-s1-p1",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch6-test-single-2",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "mode": "test",
+        "type": "single",
+        "stem": "溢出判断可用？",
+        "options": [
+          "Cn⊕Cn-1",
+          "Cn∧Cn-1",
+          "Cn",
+          "数值进位"
+        ],
+        "answerIndex": 0,
+        "explanation": "溢出判断可用Cn⊕Cn-1：符号位进位与最高数值位进位异或。若两个进位不同→溢出。例如双符号位法用00正常/01正溢出/10负溢出；进位判断法看同号相加结果变号。",
+        "relatedTopicId": "ch6-s2-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-3",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s3",
+        "sectionTitle": "6.3 浮点运算",
+        "mode": "test",
+        "type": "single",
+        "stem": "IEEE754单精度阶码偏置？",
+        "options": [
+          "64",
+          "127",
+          "128",
+          "1023"
+        ],
+        "answerIndex": 1,
+        "explanation": "IEEE754单精度浮点数：1位符号+8位阶码(移码偏127)+23位尾数(隐含1)。阶码真值=E-127。双精度偏置1023。",
+        "relatedTopicId": "ch6-s3-p3",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-4",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s4",
+        "sectionTitle": "6.4 ALU设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "双符号位01表示？",
+        "options": [
+          "正数",
+          "负数",
+          "正溢出",
+          "负溢出"
+        ],
+        "answerIndex": 2,
+        "explanation": "双符号位：00正常正数，11正常负数，01正溢出（两个正数相加超出了表示范围），10负溢出（两个负数相加超出范围）。双符号位01表示上溢。",
+        "relatedTopicId": "ch6-s4-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-5",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "single",
+        "stem": "Booth算法处理的是？",
+        "options": [
+          "原码乘法",
+          "补码乘法",
+          "原码除法",
+          "补码除法"
+        ],
+        "answerIndex": 1,
+        "explanation": "Booth算法是补码乘法的标准算法——不需要将补码转回原码，符号位参与运算。通过检查乘数相邻两位决定+[X]补、-[X]补或+0。",
+        "relatedTopicId": "ch6-s1-p5",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch6-test-single-6",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "mode": "test",
+        "type": "single",
+        "stem": "浮点数对阶时？",
+        "options": [
+          "大阶向小阶对齐",
+          "小阶向大阶对齐",
+          "任意对齐",
+          "不需要对齐"
+        ],
+        "answerIndex": 1,
+        "explanation": "浮点数加减第一步是对阶——小阶向大阶对齐。将阶码小的数的尾数右移，阶码增加至与大阶相同。小阶向大阶可保证较大数的精度不损失。",
+        "relatedTopicId": "ch6-s2-p1",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-7",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s3",
+        "sectionTitle": "6.3 浮点运算",
+        "mode": "test",
+        "type": "single",
+        "stem": "8位补码范围？",
+        "options": [
+          "0~255",
+          "-127~+127",
+          "-128~+127",
+          "-127~+128"
+        ],
+        "answerIndex": 2,
+        "explanation": "8位补码整数范围：-2⁷ ~ 2⁷-1 = -128 ~ +127。注意负数比正数多一个（-128没有对应的正数+128）。",
+        "relatedTopicId": "ch6-s3-p3",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-8",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s4",
+        "sectionTitle": "6.4 ALU设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "浮点数尾数位数决定？",
+        "options": [
+          "表示范围",
+          "精度",
+          "速度",
+          "功耗"
+        ],
+        "answerIndex": 1,
+        "explanation": "浮点数中尾数位数决定精度（有效数字的位数），阶码位数决定表示范围（能表示的最大最小数值）。",
+        "relatedTopicId": "ch6-s4-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-9",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "single",
+        "stem": "IEEE754 NaN表示？",
+        "options": [
+          "0/0",
+          "1/0",
+          "0/1",
+          "1"
+        ],
+        "answerIndex": 0,
+        "explanation": "IEEE754中NaN（Not a Number）表示非数值结果。阶码全1且尾数M≠0时表示NaN，典型如0/0、∞-∞等未定义运算。1/0得±∞（阶码全1尾数全0）。",
+        "relatedTopicId": "ch6-s1-p4",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-single-10",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "mode": "test",
+        "type": "single",
+        "stem": "全加器输入不包括？",
+        "options": [
+          "Ai",
+          "Bi",
+          "Ci-1",
+          "Si"
+        ],
+        "answerIndex": 3,
+        "explanation": "全加器输入三个：Ai、Bi、Ci-1（低位进位）。输出两个：Si（和）=Ai⊕Bi⊕Ci-1，Ci（进位）=AiBi+(Ai⊕Bi)Ci-1。Si是输出不是输入。",
+        "relatedTopicId": "ch6-s2-p5",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-judge-1",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "judge",
+        "stem": "补码中0有两种表示方式。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch6-s1-p1",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch6-test-judge-2",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "mode": "test",
+        "type": "judge",
+        "stem": "IEEE754单精度浮点数的阶码用原码表示。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch6-s2-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-judge-3",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s3",
+        "sectionTitle": "6.3 浮点运算",
+        "mode": "test",
+        "type": "judge",
+        "stem": "浮点数对阶时大阶向小阶对齐。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch6-s3-p3",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-judge-4",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s4",
+        "sectionTitle": "6.4 ALU设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "Booth算法可用于补码乘法运算。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch6-s4-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-judge-5",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "judge",
+        "stem": "全加器的输入包括低位进位Ci-1。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch6-s1-p5",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch6-test-fill-1",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "fill",
+        "stem": "[-X]补=[X]补连同___位取反+1。",
+        "answer": "符号",
+        "explanation": "",
+        "relatedTopicId": "ch6-s1-p1",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch6-test-fill-2",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s2",
+        "sectionTitle": "6.2 定点运算",
+        "mode": "test",
+        "type": "fill",
+        "stem": "IEEE754单精度的阶码偏置值是___。",
+        "answer": "127",
+        "explanation": "",
+        "relatedTopicId": "ch6-s2-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-fill-3",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s3",
+        "sectionTitle": "6.3 浮点运算",
+        "mode": "test",
+        "type": "fill",
+        "stem": "双符号位中01表示___溢出。",
+        "answer": "正",
+        "explanation": "",
+        "relatedTopicId": "ch6-s3-p3",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-fill-4",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s4",
+        "sectionTitle": "6.4 ALU设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "浮点数对阶时___阶向大阶对齐。",
+        "answer": "小",
+        "explanation": "",
+        "relatedTopicId": "ch6-s4-p2",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch6-test-fill-5",
+        "chapterId": "ch6",
+        "sectionId": "ch6-s1",
+        "sectionTitle": "6.1 数制与码制",
+        "mode": "test",
+        "type": "fill",
+        "stem": "补码的0有___种表示。",
+        "answer": "1",
+        "explanation": "",
+        "relatedTopicId": "ch6-s1-p5",
+        "relatedSimulatorId": "sim-base"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch7",
+    "chapterTitle": "指令系统",
+    "practiceSections": [
+      {
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "questions": [
+          {
+            "id": "ch7-ch7-s1-single-1",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s1",
+            "sectionTitle": "7.1 指令格式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "变址寻址EA=？",
+            "options": [
+              "(IX)+A",
+              "(BR)+A",
+              "(PC)+A",
+              "A"
+            ],
+            "answerIndex": 0,
+            "explanation": "变址寻址EA=(IX)+A，IX为变址寄存器内容（可递增），A为形式地址（偏移量）。数组访问的经典方式：IX存基址，每循环一次加1指向下一元素。",
+            "relatedTopicId": "ch7-s1-p1",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch7-ch7-s1-single-2",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s1",
+            "sectionTitle": "7.1 指令格式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "三地址指令(A1)OP(A2)→A3中操作数个数？",
+            "options": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "answerIndex": 2,
+            "explanation": "三地址指令格式：(A1)OP(A2)→A3。操作数是A2和A3两个，A1存放结果。注意：三地址指指令中有三个地址码字段，但操作数通常为A2和A3。",
+            "relatedTopicId": "ch7-s1-p2",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch7-ch7-s1-single-3",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s1",
+            "sectionTitle": "7.1 指令格式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "基址寻址EA=(BR)+A，BR通常存？",
+            "options": [
+              "程序或数据段起始地址",
+              "数组索引",
+              "堆栈指针",
+              "循环计数"
+            ],
+            "answerIndex": 0,
+            "explanation": "基址寻址中BR存放程序段或数据段的起始地址（基地址），通常由操作系统设置。这允许程序在主存中灵活放置（重定位），程序员无需关心绝对地址。",
+            "relatedTopicId": "ch7-s1-p3",
+            "relatedSimulatorId": "sim-pipeline"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "questions": [
+          {
+            "id": "ch7-ch7-s2-single-1",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s2",
+            "sectionTitle": "7.2-7.3 寻址方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "RISC指令长度通常？",
+            "options": [
+              "变长",
+              "定长32位",
+              "定长16位",
+              "8位"
+            ],
+            "answerIndex": 1,
+            "explanation": "RISC指令长度通常定长32位。格式规整便于流水线取指和译码。对比CISC的x86变长1-15字节，RISC的设计哲学是简单规整。",
+            "relatedTopicId": "ch7-s2-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch7-ch7-s2-single-2",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s2",
+            "sectionTitle": "7.2-7.3 寻址方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "属于CISC特征的是？",
+            "options": [
+              "定长指令",
+              "仅Load/Store访存",
+              "指令条数~100",
+              "指令变长格式多样"
+            ],
+            "answerIndex": 3,
+            "explanation": "CISC核心特征：指令变长格式多样、支持主存操作数、寻址方式丰富(10+种)、常用微程序控制。RISC则相反——定长指令、仅Load/Store访存、简单寻址。",
+            "relatedTopicId": "ch7-s2-p2",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch7-ch7-s2-single-3",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s2",
+            "sectionTitle": "7.2-7.3 寻址方式",
+            "mode": "practice",
+            "type": "single",
+            "stem": "操作码扩展目的是？",
+            "options": [
+              "增加指令种类",
+              "缩短高频指令",
+              "增加低频指令",
+              "缩短所有指令"
+            ],
+            "answerIndex": 1,
+            "explanation": "操作码扩展（Huffman编码思想）：短操作码给高频指令（如MOV/ADD），长操作码给低频指令（如DIV/浮点运算）。在有限指令字长内支持更多指令，同时缩短常用指令。",
+            "relatedTopicId": "ch7-s2-p3",
+            "relatedSimulatorId": "sim-float"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch7-s3",
+        "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+        "questions": [
+          {
+            "id": "ch7-ch7-s3-single-1",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s3",
+            "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+            "mode": "practice",
+            "type": "single",
+            "stem": "最快寻址方式是？",
+            "options": [
+              "间接寻址",
+              "直接寻址",
+              "寄存器寻址",
+              "存储器寻址"
+            ],
+            "answerIndex": 2,
+            "explanation": "寄存器寻址：操作数在CPU内部寄存器中，无需访存，速度最快。RISC的Load-Store架构中绝大多数运算指令都使用寄存器寻址。",
+            "relatedTopicId": "ch7-s3-p1",
+            "relatedSimulatorId": "sim-float"
+          },
+          {
+            "id": "ch7-ch7-s3-single-2",
+            "chapterId": "ch7",
+            "sectionId": "ch7-s3",
+            "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+            "mode": "practice",
+            "type": "single",
+            "stem": "相对寻址用于？",
+            "options": [
+              "数组访问",
+              "转移指令",
+              "堆栈操作",
+              "I/O操作"
+            ],
+            "answerIndex": 1,
+            "explanation": "相对寻址EA=(PC)+A（位移量用补码表示可正可负），专门用于转移指令。优点：代码与位置无关——程序可以加载到主存任何位置运行。",
+            "relatedTopicId": "ch7-s3-p2",
+            "relatedSimulatorId": "sim-pipeline"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch7-test-single-1",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "single",
+        "stem": "变址寻址EA=？",
+        "options": [
+          "(IX)+A",
+          "(BR)+A",
+          "(PC)+A",
+          "A"
+        ],
+        "answerIndex": 0,
+        "explanation": "变址寻址EA=(IX)+A，IX为变址寄存器内容（可递增），A为形式地址（偏移量）。数组访问的经典方式：IX存基址，每循环一次加1指向下一元素。",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-single-2",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "RISC指令长度通常？",
+        "options": [
+          "变长",
+          "定长32位",
+          "定长16位",
+          "8位"
+        ],
+        "answerIndex": 1,
+        "explanation": "RISC指令长度通常定长32位。格式规整便于流水线取指和译码。对比CISC的x86变长1-15字节，RISC的设计哲学是简单规整。",
+        "relatedTopicId": "ch7-s2-p2",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-single-3",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s3",
+        "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+        "mode": "test",
+        "type": "single",
+        "stem": "最快寻址方式是？",
+        "options": [
+          "间接寻址",
+          "直接寻址",
+          "寄存器寻址",
+          "存储器寻址"
+        ],
+        "answerIndex": 2,
+        "explanation": "寄存器寻址：操作数在CPU内部寄存器中，无需访存，速度最快。RISC的Load-Store架构中绝大多数运算指令都使用寄存器寻址。",
+        "relatedTopicId": "ch7-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch7-test-single-4",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "single",
+        "stem": "三地址指令(A1)OP(A2)→A3中操作数个数？",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "answerIndex": 2,
+        "explanation": "三地址指令格式：(A1)OP(A2)→A3。操作数是A2和A3两个，A1存放结果。注意：三地址指指令中有三个地址码字段，但操作数通常为A2和A3。",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-single-5",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "属于CISC特征的是？",
+        "options": [
+          "定长指令",
+          "仅Load/Store访存",
+          "指令条数~100",
+          "指令变长格式多样"
+        ],
+        "answerIndex": 3,
+        "explanation": "CISC核心特征：指令变长格式多样、支持主存操作数、寻址方式丰富(10+种)、常用微程序控制。RISC则相反——定长指令、仅Load/Store访存、简单寻址。",
+        "relatedTopicId": "ch7-s2-p5",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-single-6",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s3",
+        "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+        "mode": "test",
+        "type": "single",
+        "stem": "相对寻址用于？",
+        "options": [
+          "数组访问",
+          "转移指令",
+          "堆栈操作",
+          "I/O操作"
+        ],
+        "answerIndex": 1,
+        "explanation": "相对寻址EA=(PC)+A（位移量用补码表示可正可负），专门用于转移指令。优点：代码与位置无关——程序可以加载到主存任何位置运行。",
+        "relatedTopicId": "ch7-s3-p2",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch7-test-single-7",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "single",
+        "stem": "基址寻址EA=(BR)+A，BR通常存？",
+        "options": [
+          "程序或数据段起始地址",
+          "数组索引",
+          "堆栈指针",
+          "循环计数"
+        ],
+        "answerIndex": 0,
+        "explanation": "基址寻址中BR存放程序段或数据段的起始地址（基地址），通常由操作系统设置。这允许程序在主存中灵活放置（重定位），程序员无需关心绝对地址。",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-single-8",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "single",
+        "stem": "操作码扩展目的是？",
+        "options": [
+          "增加指令种类",
+          "缩短高频指令",
+          "增加低频指令",
+          "缩短所有指令"
+        ],
+        "answerIndex": 1,
+        "explanation": "操作码扩展（Huffman编码思想）：短操作码给高频指令（如MOV/ADD），长操作码给低频指令（如DIV/浮点运算）。在有限指令字长内支持更多指令，同时缩短常用指令。",
+        "relatedTopicId": "ch7-s2-p2",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-judge-1",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "寄存器寻址是最快的寻址方式。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-judge-2",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "RISC指令系统通常采用变长指令格式。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch7-s2-p2",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-judge-3",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s3",
+        "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+        "mode": "test",
+        "type": "judge",
+        "stem": "变址寻址的EA=(IX)+A。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch7-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch7-test-judge-4",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "间接寻址只需一次访存即可获取操作数。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-judge-5",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "judge",
+        "stem": "RISC架构中运算类指令可直接访问主存。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch7-s2-p5",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-fill-1",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "变址寻址的有效地址EA=(IX)+___。",
+        "answer": "A",
+        "explanation": "",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-fill-2",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "RISC指令长度通常是___位。",
+        "answer": "32",
+        "explanation": "",
+        "relatedTopicId": "ch7-s2-p2",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-fill-3",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s3",
+        "sectionTitle": "7.4-7.5 指令类型与RISC/CISC",
+        "mode": "test",
+        "type": "fill",
+        "stem": "最快的寻址方式是___寻址。",
+        "answer": "寄存器",
+        "explanation": "",
+        "relatedTopicId": "ch7-s3-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch7-test-fill-4",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s1",
+        "sectionTitle": "7.1 指令格式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "操作码由___码和地址码两部分组成。",
+        "answer": "操作",
+        "explanation": "",
+        "relatedTopicId": "ch7-s1-p1",
+        "relatedSimulatorId": "sim-float"
+      },
+      {
+        "id": "ch7-test-fill-5",
+        "chapterId": "ch7",
+        "sectionId": "ch7-s2",
+        "sectionTitle": "7.2-7.3 寻址方式",
+        "mode": "test",
+        "type": "fill",
+        "stem": "基址寻址中BR存放___的起始地址。",
+        "answer": "程序或数据段",
+        "explanation": "",
+        "relatedTopicId": "ch7-s2-p5",
+        "relatedSimulatorId": "sim-float"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch8",
+    "chapterTitle": "CPU的结构和功能",
+    "practiceSections": [
+      {
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "questions": [
+          {
+            "id": "ch8-ch8-s1-single-1",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s1",
+            "sectionTitle": "8.1 CPU的结构",
+            "mode": "practice",
+            "type": "single",
+            "stem": "k段流水线n→∞时加速比→？",
+            "options": [
+              "k",
+              "n",
+              "1",
+              "n/k"
+            ],
+            "answerIndex": 0,
+            "explanation": "理想情况下k段流水线加速比趋近于k。n条指令在k段流水线上执行时间=(k+n-1)τ，加速比=n×kτ/(k+n-1)τ→k(n→∞)。实际因冒险和开销低于理论值。",
+            "relatedTopicId": "ch8-s1-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch8-ch8-s1-single-2",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s1",
+            "sectionTitle": "8.1 CPU的结构",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断响应时先保存什么到堆栈？",
+            "options": [
+              "ACC",
+              "PC和PSW",
+              "R0",
+              "IR"
+            ],
+            "answerIndex": 1,
+            "explanation": "中断响应时先将PC（程序计数器/断点地址）和PSW（程序状态字）压入堆栈保存，以便中断服务完成后恢复。这些由硬件自动完成（中断隐指令），无需编程。",
+            "relatedTopicId": "ch8-s1-p2",
+            "relatedSimulatorId": "sim-complement"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch8-s2",
+        "sectionTitle": "8.2 指令周期",
+        "questions": [
+          {
+            "id": "ch8-ch8-s2-single-1",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s2",
+            "sectionTitle": "8.2 指令周期",
+            "mode": "practice",
+            "type": "single",
+            "stem": "数据相关解决不含？",
+            "options": [
+              "旁路技术",
+              "插入气泡",
+              "编译重排",
+              "增加段数"
+            ],
+            "answerIndex": 3,
+            "explanation": "数据冒险的三种解决：旁路/转发(前递ALU结果)、插入气泡(流水线暂停)、编译重排(编译器调度指令顺序)。\"增加段数\"不能解决数据冒险，反而可能加重。",
+            "relatedTopicId": "ch8-s2-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch8-ch8-s2-single-2",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s2",
+            "sectionTitle": "8.2 指令周期",
+            "mode": "practice",
+            "type": "single",
+            "stem": "超标量处理器指？",
+            "options": [
+              "每周期发射1条指令",
+              "每周期发射多条指令",
+              "只有1个执行单元",
+              "时钟频率超高"
+            ],
+            "answerIndex": 1,
+            "explanation": "超标量处理器：每时钟周期可以发射（issue）多条指令到不同功能单元并行执行。如4发射超标量每周期最多执行4条指令。需要多个执行单元和复杂的调度逻辑。",
+            "relatedTopicId": "ch8-s2-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch8-s3",
+        "sectionTitle": "8.3 指令流水线",
+        "questions": [
+          {
+            "id": "ch8-ch8-s3-single-1",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s3",
+            "sectionTitle": "8.3 指令流水线",
+            "mode": "practice",
+            "type": "single",
+            "stem": "五段流水不含？",
+            "options": [
+              "IF取指",
+              "ID译码",
+              "WAIT等待",
+              "WB写回"
+            ],
+            "answerIndex": 2,
+            "explanation": "经典五段流水：IF(取指)→ID(译码/取寄存器)→EX(执行/地址计算)→MEM(访存)→WB(写回)。不存在WAIT段。流水线暂停时插入的空操作称为气泡(bubble)。",
+            "relatedTopicId": "ch8-s3-p1",
+            "relatedSimulatorId": "sim-pipeline"
+          },
+          {
+            "id": "ch8-ch8-s3-single-2",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s3",
+            "sectionTitle": "8.3 指令流水线",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于CPU内部寄存器的是？",
+            "options": [
+              "PC",
+              "IR",
+              "MAR",
+              "DRAM"
+            ],
+            "answerIndex": 3,
+            "explanation": "CPU内部寄存器包括PC、IR、MAR、MDR、ACC、MQ、通用寄存器等。DRAM是动态随机存取存储器芯片，属于主存部件，不在CPU内部。",
+            "relatedTopicId": "ch8-s3-p2",
+            "relatedSimulatorId": "sim-pipeline"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch8-s4",
+        "sectionTitle": "8.4 中断系统",
+        "questions": [
+          {
+            "id": "ch8-ch8-s4-single-1",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s4",
+            "sectionTitle": "8.4 中断系统",
+            "mode": "practice",
+            "type": "single",
+            "stem": "转移指令引起哪种冒险？",
+            "options": [
+              "结构冒险",
+              "数据冒险",
+              "控制冒险",
+              "写后写"
+            ],
+            "answerIndex": 2,
+            "explanation": "转移指令引起控制冒险——转移发生前CPU已预取了后续指令，转移后这些预取指令无效需要清空。解决：分支预测、延迟转移（转移后紧跟的指令总会被执行）。",
+            "relatedTopicId": "ch8-s4-p1",
+            "relatedSimulatorId": "sim-complement"
+          },
+          {
+            "id": "ch8-ch8-s4-single-2",
+            "chapterId": "ch8",
+            "sectionId": "ch8-s4",
+            "sectionTitle": "8.4 中断系统",
+            "mode": "practice",
+            "type": "single",
+            "stem": "指令周期包含？",
+            "options": [
+              "只取指",
+              "取指+执行",
+              "取指+译码+执行+可能间址",
+              "只执行"
+            ],
+            "answerIndex": 2,
+            "explanation": "指令周期包括取指+（可能间址）+执行+（可能中断）。并非所有指令都需要间址周期（取决于寻址方式），中断周期只在响应中断时才出现。",
+            "relatedTopicId": "ch8-s4-p2",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch8-test-single-1",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "single",
+        "stem": "k段流水线n→∞时加速比→？",
+        "options": [
+          "k",
+          "n",
+          "1",
+          "n/k"
+        ],
+        "answerIndex": 0,
+        "explanation": "理想情况下k段流水线加速比趋近于k。n条指令在k段流水线上执行时间=(k+n-1)τ，加速比=n×kτ/(k+n-1)τ→k(n→∞)。实际因冒险和开销低于理论值。",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch8-test-single-2",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s2",
+        "sectionTitle": "8.2 指令周期",
+        "mode": "test",
+        "type": "single",
+        "stem": "数据相关解决不含？",
+        "options": [
+          "旁路技术",
+          "插入气泡",
+          "编译重排",
+          "增加段数"
+        ],
+        "answerIndex": 3,
+        "explanation": "数据冒险的三种解决：旁路/转发(前递ALU结果)、插入气泡(流水线暂停)、编译重排(编译器调度指令顺序)。\"增加段数\"不能解决数据冒险，反而可能加重。",
+        "relatedTopicId": "ch8-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch8-test-single-3",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s3",
+        "sectionTitle": "8.3 指令流水线",
+        "mode": "test",
+        "type": "single",
+        "stem": "五段流水不含？",
+        "options": [
+          "IF取指",
+          "ID译码",
+          "WAIT等待",
+          "WB写回"
+        ],
+        "answerIndex": 2,
+        "explanation": "经典五段流水：IF(取指)→ID(译码/取寄存器)→EX(执行/地址计算)→MEM(访存)→WB(写回)。不存在WAIT段。流水线暂停时插入的空操作称为气泡(bubble)。",
+        "relatedTopicId": "ch8-s3-p3",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch8-test-single-4",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s4",
+        "sectionTitle": "8.4 中断系统",
+        "mode": "test",
+        "type": "single",
+        "stem": "转移指令引起哪种冒险？",
+        "options": [
+          "结构冒险",
+          "数据冒险",
+          "控制冒险",
+          "写后写"
+        ],
+        "answerIndex": 2,
+        "explanation": "转移指令引起控制冒险——转移发生前CPU已预取了后续指令，转移后这些预取指令无效需要清空。解决：分支预测、延迟转移（转移后紧跟的指令总会被执行）。",
+        "relatedTopicId": "ch8-s4-p1",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch8-test-single-5",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断响应时先保存什么到堆栈？",
+        "options": [
+          "ACC",
+          "PC和PSW",
+          "R0",
+          "IR"
+        ],
+        "answerIndex": 1,
+        "explanation": "中断响应时先将PC（程序计数器/断点地址）和PSW（程序状态字）压入堆栈保存，以便中断服务完成后恢复。这些由硬件自动完成（中断隐指令），无需编程。",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch8-test-single-6",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s2",
+        "sectionTitle": "8.2 指令周期",
+        "mode": "test",
+        "type": "single",
+        "stem": "超标量处理器指？",
+        "options": [
+          "每周期发射1条指令",
+          "每周期发射多条指令",
+          "只有1个执行单元",
+          "时钟频率超高"
+        ],
+        "answerIndex": 1,
+        "explanation": "超标量处理器：每时钟周期可以发射（issue）多条指令到不同功能单元并行执行。如4发射超标量每周期最多执行4条指令。需要多个执行单元和复杂的调度逻辑。",
+        "relatedTopicId": "ch8-s2-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch8-test-single-7",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s3",
+        "sectionTitle": "8.3 指令流水线",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于CPU内部寄存器的是？",
+        "options": [
+          "PC",
+          "IR",
+          "MAR",
+          "DRAM"
+        ],
+        "answerIndex": 3,
+        "explanation": "CPU内部寄存器包括PC、IR、MAR、MDR、ACC、MQ、通用寄存器等。DRAM是动态随机存取存储器芯片，属于主存部件，不在CPU内部。",
+        "relatedTopicId": "ch8-s3-p3",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch8-test-single-8",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s4",
+        "sectionTitle": "8.4 中断系统",
+        "mode": "test",
+        "type": "single",
+        "stem": "指令周期包含？",
+        "options": [
+          "只取指",
+          "取指+执行",
+          "取指+译码+执行+可能间址",
+          "只执行"
+        ],
+        "answerIndex": 2,
+        "explanation": "指令周期包括取指+（可能间址）+执行+（可能中断）。并非所有指令都需要间址周期（取决于寻址方式），中断周期只在响应中断时才出现。",
+        "relatedTopicId": "ch8-s4-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch8-test-judge-1",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "judge",
+        "stem": "指令流水线可以完全消除所有指令间的等待。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch8-test-judge-2",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s2",
+        "sectionTitle": "8.2 指令周期",
+        "mode": "test",
+        "type": "judge",
+        "stem": "数据冒险可通过旁路技术缓解。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch8-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch8-test-judge-3",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s3",
+        "sectionTitle": "8.3 指令流水线",
+        "mode": "test",
+        "type": "judge",
+        "stem": "超标量处理器每周期可发射多条指令。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch8-s3-p3",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch8-test-judge-4",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s4",
+        "sectionTitle": "8.4 中断系统",
+        "mode": "test",
+        "type": "judge",
+        "stem": "中断响应时先保存PC和PSW到堆栈。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch8-s4-p1",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch8-test-judge-5",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "judge",
+        "stem": "五段经典流水线包括IF、ID、EX、MEM、WB。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch8-test-fill-1",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "fill",
+        "stem": "指令流水线k段时理想加速比趋于___。",
+        "answer": "k",
+        "explanation": "",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch8-test-fill-2",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s2",
+        "sectionTitle": "8.2 指令周期",
+        "mode": "test",
+        "type": "fill",
+        "stem": "数据冒险中RAW表示___后写。",
+        "answer": "读",
+        "explanation": "",
+        "relatedTopicId": "ch8-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch8-test-fill-3",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s3",
+        "sectionTitle": "8.3 指令流水线",
+        "mode": "test",
+        "type": "fill",
+        "stem": "控制冒险由___指令引起。",
+        "answer": "转移",
+        "explanation": "",
+        "relatedTopicId": "ch8-s3-p3",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch8-test-fill-4",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s4",
+        "sectionTitle": "8.4 中断系统",
+        "mode": "test",
+        "type": "fill",
+        "stem": "CPU内部存放当前指令的寄存器是___。",
+        "answer": "IR",
+        "explanation": "",
+        "relatedTopicId": "ch8-s4-p1",
+        "relatedSimulatorId": "sim-complement"
+      },
+      {
+        "id": "ch8-test-fill-5",
+        "chapterId": "ch8",
+        "sectionId": "ch8-s1",
+        "sectionTitle": "8.1 CPU的结构",
+        "mode": "test",
+        "type": "fill",
+        "stem": "中断响应时___和PSW保存到堆栈。",
+        "answer": "PC",
+        "explanation": "",
+        "relatedTopicId": "ch8-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch9",
+    "chapterTitle": "控制单元的功能",
+    "practiceSections": [
+      {
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "questions": [
+          {
+            "id": "ch9-ch9-s1-single-1",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s1",
+            "sectionTitle": "9.1 微操作命令分析",
+            "mode": "practice",
+            "type": "single",
+            "stem": "取指周期第一步微操作？",
+            "options": [
+              "MDR→IR",
+              "PC→MAR",
+              "PC+1→PC",
+              "ALU加"
+            ],
+            "answerIndex": 1,
+            "explanation": "取指周期第一步：PC→MAR。将程序计数器中的指令地址送到存储器地址寄存器，为读取指令做准备。这是每条指令执行的起点。",
+            "relatedTopicId": "ch9-s1-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch9-ch9-s1-single-2",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s1",
+            "sectionTitle": "9.1 微操作命令分析",
+            "mode": "practice",
+            "type": "single",
+            "stem": "间址周期目的？",
+            "options": [
+              "取出操作码",
+              "取出操作数有效地址",
+              "执行运算",
+              "保存结果"
+            ],
+            "answerIndex": 1,
+            "explanation": "间址周期：当指令使用间接寻址时，需要额外访问主存获取操作数的有效地址。Ad(IR)→MAR→Read→MDR→Ad(IR)，将间址单元内容(有效地址)写回指令地址码字段。",
+            "relatedTopicId": "ch9-s1-p2",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch9-ch9-s1-single-3",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s1",
+            "sectionTitle": "9.1 微操作命令分析",
+            "mode": "practice",
+            "type": "single",
+            "stem": "CU输出信号不包括？",
+            "options": [
+              "寄存器读写使能",
+              "ALU功能选择",
+              "Read/Write命令",
+              "中断请求信号INTR"
+            ],
+            "answerIndex": 3,
+            "explanation": "CU输出信号包括：寄存器读写使能、ALU功能选择、Read/Write命令、PC控制、数据通路选择等。INTR是中断请求信号，是从外部输入到CU的输入信号，不是CU的输出。",
+            "relatedTopicId": "ch9-s1-p3",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "questions": [
+          {
+            "id": "ch9-ch9-s2-single-1",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s2",
+            "sectionTitle": "9.2 控制单元的功能",
+            "mode": "practice",
+            "type": "single",
+            "stem": "三级时序不包括？",
+            "options": [
+              "工作周期",
+              "节拍",
+              "脉冲",
+              "指令"
+            ],
+            "answerIndex": 3,
+            "explanation": "三级时序系统：工作周期（取指/间址/执行/中断周期）、节拍（T0,T1...Tn）、脉冲（时钟触发沿）。\"指令\"是机器指令，不属于时序系统的层级。",
+            "relatedTopicId": "ch9-s2-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch9-ch9-s2-single-2",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s2",
+            "sectionTitle": "9.2 控制单元的功能",
+            "mode": "practice",
+            "type": "single",
+            "stem": "中断周期微操作包括？",
+            "options": [
+              "关中断保存断点",
+              "取操作数",
+              "执行加法",
+              "译码"
+            ],
+            "answerIndex": 0,
+            "explanation": "中断周期微操作：关中断→SP-1压PC→SP-1压PSW→取向量地址→PC。这些都是硬件自动完成的中断隐指令，不需要程序执行取操作数或加法。",
+            "relatedTopicId": "ch9-s2-p2",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch9-ch9-s2-single-3",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s2",
+            "sectionTitle": "9.2 控制单元的功能",
+            "mode": "practice",
+            "type": "single",
+            "stem": "执行周期微操作中STA指令需要？",
+            "options": [
+              "只读不写",
+              "发出Write命令写入主存",
+              "PC+1",
+              "读取下一条指令"
+            ],
+            "answerIndex": 1,
+            "explanation": "STA（Store Accumulator）存数指令：ACC内容写入主存。需要在执行周期发出Write写命令：Ad(IR)→MAR, ACC→MDR, Write→将MDR内容写入M(MAR)。这涉及写操作而非仅读取。",
+            "relatedTopicId": "ch9-s2-p3",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch9-s3",
+        "sectionTitle": "9.3 时序系统实例分析",
+        "questions": [
+          {
+            "id": "ch9-ch9-s3-single-1",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s3",
+            "sectionTitle": "9.3 时序系统实例分析",
+            "mode": "practice",
+            "type": "single",
+            "stem": "微操作命令由谁发出？",
+            "options": [
+              "ALU",
+              "控制单元CU",
+              "存储器",
+              "I/O接口"
+            ],
+            "answerIndex": 1,
+            "explanation": "微操作命令由控制单元CU发出。CU根据指令操作码(来自IR)和时序信号，产生控制信号序列协调各部件工作。这是CPU的指挥中心。",
+            "relatedTopicId": "ch9-s3-p1",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch9-ch9-s3-single-2",
+            "chapterId": "ch9",
+            "sectionId": "ch9-s3",
+            "sectionTitle": "9.3 时序系统实例分析",
+            "mode": "practice",
+            "type": "single",
+            "stem": "同步控制的特点？",
+            "options": [
+              "各操作耗时自适应",
+              "无统一时钟信号",
+              "所有微操作由统一时钟同步",
+              "控制器不产生时序"
+            ],
+            "answerIndex": 2,
+            "explanation": "同步控制：所有微操作由统一时钟信号同步，工作周期固定。优点是控制简单，缺点是快指令会浪费等待时间。现代CPU多为同步控制+异步等待的联合方式。",
+            "relatedTopicId": "ch9-s3-p1",
+            "relatedSimulatorId": "sim-fetch"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch9-test-single-1",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "single",
+        "stem": "取指周期第一步微操作？",
+        "options": [
+          "MDR→IR",
+          "PC→MAR",
+          "PC+1→PC",
+          "ALU加"
+        ],
+        "answerIndex": 1,
+        "explanation": "取指周期第一步：PC→MAR。将程序计数器中的指令地址送到存储器地址寄存器，为读取指令做准备。这是每条指令执行的起点。",
+        "relatedTopicId": "ch9-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-2",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "single",
+        "stem": "三级时序不包括？",
+        "options": [
+          "工作周期",
+          "节拍",
+          "脉冲",
+          "指令"
+        ],
+        "answerIndex": 3,
+        "explanation": "三级时序系统：工作周期（取指/间址/执行/中断周期）、节拍（T0,T1...Tn）、脉冲（时钟触发沿）。\"指令\"是机器指令，不属于时序系统的层级。",
+        "relatedTopicId": "ch9-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-3",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s3",
+        "sectionTitle": "9.3 时序系统实例分析",
+        "mode": "test",
+        "type": "single",
+        "stem": "微操作命令由谁发出？",
+        "options": [
+          "ALU",
+          "控制单元CU",
+          "存储器",
+          "I/O接口"
+        ],
+        "answerIndex": 1,
+        "explanation": "微操作命令由控制单元CU发出。CU根据指令操作码(来自IR)和时序信号，产生控制信号序列协调各部件工作。这是CPU的指挥中心。",
+        "relatedTopicId": "ch9-s3-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-4",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "single",
+        "stem": "间址周期目的？",
+        "options": [
+          "取出操作码",
+          "取出操作数有效地址",
+          "执行运算",
+          "保存结果"
+        ],
+        "answerIndex": 1,
+        "explanation": "间址周期：当指令使用间接寻址时，需要额外访问主存获取操作数的有效地址。Ad(IR)→MAR→Read→MDR→Ad(IR)，将间址单元内容(有效地址)写回指令地址码字段。",
+        "relatedTopicId": "ch9-s1-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-5",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "single",
+        "stem": "中断周期微操作包括？",
+        "options": [
+          "关中断保存断点",
+          "取操作数",
+          "执行加法",
+          "译码"
+        ],
+        "answerIndex": 0,
+        "explanation": "中断周期微操作：关中断→SP-1压PC→SP-1压PSW→取向量地址→PC。这些都是硬件自动完成的中断隐指令，不需要程序执行取操作数或加法。",
+        "relatedTopicId": "ch9-s2-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-6",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s3",
+        "sectionTitle": "9.3 时序系统实例分析",
+        "mode": "test",
+        "type": "single",
+        "stem": "同步控制的特点？",
+        "options": [
+          "各操作耗时自适应",
+          "无统一时钟信号",
+          "所有微操作由统一时钟同步",
+          "控制器不产生时序"
+        ],
+        "answerIndex": 2,
+        "explanation": "同步控制：所有微操作由统一时钟信号同步，工作周期固定。优点是控制简单，缺点是快指令会浪费等待时间。现代CPU多为同步控制+异步等待的联合方式。",
+        "relatedTopicId": "ch9-s3-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-7",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "single",
+        "stem": "CU输出信号不包括？",
+        "options": [
+          "寄存器读写使能",
+          "ALU功能选择",
+          "Read/Write命令",
+          "中断请求信号INTR"
+        ],
+        "answerIndex": 3,
+        "explanation": "CU输出信号包括：寄存器读写使能、ALU功能选择、Read/Write命令、PC控制、数据通路选择等。INTR是中断请求信号，是从外部输入到CU的输入信号，不是CU的输出。",
+        "relatedTopicId": "ch9-s1-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-single-8",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "single",
+        "stem": "执行周期微操作中STA指令需要？",
+        "options": [
+          "只读不写",
+          "发出Write命令写入主存",
+          "PC+1",
+          "读取下一条指令"
+        ],
+        "answerIndex": 1,
+        "explanation": "STA（Store Accumulator）存数指令：ACC内容写入主存。需要在执行周期发出Write写命令：Ad(IR)→MAR, ACC→MDR, Write→将MDR内容写入M(MAR)。这涉及写操作而非仅读取。",
+        "relatedTopicId": "ch9-s2-p4",
+        "relatedSimulatorId": "sim-pipeline"
+      },
+      {
+        "id": "ch9-test-judge-1",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "judge",
+        "stem": "微操作命令由ALU发出。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch9-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-judge-2",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "judge",
+        "stem": "取指周期的第一步微操作是PC→MAR。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch9-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-judge-3",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s3",
+        "sectionTitle": "9.3 时序系统实例分析",
+        "mode": "test",
+        "type": "judge",
+        "stem": "三级时序系统包括工作周期、节拍和指令。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch9-s3-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-judge-4",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "judge",
+        "stem": "间址周期的目的是取出操作数的有效地址。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch9-s1-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-judge-5",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "judge",
+        "stem": "同步控制中各微操作由统一时钟信号同步。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch9-s2-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-fill-1",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "fill",
+        "stem": "取指周期第一步微操作是___→MAR。",
+        "answer": "PC",
+        "explanation": "",
+        "relatedTopicId": "ch9-s1-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-fill-2",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "fill",
+        "stem": "三级时序系统：工作周期、___、脉冲。",
+        "answer": "节拍",
+        "explanation": "",
+        "relatedTopicId": "ch9-s2-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-fill-3",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s3",
+        "sectionTitle": "9.3 时序系统实例分析",
+        "mode": "test",
+        "type": "fill",
+        "stem": "微操作命令由___（英文缩写）发出。",
+        "answer": "CU",
+        "explanation": "",
+        "relatedTopicId": "ch9-s3-p1",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-fill-4",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s1",
+        "sectionTitle": "9.1 微操作命令分析",
+        "mode": "test",
+        "type": "fill",
+        "stem": "___周期的目的是获取操作数的有效地址。",
+        "answer": "间址",
+        "explanation": "",
+        "relatedTopicId": "ch9-s1-p4",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch9-test-fill-5",
+        "chapterId": "ch9",
+        "sectionId": "ch9-s2",
+        "sectionTitle": "9.2 控制单元的功能",
+        "mode": "test",
+        "type": "fill",
+        "stem": "同步控制中各微操作由统一的___信号同步。",
+        "answer": "时钟",
+        "explanation": "",
+        "relatedTopicId": "ch9-s2-p1",
+        "relatedSimulatorId": "sim-fetch"
+      }
+    ]
+  },
+  {
+    "chapterId": "ch10",
+    "chapterTitle": "控制单元的设计",
+    "practiceSections": [
+      {
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "questions": [
+          {
+            "id": "ch10-ch10-s1-single-1",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s1",
+            "sectionTitle": "10.1 组合逻辑设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "组合逻辑设计优点？",
+            "options": [
+              "速度快",
+              "易修改",
+              "规整",
+              "省芯片"
+            ],
+            "answerIndex": 0,
+            "explanation": "组合逻辑控制：控制信号由门电路直接产生（硬布线），无取控制字的额外延迟，因此速度快。缺点是设计复杂、不易修改、缺乏规整性。RISC处理器多采用此方案。",
+            "relatedTopicId": "ch10-s1-p1",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch10-ch10-s1-single-2",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s1",
+            "sectionTitle": "10.1 组合逻辑设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "水平型微指令特点？",
+            "options": [
+              "短串行慢",
+              "长并行快",
+              "短并行快",
+              "长串行慢"
+            ],
+            "answerIndex": 1,
+            "explanation": "水平型微指令：长字长（100+位），采用直接编码或少量字段编码，一位对应一个控制信号。并行度高（可同时发出多个控制信号）、执行速度快，但微指令字长较长。",
+            "relatedTopicId": "ch10-s1-p2",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch10-ch10-s1-single-3",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s1",
+            "sectionTitle": "10.1 组合逻辑设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "CM存放的是什么？",
+            "options": [
+              "机器指令",
+              "微指令",
+              "数据",
+              "地址"
+            ],
+            "answerIndex": 1,
+            "explanation": "CM（控制存储器）存放的是微指令序列（微程序），不是机器指令。每条机器指令对应一段微程序，每条微指令在一个微周期内发出一组控制信号。",
+            "relatedTopicId": "ch10-s1-p3",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch10-ch10-s1-single-4",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s1",
+            "sectionTitle": "10.1 组合逻辑设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "动态微程序指？",
+            "options": [
+              "运行时不可改",
+              "运行时可通过WCS修改",
+              "保存在ROM中",
+              "速度最快"
+            ],
+            "answerIndex": 1,
+            "explanation": "动态微程序：运行时可通过WCS（Writable Control Store，可写控制存储器）修改微程序内容。常用于仿真其他指令集——同一硬件加载不同微程序即可执行不同指令集。",
+            "relatedTopicId": "ch10-s1-p1",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      },
+      {
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "questions": [
+          {
+            "id": "ch10-ch10-s2-single-1",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s2",
+            "sectionTitle": "10.2 微程序设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "微程序控制存储器叫？",
+            "options": [
+              "主存",
+              "Cache",
+              "CM",
+              "ROM"
+            ],
+            "answerIndex": 2,
+            "explanation": "CM（Control Memory，控制存储器）是微程序控制的核心，用ROM实现，存放所有微程序（微指令序列）。不是主存、不是Cache，是CU内部专用的控制存储器。",
+            "relatedTopicId": "ch10-s2-p1",
+            "relatedSimulatorId": "sim-base"
+          },
+          {
+            "id": "ch10-ch10-s2-single-2",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s2",
+            "sectionTitle": "10.2 微程序设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "RISC常采用什么控制？",
+            "options": [
+              "组合逻辑",
+              "微程序",
+              "毫微程序",
+              "动态微程序"
+            ],
+            "answerIndex": 0,
+            "explanation": "RISC追求速度和简单——采用组合逻辑（硬布线）控制。CISC指令复杂才使用微程序控制（便于实现和修改复杂指令）。这是两者的核心差异之一。",
+            "relatedTopicId": "ch10-s2-p2",
+            "relatedSimulatorId": "sim-cache"
+          },
+          {
+            "id": "ch10-ch10-s2-single-3",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s2",
+            "sectionTitle": "10.2 微程序设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "不属于微指令编码方式？",
+            "options": [
+              "直接编码",
+              "字段编码",
+              "Huffman编码",
+              "混合编码"
+            ],
+            "answerIndex": 2,
+            "explanation": "微指令编码方式有三种：直接编码、字段直接编码、混合编码。Huffman编码是信息论中的压缩编码方法，不用于微指令编码（虽然操作码扩展思想类似Huffman，但不是微指令编码方式）。",
+            "relatedTopicId": "ch10-s2-p3",
+            "relatedSimulatorId": "sim-fetch"
+          },
+          {
+            "id": "ch10-ch10-s2-single-4",
+            "chapterId": "ch10",
+            "sectionId": "ch10-s2",
+            "sectionTitle": "10.2 微程序设计",
+            "mode": "practice",
+            "type": "single",
+            "stem": "微地址形成方式不含？",
+            "options": [
+              "计数器方式",
+              "断定方式",
+              "增量+断定",
+              "DMA方式"
+            ],
+            "answerIndex": 3,
+            "explanation": "微地址形成方式：计数器方式（μPC+1）、断定方式（微指令下址字段直接指定）、增量与断定结合。DMA方式是I/O数据传送方式，与微地址形成无关。",
+            "relatedTopicId": "ch10-s2-p4",
+            "relatedSimulatorId": "sim-cache"
+          }
+        ]
+      }
+    ],
+    "chapterTest": [
+      {
+        "id": "ch10-test-single-1",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "组合逻辑设计优点？",
+        "options": [
+          "速度快",
+          "易修改",
+          "规整",
+          "省芯片"
+        ],
+        "answerIndex": 0,
+        "explanation": "组合逻辑控制：控制信号由门电路直接产生（硬布线），无取控制字的额外延迟，因此速度快。缺点是设计复杂、不易修改、缺乏规整性。RISC处理器多采用此方案。",
+        "relatedTopicId": "ch10-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-single-2",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "微程序控制存储器叫？",
+        "options": [
+          "主存",
+          "Cache",
+          "CM",
+          "ROM"
+        ],
+        "answerIndex": 2,
+        "explanation": "CM（Control Memory，控制存储器）是微程序控制的核心，用ROM实现，存放所有微程序（微指令序列）。不是主存、不是Cache，是CU内部专用的控制存储器。",
+        "relatedTopicId": "ch10-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-single-3",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "水平型微指令特点？",
+        "options": [
+          "短串行慢",
+          "长并行快",
+          "短并行快",
+          "长串行慢"
+        ],
+        "answerIndex": 1,
+        "explanation": "水平型微指令：长字长（100+位），采用直接编码或少量字段编码，一位对应一个控制信号。并行度高（可同时发出多个控制信号）、执行速度快，但微指令字长较长。",
+        "relatedTopicId": "ch10-s1-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch10-test-single-4",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "RISC常采用什么控制？",
+        "options": [
+          "组合逻辑",
+          "微程序",
+          "毫微程序",
+          "动态微程序"
+        ],
+        "answerIndex": 0,
+        "explanation": "RISC追求速度和简单——采用组合逻辑（硬布线）控制。CISC指令复杂才使用微程序控制（便于实现和修改复杂指令）。这是两者的核心差异之一。",
+        "relatedTopicId": "ch10-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-single-5",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "CM存放的是什么？",
+        "options": [
+          "机器指令",
+          "微指令",
+          "数据",
+          "地址"
+        ],
+        "answerIndex": 1,
+        "explanation": "CM（控制存储器）存放的是微指令序列（微程序），不是机器指令。每条机器指令对应一段微程序，每条微指令在一个微周期内发出一组控制信号。",
+        "relatedTopicId": "ch10-s1-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch10-test-single-6",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "不属于微指令编码方式？",
+        "options": [
+          "直接编码",
+          "字段编码",
+          "Huffman编码",
+          "混合编码"
+        ],
+        "answerIndex": 2,
+        "explanation": "微指令编码方式有三种：直接编码、字段直接编码、混合编码。Huffman编码是信息论中的压缩编码方法，不用于微指令编码（虽然操作码扩展思想类似Huffman，但不是微指令编码方式）。",
+        "relatedTopicId": "ch10-s2-p6",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-single-7",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "动态微程序指？",
+        "options": [
+          "运行时不可改",
+          "运行时可通过WCS修改",
+          "保存在ROM中",
+          "速度最快"
+        ],
+        "answerIndex": 1,
+        "explanation": "动态微程序：运行时可通过WCS（Writable Control Store，可写控制存储器）修改微程序内容。常用于仿真其他指令集——同一硬件加载不同微程序即可执行不同指令集。",
+        "relatedTopicId": "ch10-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-single-8",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "single",
+        "stem": "微地址形成方式不含？",
+        "options": [
+          "计数器方式",
+          "断定方式",
+          "增量+断定",
+          "DMA方式"
+        ],
+        "answerIndex": 3,
+        "explanation": "微地址形成方式：计数器方式（μPC+1）、断定方式（微指令下址字段直接指定）、增量与断定结合。DMA方式是I/O数据传送方式，与微地址形成无关。",
+        "relatedTopicId": "ch10-s2-p1",
+        "relatedSimulatorId": "sim-base"
+      },
+      {
+        "id": "ch10-test-judge-1",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "组合逻辑控制的速度比微程序控制快。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-judge-2",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "微程序控制中CM存放的是机器指令。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch10-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-judge-3",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "水平型微指令并行度高但字长较长。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch10-test-judge-4",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "RISC处理器普遍采用微程序控制方式。",
+        "answer": false,
+        "explanation": "",
+        "relatedTopicId": "ch10-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-judge-5",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "judge",
+        "stem": "动态微程序可在运行时修改微程序内容。",
+        "answer": true,
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p2",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch10-test-fill-1",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "微程序控制中存放微指令的存储器叫___（缩写）。",
+        "answer": "CM",
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p1",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-fill-2",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "RISC常采用___逻辑控制方式。",
+        "answer": "组合",
+        "explanation": "",
+        "relatedTopicId": "ch10-s2-p2",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-fill-3",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "水平型微指令并行度___但字长较长。",
+        "answer": "高",
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p3",
+        "relatedSimulatorId": "sim-fetch"
+      },
+      {
+        "id": "ch10-test-fill-4",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s2",
+        "sectionTitle": "10.2 微程序设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "组合逻辑控制的速度比微程序___。",
+        "answer": "快",
+        "explanation": "",
+        "relatedTopicId": "ch10-s2-p4",
+        "relatedSimulatorId": "sim-cache"
+      },
+      {
+        "id": "ch10-test-fill-5",
+        "chapterId": "ch10",
+        "sectionId": "ch10-s1",
+        "sectionTitle": "10.1 组合逻辑设计",
+        "mode": "test",
+        "type": "fill",
+        "stem": "运行时可通过WCS修改微程序内容的技术叫___微程序。",
+        "answer": "动态",
+        "explanation": "",
+        "relatedTopicId": "ch10-s1-p2",
+        "relatedSimulatorId": "sim-fetch"
+      }
+    ]
+  }
+]

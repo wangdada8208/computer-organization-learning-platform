@@ -158,6 +158,10 @@ ul { margin: 0; padding-left: 18px; }
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(197, 208, 202, 0.82);
   padding: 16px 24px;
+}
+.topbar-inner {
+  width: min(100%, var(--max-width));
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -168,6 +172,10 @@ ul { margin: 0; padding-left: 18px; }
   display: flex;
   gap: 14px;
   align-items: flex-start;
+}
+.topbar-copy {
+  display: grid;
+  gap: 2px;
 }
 .topbar h2 { margin-top: 4px; font-size: 24px; line-height: 1.1; }
 .topbar p { margin-top: 6px; color: var(--muted); font-size: 14px; max-width: 720px; line-height: 1.6; }
@@ -375,8 +383,32 @@ ul { margin: 0; padding-left: 18px; }
 }
 .chapter-overview-card, .wrong-card, .wrong-item, .simulator-card, .quiz-card { padding: 16px; }
 .chapter-card-head, .simulator-card-head, .point-card-head, .question-head { display: grid; gap: 8px; }
-.chapter-card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.chapter-card-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.chapter-overview-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
 .chapter-overview-card h4 { margin-top: 8px; font-size: 18px; }
+.chapter-card-summary {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.chapter-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chapter-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--muted-strong);
+  font-size: 12px;
+}
 .card-actions, .action-row, .point-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .action-row.small { gap: 8px; }
 .text-link {
@@ -631,8 +663,11 @@ ul { margin: 0; padding-left: 18px; }
   .topbar h2 { font-size: 21px; }
   .hero-title { font-size: 26px; }
   .overview-hero { padding: 20px; }
+  .topbar-inner { align-items: flex-start; }
+  .primary-tabs { width: 100%; }
   .hero-meta-grid, .metric-grid, .point-meta-grid { grid-template-columns: 1fr; }
   .section-heading { flex-direction: column; align-items: flex-start; }
+  .chapter-card-head { flex-direction: column; }
   .hero-note-head, .overview-stat-row { flex-direction: column; align-items: flex-start; }
   .score-box { flex-direction: column; align-items: flex-start; }
 }

@@ -267,18 +267,20 @@ function renderTopbar() {
   };
   const [title, subtitle] = titleMap[app.state.view];
   topbarEl.innerHTML = `
-    <div class="topbar-left">
-      <button class="icon-btn mobile-toggle" data-action="toggle-sidebar" aria-label="打开目录">目录</button>
-      <div>
-        <div class="eyebrow">计算机组成原理学习平台</div>
-        <h2>${title}</h2>
-        <p>${subtitle}</p>
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-toggle" data-action="toggle-sidebar" aria-label="打开目录">目录</button>
+        <div class="topbar-copy">
+          <div class="eyebrow">计算机组成原理学习平台</div>
+          <h2>${title}</h2>
+          <p>${subtitle}</p>
+        </div>
       </div>
+      <nav class="primary-tabs" aria-label="主导航">
+        ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
+          .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
+      </nav>
     </div>
-    <nav class="primary-tabs" aria-label="主导航">
-      ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
-        .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
-    </nav>
   `;
 }
 
@@ -395,7 +397,7 @@ function renderDashboard() {
         <div class="section-heading">
           <div>
             <span class="eyebrow">章节学习</span>
-            <h3>按章节切入，不必先想模式</h3>
+            <h3>课程目录与章节进度</h3>
           </div>
         </div>
         <div class="chapter-overview-grid">${app.data.chapters.map(renderChapterOverviewCard).join('')}</div>
@@ -406,20 +408,27 @@ function renderDashboard() {
 
 function renderChapterOverviewCard(chapter) {
   const progress = getChapterProgress(chapter);
+  const totalSections = chapter.sections.length;
+  const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   return `
     <article class="chapter-overview-card">
       <div class="chapter-card-head">
         <div>
           <span class="eyebrow">第 ${chapter.number} 章</span>
           <h4>${chapter.title}</h4>
+          <p class="chapter-card-summary">${chapter.summary}</p>
         </div>
         <span class="soft-badge">${progress.percent}%</span>
       </div>
-      <p class="body-copy">${chapter.summary}</p>
+      <div class="chapter-card-meta">
+        <span>${totalSections} 节</span>
+        <span>${totalPoints} 个知识点</span>
+        <span>${progress.mastered}/${progress.total} 已掌握</span>
+      </div>
       <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
       <div class="card-actions">
         <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${chapter.id}">进入章节</button>
-        <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}">直接训练</button>
+        <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}">进入训练</button>
       </div>
     </article>
   `;

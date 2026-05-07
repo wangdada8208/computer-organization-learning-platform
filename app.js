@@ -439,16 +439,23 @@ function renderChapterView() {
   const progress = getChapterProgress(chapter);
   const chapterState = app.state.progress.chapters[chapter.id] || {};
   const featured = chapter.sections.slice(0, 3);
+  const totalSections = chapter.sections.length;
+  const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   pageEl.innerHTML = `
     <div class="page-stack chapter-stack">
       <section class="chapter-hero surface-panel">
-        <div class="section-heading spread">
-          <div>
+        <div class="chapter-hero-layout">
+          <div class="chapter-hero-copy">
             <span class="eyebrow">章节学习</span>
             <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
             <p class="body-copy">${chapter.summary}</p>
+            <div class="chapter-hero-tags">
+              <span>${totalSections} 节内容</span>
+              <span>${totalPoints} 个知识点</span>
+              <span>${chapter.relatedSimulatorIds.length} 个相关模拟器</span>
+            </div>
           </div>
-          <div class="hero-meta-grid">
+          <div class="hero-meta-grid chapter-hero-metrics">
             <div class="metric-card"><span>推荐用时</span><strong>${getStudyTime(chapter)}</strong></div>
             <div class="metric-card"><span>当前掌握度</span><strong>${progress.percent}%</strong></div>
             <div class="metric-card"><span>最近测试</span><strong>${chapterState.lastQuizScore ?? '--'}</strong></div>
@@ -457,24 +464,40 @@ function renderChapterView() {
       </section>
 
       <section class="guide-grid">
-        <article class="surface-panel">
-          <span class="eyebrow">学习目标</span>
-          <h3>先知道这章学完要会什么</h3>
+        <article class="surface-panel chapter-guide-card">
+          <div class="section-heading compact-heading">
+            <div>
+              <span class="eyebrow">学习目标</span>
+              <h3>本章完成后应掌握</h3>
+            </div>
+          </div>
           <div class="pill-list">${chapter.learningGoals.map((goal) => `<span class="info-pill">${goal}</span>`).join('')}</div>
         </article>
-        <article class="surface-panel">
-          <span class="eyebrow">本章导览</span>
-          <h3>按这条线读会更顺</h3>
+        <article class="surface-panel chapter-guide-card">
+          <div class="section-heading compact-heading">
+            <div>
+              <span class="eyebrow">本章导览</span>
+              <h3>建议阅读顺序</h3>
+            </div>
+          </div>
           <div class="chapter-map-list">${chapter.chapterMap.map((item) => `<div class="map-row">${item}</div>`).join('')}</div>
         </article>
-        <article class="surface-panel">
-          <span class="eyebrow">先修提醒</span>
-          <h3>开读前先把前置信息放进脑子里</h3>
+        <article class="surface-panel chapter-guide-card">
+          <div class="section-heading compact-heading">
+            <div>
+              <span class="eyebrow">先修提醒</span>
+              <h3>阅读前先对齐前置概念</h3>
+            </div>
+          </div>
           <ul class="plain-list">${chapter.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul>
         </article>
-        <article class="surface-panel">
-          <span class="eyebrow">必看知识块</span>
-          <h3>这几段最适合优先扫读</h3>
+        <article class="surface-panel chapter-guide-card">
+          <div class="section-heading compact-heading">
+            <div>
+              <span class="eyebrow">必看知识块</span>
+              <h3>优先完成这几段</h3>
+            </div>
+          </div>
           <div class="featured-list">${featured.map((section) => `<div class="featured-item"><strong>${section.title}</strong><span>${section.points.length} 个知识点</span></div>`).join('')}</div>
         </article>
       </section>
@@ -511,7 +534,10 @@ function renderSectionCard(chapter, section) {
           <h3>${section.title}</h3>
           <p class="body-copy">${section.overview}</p>
         </div>
-        <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">做本节小测</button>
+        <div class="section-head-actions">
+          <span class="tiny-pill">${section.points.length} 个知识点</span>
+          <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">做本节小测</button>
+        </div>
       </div>
       <div class="point-list">${section.points.map((point) => renderPointCard(chapter, section, point)).join('')}</div>
     </section>
@@ -532,7 +558,7 @@ function renderPointCard(chapter, section, point) {
         </div>
         <div class="point-conclusion">${point.tip || point.summary}</div>
         <div class="point-excerpt"><span>精炼解释</span><p>${getPointExcerpt(point)}</p></div>
-        <div class="point-hint-row"><span>展开看完整说明</span><em>${section.title}</em></div>
+        <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
       <div class="point-detail-wrap">
         <div class="point-detail-block">

@@ -443,6 +443,49 @@ ul { margin: 0; padding-left: 18px; }
 .dense-row em { font-style: normal; color: var(--primary-strong); font-weight: 700; }
 .dense-row > div { display: grid; gap: 4px; }
 .chapter-stack .section-heading h3, .training-stack .section-heading h3 { font-size: 22px; }
+.compact-heading {
+  margin-bottom: 14px;
+}
+.chapter-hero {
+  background: linear-gradient(180deg, #f7faf8 0%, #eff4f1 100%);
+}
+.chapter-hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .85fr);
+  gap: 20px;
+  align-items: start;
+}
+.chapter-hero-copy {
+  display: grid;
+  gap: 14px;
+}
+.chapter-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chapter-hero-tags span {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(232, 238, 235, 0.95);
+  color: var(--muted-strong);
+  font-size: 12px;
+}
+.chapter-hero-metrics {
+  align-self: stretch;
+}
+.chapter-guide-card {
+  display: grid;
+  align-content: start;
+}
+.section-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .point-card { padding: 0; overflow: hidden; background: #fafcfb; }
 .point-card summary {
   list-style: none;
@@ -452,6 +495,14 @@ ul { margin: 0; padding-left: 18px; }
   padding: 18px;
 }
 .point-card summary::-webkit-details-marker { display: none; }
+.point-card-head {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+.point-card-head strong {
+  font-size: 18px;
+  line-height: 1.35;
+}
 .point-conclusion {
   padding: 14px 16px;
   border-radius: 12px;
@@ -635,7 +686,7 @@ ul { margin: 0; padding-left: 18px; }
 }
 
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .chapter-hero-layout { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
 }

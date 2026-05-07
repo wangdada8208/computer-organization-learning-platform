@@ -12,7 +12,7 @@ const authLayerEl = document.createElement('div');
 authLayerEl.className = 'auth-layer';
 document.body.appendChild(authLayerEl);
 
-const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
+const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice', 'teacher'];
 const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator'];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
@@ -70,13 +70,15 @@ boot();
 
 async function boot() {
   try {
-    const [rawChapters, rawQuizzes] = await Promise.all([
+    const [rawChapters, rawQuizzes, rawTeacherQuizzes] = await Promise.all([
       fetchJson('./data/chapters.json'),
       fetchJson('./data/quizzes.json'),
+      fetchJson('./data/teacher_quizzes.json'),
     ]);
     const chapters = normalizeChapters(rawChapters);
     const quizzes = normalizeQuizzes(rawQuizzes, chapters);
-    app.data = { chapters, quizzes };
+    const teacherQuizzes = normalizeTeacherQuizzes(rawTeacherQuizzes.questions || [], chapters);
+    app.data = { chapters, quizzes, teacherQuizzes, teacherSources: rawTeacherQuizzes.sources || [] };
     app.state = buildInitialState(chapters, quizzes);
     loadAuthState();
     await restoreRemoteSession();
@@ -157,6 +159,27 @@ function normalizeQuestion(question, chapter, passlineSet, sectionIndex, questio
   };
 }
 
+function normalizeTeacherQuizzes(questions, chapters) {
+  return questions.map((question, index) => {
+    const chapter = chapters.find((item) => item.id === question.chapterId);
+    const relatedTitle = question.relatedTopicId ? findPointTitleInChapter(chapter, question.relatedTopicId) : '';
+    return {
+      ...question,
+      index: index + 1,
+      mode: 'teacher',
+      teacherFocus: true,
+      difficulty: question.difficulty || '重点',
+      mistakeTag: question.mistakeTag || relatedTitle || question.sectionTitle || chapter?.title || '',
+      tags: Array.from(new Set([
+        '老师重点题',
+        ...(question.tags || []),
+        chapter ? `第${chapter.number}章` : '',
+        question.type === 'fill' ? '填空题' : '选择题',
+      ].filter(Boolean))),
+    };
+  });
+}
+
 function findPointTitleInChapter(chapter, pointId) {
   if (!chapter) return '';
   for (const section of chapter.sections) {
@@ -195,6 +218,9 @@ function createDefaultState(chapters) {
     selectedChapterId: chapters[0]?.id || null,
     selectedSectionId: chapters[0]?.sections[0]?.id || null,
     selectedSimulatorId: SIMULATORS[0]?.id || null,
+    teacherChapterId: 'all',
+    teacherSource: 'all',
+    teacherType: 'all',
     practiceMode: 'passline',
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
@@ -215,6 +241,7 @@ function renderView() {
     dashboard: renderDashboard,
     chapter: renderChapterView,
     practice: renderPracticeView,
+    teacher: renderTeacherView,
   };
   views[app.state.view]?.();
   renderAuthLayer();
@@ -224,7 +251,7 @@ function renderView() {
 
 function renderSidebar() {
   const stats = getProgressStats();
-  if (app.state.view === 'dashboard') {
+  if (app.state.view === 'dashboard' || app.state.view === 'teacher') {
     sidebarEl.className = 'sidebar sidebar-empty';
     sidebarEl.innerHTML = '';
     return;
@@ -318,6 +345,7 @@ function renderTopbar() {
     dashboard: ['学习总览', '用教材学习轨建立理解，用过线冲刺轨先把及格盘稳住。'],
     chapter: ['章节学习', '先抓每章必会，再顺着知识点把概念真正读懂。'],
     practice: ['训练强化', '先过线，再提分；做题、错题和模拟器放在同一条补强回路里。'],
+    teacher: ['老师题库', '把老师发过的题单独拎出来刷，优先吃透课堂高频题和原题表达。'],
   };
   const [title, subtitle] = titleMap[app.state.view];
   topbarEl.innerHTML = `
@@ -332,7 +360,7 @@ function renderTopbar() {
       </div>
       <div class="topbar-right">
         <nav class="primary-tabs" aria-label="主导航">
-          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
+          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化'], ['teacher', '老师题库']]
             .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
         </nav>
         <div class="account-bar">
@@ -391,6 +419,7 @@ function renderDashboard() {
           <div class="action-row">
             <button class="btn primary" data-action="open-track" data-track="textbook">从上次进度继续</button>
             <button class="btn subtle" data-action="open-track" data-track="passline">先做过线练习</button>
+            <button class="btn subtle" data-action="open-teacher">刷老师题</button>
           </div>
         </div>
         <div class="hero-side">
@@ -435,6 +464,11 @@ function renderDashboard() {
             <strong>${getWrongbookCount()}</strong>
             <small>${recentWrongs[0] ? `${recentWrongs[0].chapterTitle} 有最近错题` : '当前没有错题记录'}</small>
           </div>
+          <div class="hero-band-item">
+            <span>老师题库</span>
+            <strong>${app.data.teacherQuizzes.length}</strong>
+            <small>课堂测试与课件重点题已单独整理</small>
+          </div>
         </div>
       </section>
 
@@ -476,7 +510,7 @@ function renderDashboard() {
             <div class="section-heading">
               <div>
                 <span class="eyebrow">账号与同步</span>
-                <h3>${app.auth.user ? `当前账号：${app.auth.user.username}` : '当前进度仅保存在本机'}</h3>
+                <h3>${app.auth.user ? `当前账号：${app.auth.user.username}` : '登录后才会保存学习进度'}</h3>
               </div>
             </div>
             <div class="overview-stat-list">
@@ -515,6 +549,23 @@ function renderDashboard() {
             </div>
             <div class="dense-list">
               ${weakChapters.map((chapter) => `<button class="dense-row" data-action="open-chapter" data-chapter-id="${chapter.id}"><div><strong>第 ${chapter.number} 章 · ${chapter.title}</strong><span>${chapter.progress.mastered}/${chapter.progress.total} 已掌握</span></div><em>${chapter.progress.percent}%</em></button>`).join('')}
+            </div>
+          </article>
+
+          <article class="surface-panel">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">老师题库</span>
+                <h3>先刷老师强调过的题型</h3>
+              </div>
+            </div>
+            <div class="overview-stat-list">
+              <div class="overview-stat-row"><span>已整理题目</span><strong>${app.data.teacherQuizzes.length}</strong></div>
+              <div class="overview-stat-row"><span>覆盖来源</span><strong>${app.data.teacherSources.length}</strong></div>
+              <div class="overview-stat-row"><span>重点章节</span><strong>第 1 / 3 / 4 章</strong></div>
+            </div>
+            <div class="action-row">
+              <button class="btn tiny primary" data-action="open-teacher">进入老师题库</button>
             </div>
           </article>
         </aside>
@@ -574,7 +625,7 @@ function renderAccountPanel() {
         <div class="auth-info-row"><span>当前账号</span><strong>${app.auth.user?.username || '--'}</strong></div>
         <div class="auth-info-row"><span>同步状态</span><strong>${syncStatusLabel()}</strong></div>
         <div class="auth-info-row"><span>最近同步</span><strong>${app.auth.lastSyncedAt ? formatDate(app.auth.lastSyncedAt) : '--'}</strong></div>
-        <div class="auth-info-row"><span>本机待上传</span><strong>${app.auth.pendingChanges ? '有变更' : '已同步'}</strong></div>
+        <div class="auth-info-row"><span>待同步变更</span><strong>${app.auth.pendingChanges ? '有变更' : '已同步'}</strong></div>
       </div>
       ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">最近生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
       <div class="danger-box">
@@ -620,6 +671,7 @@ function renderChapterOverviewCard(chapter) {
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   const passline = getChapterPassline(chapter);
   const training = getTrainingOverview(chapter.id);
+  const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
   return `
     <article class="chapter-overview-card">
       <div class="chapter-card-head">
@@ -635,11 +687,13 @@ function renderChapterOverviewCard(chapter) {
         <span>${totalPoints} 个知识点</span>
         <span>${passline.readyTopics}/${passline.totalTopics} 个必会点</span>
         <span>最近训练 ${training.lastScore}</span>
+        <span>老师题 ${teacherCount} 道</span>
       </div>
       <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
       <div class="card-actions">
         <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${chapter.id}">进入学习</button>
         <button class="btn tiny subtle" data-action="open-passline" data-chapter-id="${chapter.id}">进入过线训练</button>
+        <button class="btn tiny subtle" data-action="open-teacher" data-chapter-id="${chapter.id}">老师题</button>
       </div>
     </article>
   `;
@@ -653,6 +707,7 @@ function renderChapterView() {
   const totalSections = chapter.sections.length;
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   const passline = getChapterPassline(chapter);
+  const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
   pageEl.innerHTML = `
     <div class="page-stack chapter-stack">
       <section class="chapter-hero surface-panel">
@@ -666,6 +721,7 @@ function renderChapterView() {
               <span>${totalPoints} 个知识点</span>
               <span>${passline.totalTopics} 个及格线必会点</span>
               <span>${chapter.relatedSimulatorIds.length} 个相关模拟器</span>
+              <span>${teacherCount} 道老师题</span>
             </div>
           </div>
           <div class="hero-meta-grid chapter-hero-metrics">
@@ -732,6 +788,18 @@ function renderChapterView() {
               </div>
             </div>
             <ul class="plain-list">${chapter.commonMistakes.map((item) => `<li>${item}</li>`).join('')}</ul>
+          </article>
+          <article class="chapter-guide-card accent teacher-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">老师题库</span>
+                <h3>本章老师原题单独整理</h3>
+              </div>
+            </div>
+            <p class="body-copy">这一章已整理 ${teacherCount} 道老师发布或课件重点题，适合在看完主干后直接刷原题表达。</p>
+            <div class="action-row">
+              <button class="btn tiny primary" data-action="open-teacher" data-chapter-id="${chapter.id}">进入本章老师题</button>
+            </div>
           </article>
         </div>
       </section>
@@ -856,6 +924,7 @@ function renderPracticeView() {
   const wrongs = wrongbookEntries().filter((item) => item.chapterId === chapter.id);
   const overview = getTrainingOverview(chapter.id);
   const passlineSet = getPasslineQuestionSet(chapter.id);
+  const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
       <section class="training-hero surface-panel">
@@ -869,6 +938,7 @@ function renderPracticeView() {
               <span>${bundle.practiceSections.length} 个练习小节</span>
               <span>${bundle.chapterTest.length} 道综合测试题</span>
               <span>${wrongs.length} 道本章错题</span>
+              <span>${teacherCount} 道老师题</span>
             </div>
           </div>
           <div class="hero-meta-grid training-hero-metrics">
@@ -909,6 +979,9 @@ function renderPracticeView() {
             <span class="eyebrow">训练状态</span>
             <h4>${modeSummaryLabel()}</h4>
             <p class="body-copy">${modeSummaryText(chapter, section, wrongs)}</p>
+            <div class="action-row small">
+              <button class="btn tiny subtle" data-action="open-teacher" data-chapter-id="${chapter.id}">刷本章老师题</button>
+            </div>
           </div>
         </div>
 
@@ -924,6 +997,84 @@ function renderPracticeView() {
     const mountPoint = document.getElementById('simulator-stage');
     mountSimulator(app.state.selectedSimulatorId, mountPoint);
   }
+}
+
+function renderTeacherView() {
+  const questions = getFilteredTeacherQuestions();
+  const chapterOptions = [{ value: 'all', label: '全部章节' }].concat(
+    app.data.chapters
+      .filter((chapter) => getTeacherQuestionsByChapter(chapter.id).length)
+      .map((chapter) => ({ value: chapter.id, label: `第 ${chapter.number} 章 · ${chapter.title}` })),
+  );
+  const sourceOptions = [{ value: 'all', label: '全部来源' }].concat(
+    app.data.teacherSources.map((source) => ({ value: source.id, label: source.label })),
+  );
+  const stats = getTeacherStats();
+  pageEl.innerHTML = `
+    <div class="page-stack teacher-stack">
+      <section class="teacher-hero surface-panel">
+        <div class="teacher-hero-layout">
+          <div class="teacher-hero-copy">
+            <span class="eyebrow">老师题库</span>
+            <h3>把老师发过的题单独刷透</h3>
+            <p class="body-copy">这里只放老师测试题和课件重点题，没有混入普通题库。先熟悉老师常用问法，再回到章节学习补概念，会更接近真实考试。</p>
+            <div class="training-hero-tags">
+              <span>${stats.total} 道老师题</span>
+              <span>${stats.chapters} 个章节</span>
+              <span>${stats.sources} 个来源</span>
+              <span>${stats.fills} 道填空题</span>
+            </div>
+          </div>
+          <div class="hero-meta-grid training-hero-metrics">
+            <div class="metric-card"><span>当前筛选结果</span><strong>${questions.length}</strong></div>
+            <div class="metric-card"><span>雨课堂测试</span><strong>${stats.rainclassroom}</strong></div>
+            <div class="metric-card"><span>课件重点题</span><strong>${stats.courseware}</strong></div>
+            <div class="metric-card"><span>建议顺序</span><strong>1 → 3 → 4 章</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="surface-panel teacher-filter-shell">
+        <div class="toolbar-grid teacher-toolbar">
+          <div>
+            <label class="field-label">章节</label>
+            <select class="select" data-change="teacher-chapter">
+              ${chapterOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherChapterId ? 'selected' : ''}>${item.label}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="field-label">来源</label>
+            <select class="select" data-change="teacher-source">
+              ${sourceOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherSource ? 'selected' : ''}>${item.label}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="field-label">题型</label>
+            <select class="select" data-change="teacher-type">
+              <option value="all" ${app.state.teacherType === 'all' ? 'selected' : ''}>全部题型</option>
+              <option value="single" ${app.state.teacherType === 'single' ? 'selected' : ''}>选择题</option>
+              <option value="fill" ${app.state.teacherType === 'fill' ? 'selected' : ''}>填空题</option>
+            </select>
+          </div>
+        </div>
+        <div class="teacher-source-list">
+          ${app.data.teacherSources.map((source) => `<div class="teacher-source-item"><strong>${source.label}</strong><span>${source.description || ''}</span></div>`).join('')}
+        </div>
+      </section>
+
+      <section class="surface-panel training-panel teacher-question-shell">
+        <div class="section-heading training-panel-head">
+          <div>
+            <span class="eyebrow">老师原题</span>
+            <h3>只刷老师题，不混其他题</h3>
+            <p class="body-copy">题目支持即时反馈。做错后照样会进入错题本，你可以直接回知识点或回模拟器。</p>
+          </div>
+          <span class="soft-badge">${questions.length} 题</span>
+        </div>
+        ${questions.length ? `<div class="quiz-list teacher-quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>` : '<div class="empty-state">当前筛选条件下还没有题目，可切换章节或来源查看。</div>'}
+      </section>
+    </div>
+  `;
 }
 
 function renderModeTab(mode, label) {
@@ -972,10 +1123,11 @@ function renderPracticeQuestion(question) {
   const current = app.session.practiceAnswers[question.id];
   const feedback = app.session.practiceFeedback[question.id];
   return `
-    <article class="quiz-card ${feedback?.status || ''}">
+    <article class="quiz-card ${feedback?.status || ''} ${question.teacherFocus ? 'teacher-focus-card' : ''}">
       <div class="question-head">
-        <span class="eyebrow">即时反馈</span>
+        <span class="eyebrow">${question.teacherFocus ? '老师题即时反馈' : '即时反馈'}</span>
         <h4>${question.stem}</h4>
+        ${question.teacherFocus ? `<div class="teacher-tag-row">${question.tags.map((tag) => `<span class="tiny-pill">${tag}</span>`).join('')}</div>` : ''}
       </div>
       ${renderPracticeInput(question, current, feedback)}
       ${feedback ? `<div class="feedback ${feedback.status}">${feedback.message}${question.explanation ? `<br><strong>解析：</strong>${question.explanation}` : ''}</div>` : ''}
@@ -1214,6 +1366,16 @@ function handleClick(event) {
       touchState();
       renderView();
       break;
+    case 'open-teacher':
+      app.state.view = 'teacher';
+      app.state.mobileSidebarOpen = false;
+      app.state.teacherChapterId = d.chapterId || app.state.teacherChapterId || 'all';
+      app.state.teacherSource = d.sourceId || 'all';
+      if (d.chapterId) app.state.selectedChapterId = d.chapterId;
+      resetPracticeSession();
+      touchState();
+      renderView();
+      break;
     case 'open-track':
       app.state.activeTrack = d.track === 'passline' ? 'passline' : 'textbook';
       app.state.selectedChapterId = getTrackChapter(app.state.activeTrack).id;
@@ -1354,6 +1516,22 @@ function handleChange(event) {
   }
   if (event.target.matches('[data-change="test-fill"]')) {
     app.session.testAnswers[event.target.dataset.questionId] = event.target.value;
+  }
+  if (event.target.matches('[data-change="teacher-chapter"]')) {
+    app.state.teacherChapterId = event.target.value;
+    if (event.target.value !== 'all') app.state.selectedChapterId = event.target.value;
+    resetPracticeSession();
+    renderView();
+  }
+  if (event.target.matches('[data-change="teacher-source"]')) {
+    app.state.teacherSource = event.target.value;
+    resetPracticeSession();
+    renderView();
+  }
+  if (event.target.matches('[data-change="teacher-type"]')) {
+    app.state.teacherType = event.target.value;
+    resetPracticeSession();
+    renderView();
   }
 }
 
@@ -1593,10 +1771,34 @@ function getSelectedSimulator() {
 function getWrongbookCount() { return Object.keys(app.state.wrongbook).length; }
 function getSelectedChapter() { return app.data.chapters.find((chapter) => chapter.id === app.state.selectedChapterId) || app.data.chapters[0]; }
 function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.chapterId === chapterId); }
+function getTeacherQuestionsByChapter(chapterId) {
+  return app.data.teacherQuizzes.filter((question) => question.chapterId === chapterId);
+}
+function getFilteredTeacherQuestions() {
+  return app.data.teacherQuizzes.filter((question) => {
+    if (app.state.teacherChapterId !== 'all' && question.chapterId !== app.state.teacherChapterId) return false;
+    if (app.state.teacherSource !== 'all' && question.sourceId !== app.state.teacherSource) return false;
+    if (app.state.teacherType === 'single' && question.type !== 'single') return false;
+    if (app.state.teacherType === 'fill' && question.type !== 'fill') return false;
+    return true;
+  });
+}
+function getTeacherStats() {
+  const questions = app.data.teacherQuizzes;
+  return {
+    total: questions.length,
+    chapters: new Set(questions.map((item) => item.chapterId)).size,
+    sources: app.data.teacherSources.length,
+    fills: questions.filter((item) => item.type === 'fill').length,
+    rainclassroom: questions.filter((item) => item.sourceType === 'rainclassroom').length,
+    courseware: questions.filter((item) => item.sourceType === 'courseware').length,
+  };
+}
 function getSelectedPracticeSection(chapter, bundle) {
   return bundle.practiceSections.find((item) => item.sectionId === app.state.selectedSectionId) || bundle.practiceSections[0];
 }
 function getPracticeQuestions() {
+  if (app.state.view === 'teacher') return getFilteredTeacherQuestions();
   if (app.state.practiceMode === 'passline') return getPasslineQuestionSet(getSelectedChapter().id);
   return getSelectedPracticeSection(getSelectedChapter(), getQuizBundle(getSelectedChapter().id)).questions;
 }
@@ -1616,7 +1818,8 @@ function findPointById(pointId) {
 function isAnswerCorrect(question, answer) {
   if (question.type === 'single') return answer === question.answerIndex;
   if (question.type === 'judge') return answer === question.answer;
-  return normalizeText(answer) === normalizeText(question.answer);
+  const accepted = Array.isArray(question.acceptedAnswers) ? question.acceptedAnswers : [question.answer];
+  return accepted.some((item) => normalizeText(answer) === normalizeText(item));
 }
 function correctAnswerFor(question) { return question.type === 'single' ? question.answerIndex : question.answer; }
 function formatAnswer(question, answer) {
@@ -1640,7 +1843,14 @@ function formatDate(value) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleString('zh-CN', { hour12: false });
 }
-function normalizeText(value) { return String(value || '').trim().toLowerCase(); }
+function normalizeText(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[，、；]/g, ';')
+    .replace(/\s+/g, '')
+    .replace(/[（）()]/g, '');
+}
 function safeParse(value) { try { return value ? JSON.parse(value) : null; } catch { return null; } }
 function persistState() {}
 function persistAuthState() {
@@ -1699,6 +1909,9 @@ function serializeProgressState() {
     selectedChapterId: app.state.selectedChapterId,
     selectedSectionId: app.state.selectedSectionId,
     selectedSimulatorId: app.state.selectedSimulatorId,
+    teacherChapterId: app.state.teacherChapterId,
+    teacherSource: app.state.teacherSource,
+    teacherType: app.state.teacherType,
     practiceMode: app.state.practiceMode,
     progress: cloneData(app.state.progress),
     quizHistory: cloneData(app.state.quizHistory),
@@ -1730,6 +1943,9 @@ function applySyncedState(nextState) {
     chapterWeakness: { ...(incoming.chapterWeakness || {}) },
     lastPasslineScore: { ...(incoming.lastPasslineScore || {}) },
     quizHistory: Array.isArray(incoming.quizHistory) ? incoming.quizHistory : [],
+    teacherChapterId: incoming.teacherChapterId || defaults.teacherChapterId,
+    teacherSource: incoming.teacherSource || defaults.teacherSource,
+    teacherType: incoming.teacherType || defaults.teacherType,
     meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
   };
 }
@@ -1922,7 +2138,7 @@ async function apiFetch(path, options = {}, requireAuth = true) {
 
 function syncStatusLabel() {
   return ({
-    'local-only': '未登录，不保存进度',
+    'local-only': '未登录，进度不会保存',
     pending: '有未同步变更',
     syncing: '同步中',
     synced: '已同步',

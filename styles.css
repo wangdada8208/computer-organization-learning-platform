@@ -1181,8 +1181,58 @@ ul { margin: 0; padding-left: 18px; }
   font-size: 20px;
 }
 
+.teacher-stack {
+  gap: 20px;
+}
+
+.teacher-filter-shell,
+.teacher-question-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.teacher-toolbar {
+  align-items: end;
+}
+
+.teacher-source-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.teacher-source-item {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(244, 248, 246, 0.82);
+}
+
+.teacher-source-item span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.teacher-focus-card {
+  border-color: rgba(61, 117, 153, 0.22);
+  background: linear-gradient(180deg, #fbfdff 0%, #f5f9fc 100%);
+}
+
+.teacher-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.teacher-guide-card {
+  border-style: dashed;
+}
+
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip, .teacher-source-list { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
 }

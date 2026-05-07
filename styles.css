@@ -866,8 +866,215 @@ ul { margin: 0; padding-left: 18px; }
   white-space: pre-wrap;
 }
 
+.dual-track-grid,
+.chapter-guide-grid,
+.point-lane-list,
+.checklist-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.dual-track-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.track-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(183, 198, 190, 0.95);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.track-card.accent {
+  background: linear-gradient(180deg, rgba(226, 240, 235, 0.94) 0%, rgba(241, 248, 244, 0.92) 100%);
+  border-color: rgba(111, 149, 136, 0.5);
+}
+
+.track-card h4 {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.track-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.track-meta span,
+.must-topic-chip,
+.checklist-item {
+  font-size: 13px;
+}
+
+.track-meta span {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(240, 245, 242, 0.9);
+  color: var(--muted-strong);
+}
+
+.btn.subtle.strong {
+  background: #dfece7;
+  color: var(--primary-strong);
+  border-color: rgba(111, 149, 136, 0.35);
+}
+
+.chapter-guide-shell {
+  padding: 18px;
+  background: linear-gradient(180deg, #f8faf8 0%, #f2f6f4 100%);
+}
+
+.chapter-guide-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chapter-guide-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.chapter-guide-card.accent {
+  background: linear-gradient(180deg, #edf5f1 0%, #f8fbf9 100%);
+}
+
+.must-topic-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.must-topic-chip {
+  border: 1px solid rgba(111, 149, 136, 0.24);
+  background: #edf4f1;
+  color: var(--primary-strong);
+  border-radius: 999px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.must-topic-chip.compact {
+  padding: 7px 10px;
+  background: #f3f6f4;
+}
+
+.section-quickstart {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f2f6f4;
+  border: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+
+.point-lane-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.point-lane-head strong {
+  font-size: 15px;
+}
+
+.point-lane-head span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.point-lane {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #f9fbfa;
+}
+
+.lane-essential {
+  background: linear-gradient(180deg, #f6faf8 0%, #f1f7f4 100%);
+}
+
+.lane-standard {
+  background: linear-gradient(180deg, #fbfcfb 0%, #f5f8f7 100%);
+}
+
+.lane-advanced {
+  background: linear-gradient(180deg, #fcfaf7 0%, #f8f2e9 100%);
+}
+
+.checklist-panel {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+}
+
+.checklist-panel h4 {
+  font-size: 15px;
+}
+
+.checklist-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.checklist-item {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f4f7f5;
+  border: 1px solid var(--line);
+}
+
+.checklist-item.done {
+  background: var(--green-soft);
+  border-color: rgba(63, 128, 103, 0.2);
+}
+
+.checklist-item strong {
+  color: var(--primary-strong);
+}
+
+.passline-sheet {
+  background: linear-gradient(180deg, #f7fbf9 0%, #f1f6f3 100%);
+}
+
+.passline-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.passline-summary-strip > div {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 6px;
+}
+
+.passline-summary-strip span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.passline-summary-strip strong {
+  font-size: 20px;
+}
+
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
 }

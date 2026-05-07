@@ -10,11 +10,12 @@ const topbarEl = document.getElementById('topbar');
 const pageEl = document.getElementById('page');
 
 const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
-const PRACTICE_MODES = ['section', 'test', 'wrongbook', 'simulator'];
+const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator'];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
   { label: '处理器执行', ids: ['sim-pipeline', 'sim-fetch'] },
   { label: '存储层次', ids: ['sim-cache'] },
+  { label: '中断与控制', ids: ['sim-fetch', 'sim-pipeline'] },
 ];
 
 const app = {
@@ -42,10 +43,12 @@ boot();
 
 async function boot() {
   try {
-    const [chapters, quizzes] = await Promise.all([
+    const [rawChapters, rawQuizzes] = await Promise.all([
       fetchJson('./data/chapters.json'),
       fetchJson('./data/quizzes.json'),
     ]);
+    const chapters = normalizeChapters(rawChapters);
+    const quizzes = normalizeQuizzes(rawQuizzes, chapters);
     app.data = { chapters, quizzes };
     app.state = buildInitialState(chapters, quizzes);
     renderView();
@@ -62,6 +65,74 @@ async function fetchJson(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error('Failed to load ' + url);
   return response.json();
+}
+
+function normalizeChapters(chapters) {
+  return chapters.map((chapter, chapterIndex) => {
+    const orderedPointIds = chapter.sections.flatMap((section) => section.points.map((point) => point.id));
+    const passlineTopics = orderedPointIds.slice(0, Math.min(5, orderedPointIds.length));
+    const commonMistakes = chapter.confusions.map(([a, b]) => `${a} 和 ${b} 容易混在一起`).slice(0, 3);
+    if (!commonMistakes.length && chapter.highFrequency.length) {
+      commonMistakes.push(`先把 ${chapter.highFrequency[0]} 的条件和适用场景记牢。`);
+    }
+    return {
+      ...chapter,
+      difficulty: chapterIndex < 2 ? '基础' : chapterIndex < 6 ? '中等' : '进阶',
+      isEssentialChapter: chapterIndex < 6,
+      recommendedOrder: chapter.sections.map((section) => section.id),
+      passlineTopics,
+      commonMistakes,
+      sections: chapter.sections.map((section) => ({
+        ...section,
+        mustFirstIds: section.points.slice(0, Math.min(2, section.points.length)).map((point) => point.id),
+        overview: cleanLeadText(section.overview || chapter.summary || section.title),
+        points: section.points.map((point, pointIndex) => normalizePoint(point, chapter, section, pointIndex, passlineTopics)),
+      })),
+    };
+  });
+}
+
+function normalizePoint(point, chapter, section, pointIndex, passlineTopics) {
+  const conclusion = derivePointConclusion(point);
+  const preview = derivePointPreview(point, conclusion);
+  const pitfall = derivePointPitfall(point, chapter);
+  const importance = passlineTopics.includes(point.id) ? 'essential' : pointIndex === section.points.length - 1 ? 'advanced' : 'standard';
+  return { ...point, conclusion, preview, pitfall, importance };
+}
+
+function normalizeQuizzes(quizzes, chapters) {
+  return quizzes.map((bundle) => {
+    const chapter = chapters.find((item) => item.id === bundle.chapterId);
+    const passlineSet = new Set(chapter?.passlineTopics || []);
+    return {
+      ...bundle,
+      practiceSections: bundle.practiceSections.map((section, sectionIndex) => ({
+        ...section,
+        questions: section.questions.map((question, questionIndex) => normalizeQuestion(question, chapter, passlineSet, sectionIndex, questionIndex)),
+      })),
+      chapterTest: bundle.chapterTest.map((question, questionIndex) => normalizeQuestion(question, chapter, passlineSet, questionIndex, questionIndex)),
+    };
+  });
+}
+
+function normalizeQuestion(question, chapter, passlineSet, sectionIndex, questionIndex) {
+  const relatedTitle = question.relatedTopicId ? findPointTitleInChapter(chapter, question.relatedTopicId) : '';
+  const difficulty = questionIndex < 2 ? '基础' : questionIndex < 4 ? '中等' : '进阶';
+  return {
+    ...question,
+    difficulty,
+    isPassline: passlineSet.has(question.relatedTopicId) || sectionIndex === 0 || questionIndex < 2,
+    mistakeTag: relatedTitle || question.sectionTitle || chapter?.title || '',
+  };
+}
+
+function findPointTitleInChapter(chapter, pointId) {
+  if (!chapter) return '';
+  for (const section of chapter.sections) {
+    const point = section.points.find((item) => item.id === pointId);
+    if (point) return point.title;
+  }
+  return '';
 }
 
 function renderBootError(error) {
@@ -82,14 +153,18 @@ function buildInitialState(chapters, quizzes) {
   const saved = safeParse(localStorage.getItem(STORAGE_KEY));
   const defaults = {
     view: 'dashboard',
+    activeTrack: 'textbook',
     mobileSidebarOpen: false,
     selectedChapterId: chapters[0]?.id || null,
     selectedSectionId: chapters[0]?.sections[0]?.id || null,
     selectedSimulatorId: SIMULATORS[0]?.id || null,
-    practiceMode: 'section',
+    practiceMode: 'passline',
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
     wrongbook: {},
+    trackProgress: { textbook: {}, passline: {} },
+    chapterWeakness: {},
+    lastPasslineScore: {},
   };
   const state = { ...defaults, ...saved };
   state.progress = { ...defaults.progress, ...(saved?.progress || {}) };
@@ -97,12 +172,18 @@ function buildInitialState(chapters, quizzes) {
   state.progress.chapters = { ...(saved?.progress?.chapters || {}) };
   state.quizHistory = Array.isArray(saved?.quizHistory) ? saved.quizHistory : [];
   state.wrongbook = saved?.wrongbook || {};
+  state.trackProgress = {
+    textbook: { ...(saved?.trackProgress?.textbook || {}) },
+    passline: { ...(saved?.trackProgress?.passline || {}) },
+  };
+  state.chapterWeakness = { ...(saved?.chapterWeakness || {}) };
+  state.lastPasslineScore = { ...(saved?.lastPasslineScore || {}) };
   migrateLegacyState(state, chapters, quizzes);
   if (!PRIMARY_VIEWS.includes(state.view)) {
     state.view = state.view === 'simulators' ? 'practice' : 'dashboard';
   }
   if (!PRACTICE_MODES.includes(state.practiceMode)) {
-    state.practiceMode = state.view === 'simulators' ? 'simulator' : 'section';
+    state.practiceMode = state.view === 'simulators' ? 'simulator' : 'passline';
   }
   if (saved?.view === 'archive') state.view = 'dashboard';
   if (saved?.view === 'simulators') {
@@ -261,9 +342,9 @@ function renderSidebarTree() {
 
 function renderTopbar() {
   const titleMap = {
-    dashboard: ['学习总览', '汇总学习进度、训练记录与推荐任务。'],
-    chapter: ['章节学习', '按导览、知识点、整理、训练的顺序稳定推进。'],
-    practice: ['训练强化', '在同一页完成章节练习、综合测试、错题复习和模拟器强化。'],
+    dashboard: ['学习总览', '用教材学习轨建立理解，用过线冲刺轨先把及格盘稳住。'],
+    chapter: ['章节学习', '先抓每章必会，再顺着知识点把概念真正读懂。'],
+    practice: ['训练强化', '先过线，再提分；做题、错题和模拟器放在同一条补强回路里。'],
   };
   const [title, subtitle] = titleMap[app.state.view];
   topbarEl.innerHTML = `
@@ -291,35 +372,46 @@ function renderDashboard() {
   const history = [...app.state.quizHistory].reverse().slice(0, 5);
   const weakChapters = getWeakChapters();
   const recentWrongs = wrongbookEntries().slice(0, 4);
+  const passline = getPasslineOverview();
   pageEl.innerHTML = `
     <div class="overview-stack">
       <section class="overview-hero">
         <div class="hero-copy">
           <span class="eyebrow">学习总览</span>
           <h3 class="hero-title">计算机组成原理学习平台</h3>
-          <p class="body-copy">以章节学习为主线，结合练习、测试、错题复习与模拟器强化，帮助梳理知识结构并持续巩固重点概念。</p>
+          <p class="body-copy">给零基础学习者准备的双轨学习工作台。一条按教材把概念学懂，一条按考试把及格分先拿稳，减少“看了很多但不知道下一步”的挫败感。</p>
           <div class="hero-kicker-row">
-            <span class="hero-kicker">课程学习</span>
-            <span class="hero-kicker">章节训练</span>
-            <span class="hero-kicker">错题回看</span>
+            <span class="hero-kicker">教材学习轨</span>
+            <span class="hero-kicker">过线冲刺轨</span>
+            <span class="hero-kicker">错题补救</span>
             <span class="hero-kicker">模拟器强化</span>
           </div>
-          <div class="overview-route" aria-label="学习路径">
-            <div class="route-step"><strong>1</strong><span>进入章节</span></div>
-            <div class="route-step"><strong>2</strong><span>阅读知识点</span></div>
-            <div class="route-step"><strong>3</strong><span>完成训练</span></div>
-            <div class="route-step"><strong>4</strong><span>回看错题</span></div>
+          <div class="dual-track-grid" aria-label="学习双轨">
+            <article class="track-card">
+              <span class="eyebrow">按教材学</span>
+              <h4>先把主干概念学明白</h4>
+              <p class="body-copy">从当前章节继续，先看必会点，再顺着章节结构补理解。</p>
+              <div class="track-meta"><span>当前章节：第 ${continueChapter.number} 章</span><span>${getChapterProgress(continueChapter).percent}% 已掌握</span></div>
+              <button class="btn primary" data-action="open-track" data-track="textbook">进入教材学习轨</button>
+            </article>
+            <article class="track-card accent">
+              <span class="eyebrow">先过线</span>
+              <h4>先拿下本周及格分主干</h4>
+              <p class="body-copy">只做最低必会点和高频题，先把最容易丢分的地方补起来。</p>
+              <div class="track-meta"><span>${passline.completedChapters}/${passline.targetChapters} 章已达及格线</span><span>${passline.readyTopics}/${passline.totalTopics} 个必会点已完成</span></div>
+              <button class="btn subtle strong" data-action="open-track" data-track="passline">进入过线冲刺轨</button>
+            </article>
           </div>
           <div class="action-row">
-            <button class="btn primary" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续学习 ${continueChapter.title}</button>
-            <button class="btn subtle" data-action="switch-view" data-view="chapter">查看章节目录</button>
+            <button class="btn primary" data-action="open-track" data-track="textbook">从上次进度继续</button>
+            <button class="btn subtle" data-action="open-track" data-track="passline">先做过线练习</button>
           </div>
         </div>
         <div class="hero-side">
           <div class="surface-panel compact-panel hero-note">
             <div class="hero-note-head">
               <div>
-                <span class="eyebrow">本次学习</span>
+                <span class="eyebrow">推荐下一步</span>
                 <h4>${getContinueLabel()}</h4>
               </div>
               <span class="soft-badge">推荐任务</span>
@@ -327,6 +419,7 @@ function renderDashboard() {
             <p class="body-copy">${recommendation.text}</p>
             <div class="metric-grid single-column">
               <div class="metric-card"><span>总体掌握度</span><strong>${stats.percent}%</strong></div>
+              <div class="metric-card"><span>过线完成度</span><strong>${passline.percent}%</strong></div>
               <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong></div>
               <div class="metric-card"><span>最近测试记录</span><strong>${app.state.quizHistory.length}</strong></div>
             </div>
@@ -342,9 +435,9 @@ function renderDashboard() {
             <small>${getContinueLabel()}</small>
           </div>
           <div class="hero-band-item">
-            <span>总体掌握度</span>
-            <strong>${stats.percent}%</strong>
-            <small>${stats.masteredPoints}/${stats.totalPoints} 个知识点已掌握</small>
+            <span>过线进度</span>
+            <strong>${passline.percent}%</strong>
+            <small>${passline.readyTopics}/${passline.totalTopics} 个必会点已完成</small>
           </div>
           <div class="hero-band-item">
             <span>近期训练</span>
@@ -365,9 +458,9 @@ function renderDashboard() {
             <div class="section-heading">
               <div>
                 <span class="eyebrow">继续学习</span>
-                <h3>${getContinueLabel()}</h3>
+                <h3>${app.state.activeTrack === 'passline' ? '先把过线主干拿下' : getContinueLabel()}</h3>
               </div>
-              <span class="soft-badge">当前入口</span>
+              <span class="soft-badge">${app.state.activeTrack === 'passline' ? '过线冲刺轨' : '教材学习轨'}</span>
             </div>
             <p class="body-copy">${recommendation.text}</p>
             <div class="action-row">${recommendation.actions}</div>
@@ -376,11 +469,19 @@ function renderDashboard() {
           <article class="surface-panel">
             <div class="section-heading">
               <div>
-                <span class="eyebrow">最近训练</span>
-                <h3>训练记录与得分变化</h3>
+                <span class="eyebrow">过线进度</span>
+                <h3>哪些章节已经稳住，哪些还在掉分</h3>
               </div>
             </div>
-            ${history.length ? `<div class="timeline-list">${history.map((item) => `<div class="timeline-item"><strong>${item.chapterTitle}</strong><span>${item.mode === 'test' ? '综合测试' : '练习'} · ${item.score}/${item.total}</span><small>${formatDate(item.completedAt)}</small></div>`).join('')}</div>` : '<div class="empty-state">暂时还没有测试记录，可从任一章节开始综合测试，逐步形成训练记录。</div>'}
+            <div class="timeline-list">
+              ${passline.chapterCards.map((item) => `
+                <div class="timeline-item">
+                  <strong>第 ${item.number} 章 · ${item.title}</strong>
+                  <span>${item.readyTopics}/${item.totalTopics} 个必会点已拿下 · 最近过线分 ${item.lastScore}</span>
+                  <small>${item.statusText}</small>
+                </div>
+              `).join('')}
+            </div>
           </article>
         </div>
 
@@ -395,6 +496,7 @@ function renderDashboard() {
             <div class="overview-stat-list">
               <div class="overview-stat-row"><span>已掌握知识点</span><strong>${stats.masteredPoints}/${stats.totalPoints}</strong></div>
               <div class="overview-stat-row"><span>待复习知识点</span><strong>${stats.reviewPoints}</strong></div>
+              <div class="overview-stat-row"><span>已过线章节</span><strong>${passline.completedChapters}/${passline.targetChapters}</strong></div>
               <div class="overview-stat-row"><span>最近学习章节</span><strong>第 ${continueChapter.number} 章</strong></div>
             </div>
           </article>
@@ -441,6 +543,8 @@ function renderChapterOverviewCard(chapter) {
   const progress = getChapterProgress(chapter);
   const totalSections = chapter.sections.length;
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
+  const passline = getChapterPassline(chapter);
+  const training = getTrainingOverview(chapter.id);
   return `
     <article class="chapter-overview-card">
       <div class="chapter-card-head">
@@ -449,17 +553,18 @@ function renderChapterOverviewCard(chapter) {
           <h4>${chapter.title}</h4>
           <p class="chapter-card-summary">${chapter.summary}</p>
         </div>
-        <span class="soft-badge">${progress.percent}%</span>
+        <span class="soft-badge">${chapter.difficulty}</span>
       </div>
       <div class="chapter-card-meta">
         <span>${totalSections} 节</span>
         <span>${totalPoints} 个知识点</span>
-        <span>${progress.mastered}/${progress.total} 已掌握</span>
+        <span>${passline.readyTopics}/${passline.totalTopics} 个必会点</span>
+        <span>最近训练 ${training.lastScore}</span>
       </div>
       <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
       <div class="card-actions">
-        <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${chapter.id}">进入章节</button>
-        <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}">进入训练</button>
+        <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${chapter.id}">进入学习</button>
+        <button class="btn tiny subtle" data-action="open-passline" data-chapter-id="${chapter.id}">进入过线训练</button>
       </div>
     </article>
   `;
@@ -472,6 +577,7 @@ function renderChapterView() {
   const featured = chapter.sections.slice(0, 3);
   const totalSections = chapter.sections.length;
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
+  const passline = getChapterPassline(chapter);
   pageEl.innerHTML = `
     <div class="page-stack chapter-stack">
       <section class="chapter-hero surface-panel">
@@ -483,6 +589,7 @@ function renderChapterView() {
             <div class="chapter-hero-tags">
               <span>${totalSections} 节内容</span>
               <span>${totalPoints} 个知识点</span>
+              <span>${passline.totalTopics} 个及格线必会点</span>
               <span>${chapter.relatedSimulatorIds.length} 个相关模拟器</span>
             </div>
           </div>
@@ -494,43 +601,64 @@ function renderChapterView() {
         </div>
       </section>
 
-      <section class="guide-grid">
-        <article class="surface-panel chapter-guide-card">
-          <div class="section-heading compact-heading">
-            <div>
-              <span class="eyebrow">学习目标</span>
-              <h3>本章完成后应掌握</h3>
+      <section class="surface-panel chapter-guide-shell">
+        <div class="chapter-guide-grid">
+          <article class="chapter-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">这一章学什么</span>
+                <h3>本章完成后应掌握</h3>
+              </div>
             </div>
-          </div>
-          <div class="pill-list">${chapter.learningGoals.map((goal) => `<span class="info-pill">${goal}</span>`).join('')}</div>
-        </article>
-        <article class="surface-panel chapter-guide-card">
-          <div class="section-heading compact-heading">
-            <div>
-              <span class="eyebrow">本章导览</span>
-              <h3>建议阅读顺序</h3>
+            <div class="pill-list">${chapter.learningGoals.map((goal) => `<span class="info-pill">${goal}</span>`).join('')}</div>
+          </article>
+          <article class="chapter-guide-card accent">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">及格线必会</span>
+                <h3>先拿下这几个最低必会点</h3>
+              </div>
             </div>
-          </div>
-          <div class="chapter-map-list">${chapter.chapterMap.map((item) => `<div class="map-row">${item}</div>`).join('')}</div>
-        </article>
-        <article class="surface-panel chapter-guide-card">
-          <div class="section-heading compact-heading">
-            <div>
-              <span class="eyebrow">先修提醒</span>
-              <h3>阅读前先对齐前置概念</h3>
+            <div class="must-topic-list">${passline.points.map((point) => `<button class="must-topic-chip" data-action="review-topic" data-topic-id="${point.id}" data-chapter-id="${chapter.id}">${point.title}</button>`).join('')}</div>
+            <p class="body-copy">先把这 ${passline.totalTopics} 个点做懂，再去补完整细节，效率会高很多。</p>
+          </article>
+          <article class="chapter-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">本章导览</span>
+                <h3>建议阅读顺序</h3>
+              </div>
             </div>
-          </div>
-          <ul class="plain-list">${chapter.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul>
-        </article>
-        <article class="surface-panel chapter-guide-card">
-          <div class="section-heading compact-heading">
-            <div>
-              <span class="eyebrow">必看知识块</span>
-              <h3>优先完成这几段</h3>
+            <div class="chapter-map-list">${chapter.chapterMap.map((item) => `<div class="map-row">${item}</div>`).join('')}</div>
+          </article>
+          <article class="chapter-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">先修提醒</span>
+                <h3>阅读前先对齐前置概念</h3>
+              </div>
             </div>
-          </div>
-          <div class="featured-list">${featured.map((section) => `<div class="featured-item"><strong>${section.title}</strong><span>${section.points.length} 个知识点</span></div>`).join('')}</div>
-        </article>
+            <ul class="plain-list">${chapter.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul>
+          </article>
+          <article class="chapter-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">必看知识块</span>
+                <h3>优先完成这几段</h3>
+              </div>
+            </div>
+            <div class="featured-list">${featured.map((section) => `<div class="featured-item"><strong>${section.title}</strong><span>${section.points.length} 个知识点</span></div>`).join('')}</div>
+          </article>
+          <article class="chapter-guide-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="eyebrow">常见失分点</span>
+                <h3>做题前先避开这几类坑</h3>
+              </div>
+            </div>
+            <ul class="plain-list">${chapter.commonMistakes.map((item) => `<li>${item}</li>`).join('')}</ul>
+          </article>
+        </div>
       </section>
 
       ${chapter.sections.map((section, index) => renderSectionCard(chapter, section, index)).join('')}
@@ -547,8 +675,18 @@ function renderChapterView() {
           <div class="summary-column"><h4>高频考点</h4><ul class="plain-list">${chapter.highFrequency.map((item) => `<li>${item}</li>`).join('')}</ul></div>
           <div class="summary-column"><h4>易混概念对照</h4><ul class="plain-list">${chapter.confusions.map(([a, b]) => `<li>${a} / ${b}</li>`).join('')}</ul></div>
         </div>
+        <div class="checklist-panel">
+          <h4>过线检查单</h4>
+          <div class="checklist-grid">
+            ${passline.points.map((point) => {
+              const done = app.state.progress.points[point.id]?.status === 'mastered';
+              return `<div class="checklist-item ${done ? 'done' : ''}"><strong>${done ? '已会' : '待补'}</strong><span>${point.title}</span></div>`;
+            }).join('')}
+          </div>
+        </div>
         <div class="action-row">
           <button class="btn primary" data-action="open-practice" data-chapter-id="${chapter.id}">进入章节练习</button>
+          <button class="btn subtle" data-action="open-passline" data-chapter-id="${chapter.id}">先做过线练习</button>
           <button class="btn subtle" data-action="open-test" data-chapter-id="${chapter.id}">开始综合测试</button>
         </div>
       </section>
@@ -557,6 +695,7 @@ function renderChapterView() {
 }
 
 function renderSectionCard(chapter, section, sectionIndex) {
+  const grouped = groupSectionPoints(section);
   return `
     <section class="surface-panel section-block">
       <div class="section-heading spread align-start">
@@ -570,14 +709,30 @@ function renderSectionCard(chapter, section, sectionIndex) {
           <button class="btn tiny subtle" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">做本节小测</button>
         </div>
       </div>
-      <div class="point-list">${section.points.map((point, pointIndex) => renderPointCard(chapter, section, point, pointIndex)).join('')}</div>
+      <div class="section-quickstart">
+        <span class="eyebrow">先看这几个</span>
+        <div class="must-topic-list">${section.mustFirstIds.map((pointId) => {
+          const point = section.points.find((item) => item.id === pointId);
+          return point ? `<button class="must-topic-chip compact" data-action="review-topic" data-topic-id="${point.id}" data-chapter-id="${chapter.id}">${point.title}</button>` : '';
+        }).join('')}</div>
+      </div>
+      <div class="point-lane-list">
+        ${grouped.map((group) => `
+          <div class="point-lane lane-${group.key}">
+            <div class="point-lane-head">
+              <strong>${group.label}</strong>
+              <span>${group.description}</span>
+            </div>
+            <div class="point-list">${group.points.map((point, pointIndex) => renderPointCard(chapter, section, point, pointIndex)).join('')}</div>
+          </div>
+        `).join('')}
+      </div>
     </section>
   `;
 }
 
 function renderPointCard(chapter, section, point, pointIndex) {
   const status = app.state.progress.points[point.id]?.status || 'unseen';
-  const excerpt = getPointExcerpt(point);
   return `
     <details class="point-card" ${app.state.progress.lastPointId === point.id ? 'open' : ''}>
       <summary data-action="focus-point" data-chapter-id="${chapter.id}" data-point-id="${point.id}">
@@ -591,18 +746,18 @@ function renderPointCard(chapter, section, point, pointIndex) {
           </div>
           <span class="status-pill ${status}">${statusLabel(status)}</span>
         </div>
-        <div class="point-conclusion">${getPointConclusion(point)}</div>
-        ${excerpt ? `<div class="point-excerpt"><span>核心解释</span><p>${excerpt}</p></div>` : ''}
+        <div class="point-conclusion">${point.conclusion}</div>
+        ${point.preview ? `<div class="point-excerpt"><span>为什么是这样</span><p>${point.preview}</p></div>` : ''}
         <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
       <div class="point-detail-wrap">
         <div class="point-detail-block">
           <span class="detail-label">完整说明</span>
-          <div class="point-body">${point.detail}</div>
+          <div class="point-body">${cleanLeadText(point.detail)}</div>
         </div>
         ${point.svg ? `<div class="svg-box">${point.svg}</div>` : ''}
         <div class="point-meta-grid">
-          ${point.tip ? `<div class="point-tip"><span class="detail-label">易错提醒</span><p>${point.tip}</p></div>` : ''}
+          ${point.pitfall ? `<div class="point-tip"><span class="detail-label">易错点</span><p>${point.pitfall}</p></div>` : ''}
           ${getConfusionHints(chapter, point).length ? `<div class="point-compare"><span class="detail-label">对比概念</span><ul class="plain-list">${getConfusionHints(chapter, point).map((item) => `<li>${item}</li>`).join('')}</ul></div>` : ''}
         </div>
         <div class="point-actions">
@@ -625,6 +780,7 @@ function renderPracticeView() {
   const section = getSelectedPracticeSection(chapter, bundle);
   const wrongs = wrongbookEntries().filter((item) => item.chapterId === chapter.id);
   const overview = getTrainingOverview(chapter.id);
+  const passlineSet = getPasslineQuestionSet(chapter.id);
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
       <section class="training-hero surface-panel">
@@ -632,17 +788,19 @@ function renderPracticeView() {
           <div class="training-hero-copy">
             <span class="eyebrow">训练强化</span>
             <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
-            <p class="body-copy">围绕当前章节完成章节练习、综合测试、错题复习与模拟器强化，让训练过程更专注、更连续。</p>
+            <p class="body-copy">先用过线练习把必会点拿下，再用章节练习和综合测试把得分盘做稳。做错以后，能直接回知识点或开模拟器补理解。</p>
             <div class="training-hero-tags">
+              <span>${passlineSet.length} 道过线题</span>
               <span>${bundle.practiceSections.length} 个练习小节</span>
               <span>${bundle.chapterTest.length} 道综合测试题</span>
               <span>${wrongs.length} 道本章错题</span>
             </div>
           </div>
           <div class="hero-meta-grid training-hero-metrics">
+            <div class="metric-card"><span>当前章过线状态</span><strong>${overview.passlineReady ? '已达线' : '待补强'}</strong></div>
             <div class="metric-card"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
             <div class="metric-card"><span>错题数量</span><strong>${overview.wrongCount}</strong></div>
-            <div class="metric-card"><span>薄弱章节数</span><strong>${getWeakChapters().length}</strong></div>
+            <div class="metric-card"><span>当前薄弱节</span><strong>${overview.weakSection || '--'}</strong></div>
           </div>
         </div>
       </section>
@@ -665,6 +823,7 @@ function renderPracticeView() {
               </div>
             </div>
             <div class="segment-tabs training-tabs" role="tablist">
+              ${renderModeTab('passline', '过线练习')}
               ${renderModeTab('section', '章节练习')}
               ${renderModeTab('test', '综合测试')}
               ${renderModeTab('wrongbook', '错题复习')}
@@ -678,6 +837,7 @@ function renderPracticeView() {
           </div>
         </div>
 
+        ${app.state.practiceMode === 'passline' ? renderPasslinePractice(chapter, passlineSet) : ''}
         ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
         ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
         ${app.state.practiceMode === 'wrongbook' ? renderWrongbook(chapter, wrongs) : ''}
@@ -693,6 +853,28 @@ function renderPracticeView() {
 
 function renderModeTab(mode, label) {
   return `<button class="segment-tab ${app.state.practiceMode === mode ? 'active' : ''}" data-action="set-practice-mode" data-mode="${mode}">${label}</button>`;
+}
+
+function renderPasslinePractice(chapter, questions) {
+  const passline = getChapterPassline(chapter);
+  return `
+    <section class="training-panel training-panel-sheet passline-sheet">
+      <div class="section-heading training-panel-head">
+        <div>
+          <span class="eyebrow">过线练习</span>
+          <h3>${chapter.title}</h3>
+          <p class="body-copy">只练最低必会点和高频题，先把最容易丢分的地方补齐，再去做综合测试。</p>
+        </div>
+        <span class="soft-badge">${questions.length} 题</span>
+      </div>
+      <div class="passline-summary-strip">
+        <div><span>必会点</span><strong>${passline.readyTopics}/${passline.totalTopics}</strong></div>
+        <div><span>最近过线分</span><strong>${app.state.lastPasslineScore[chapter.id] || '--'}</strong></div>
+        <div><span>优先动作</span><strong>先对后难</strong></div>
+      </div>
+      <div class="quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>
+    </section>
+  `;
 }
 
 function renderSectionPractice(section) {
@@ -720,20 +902,30 @@ function renderPracticeQuestion(question) {
         <span class="eyebrow">即时反馈</span>
         <h4>${question.stem}</h4>
       </div>
-      <div class="option-list">
-        ${question.options.map((option, index) => {
-          const classes = ['option-btn'];
-          if (current === index) classes.push('selected');
-          if (feedback?.status) {
-            if (index === question.answerIndex) classes.push('correct');
-            else if (current === index && current !== question.answerIndex) classes.push('wrong');
-          }
-          return `<button class="${classes.join(' ')}" data-action="practice-answer" data-question-id="${question.id}" data-answer-index="${index}">${String.fromCharCode(65 + index)}. ${option}</button>`;
-        }).join('')}
-      </div>
+      ${renderPracticeInput(question, current, feedback)}
       ${feedback ? `<div class="feedback ${feedback.status}">${feedback.message}${question.explanation ? `<br><strong>解析：</strong>${question.explanation}` : ''}</div>` : ''}
     </article>
   `;
+}
+
+function renderPracticeInput(question, current, feedback) {
+  if (question.type === 'judge') {
+    return `<div class="option-list"><button class="option-btn ${current === true ? 'selected' : ''} ${feedback?.status && question.answer === true ? 'correct' : ''} ${feedback?.status && current === true && question.answer !== true ? 'wrong' : ''}" data-action="practice-answer" data-question-id="${question.id}" data-answer-value="true">正确</button><button class="option-btn ${current === false ? 'selected' : ''} ${feedback?.status && question.answer === false ? 'correct' : ''} ${feedback?.status && current === false && question.answer !== false ? 'wrong' : ''}" data-action="practice-answer" data-question-id="${question.id}" data-answer-value="false">错误</button></div>`;
+  }
+  if (question.type === 'fill') {
+    return `<div class="option-list"><input class="input" data-change="practice-fill" data-question-id="${question.id}" value="${escapeHtml(current || '')}" placeholder="请输入答案"/>${feedback ? `<button class="btn tiny subtle" data-action="practice-fill-submit" data-question-id="${question.id}">重新判断</button>` : `<button class="btn tiny primary" data-action="practice-fill-submit" data-question-id="${question.id}">提交判断</button>`}</div>`;
+  }
+  return `<div class="option-list">
+    ${question.options.map((option, index) => {
+      const classes = ['option-btn'];
+      if (current === index) classes.push('selected');
+      if (feedback?.status) {
+        if (index === question.answerIndex) classes.push('correct');
+        else if (current === index && current !== question.answerIndex) classes.push('wrong');
+      }
+      return `<button class="${classes.join(' ')}" data-action="practice-answer" data-question-id="${question.id}" data-answer-index="${index}">${String.fromCharCode(65 + index)}. ${option}</button>`;
+    }).join('')}
+  </div>`;
 }
 
 function renderChapterTest(chapter, bundle) {
@@ -809,8 +1001,8 @@ function renderWrongbook(chapter, wrongs) {
           ${item.explanation ? `<p class="body-copy">${item.explanation}</p>` : ''}
           <small class="muted">最近一次 ${formatDate(item.lastWrongAt)}</small>
           <div class="action-row small">
-            ${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">回到知识点</button>` : ''}
-            ${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">打开相关模拟器</button>` : ''}
+            ${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">先回知识点</button>` : ''}
+            ${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">我还是没懂，开模拟器</button>` : ''}
           </div>
         </article>`).join('')}</div><div class="action-row"><button class="btn subtle" data-action="clear-wrongbook" data-chapter-id="${chapter.id}">清空本章错题</button></div>` : '<div class="empty-state">本章目前没有错题记录，可切换到章节练习或综合测试继续训练。</div>'}
     </section>
@@ -854,6 +1046,7 @@ function renderSimulatorWorkbench(chapter) {
 
 function modeSummaryLabel() {
   const labels = {
+    passline: '当前处于过线练习',
     section: '当前处于章节练习',
     test: '当前处于综合测试',
     wrongbook: '当前处于错题复习',
@@ -863,6 +1056,10 @@ function modeSummaryLabel() {
 }
 
 function modeSummaryText(chapter, section, wrongs) {
+  if (app.state.practiceMode === 'passline') {
+    const passline = getChapterPassline(chapter);
+    return `本章先盯住 ${passline.totalTopics} 个及格线必会点，优先确保基础题不丢分。`;
+  }
   if (app.state.practiceMode === 'section') {
     return `${section.sectionTitle} 提供即时反馈，适合配合刚完成的知识点阅读继续巩固。`;
   }
@@ -908,8 +1105,22 @@ function handleClick(event) {
       if (app.state.view !== 'practice') resetPracticeSession();
       renderView();
       break;
+    case 'open-track':
+      app.state.activeTrack = d.track === 'passline' ? 'passline' : 'textbook';
+      app.state.selectedChapterId = getTrackChapter(app.state.activeTrack).id;
+      if (app.state.activeTrack === 'passline') {
+        app.state.view = 'practice';
+        app.state.practiceMode = 'passline';
+      } else {
+        app.state.view = 'chapter';
+      }
+      app.state.mobileSidebarOpen = false;
+      resetPracticeSession();
+      renderView();
+      break;
     case 'open-chapter':
       app.state.selectedChapterId = d.chapterId;
+      app.state.activeTrack = 'textbook';
       app.state.view = 'chapter';
       app.state.mobileSidebarOpen = false;
       renderView();
@@ -925,14 +1136,25 @@ function handleClick(event) {
     case 'open-practice':
       app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
       if (d.sectionId) app.state.selectedSectionId = d.sectionId;
+      app.state.activeTrack = 'textbook';
       app.state.practiceMode = 'section';
       app.state.view = 'practice';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
       renderView();
       break;
+    case 'open-passline':
+      app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
+      app.state.activeTrack = 'passline';
+      app.state.view = 'practice';
+      app.state.practiceMode = 'passline';
+      app.state.mobileSidebarOpen = false;
+      resetPracticeSession();
+      renderView();
+      break;
     case 'open-test':
       app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
+      app.state.activeTrack = 'textbook';
       app.state.view = 'practice';
       app.state.practiceMode = 'test';
       app.state.mobileSidebarOpen = false;
@@ -941,11 +1163,16 @@ function handleClick(event) {
       break;
     case 'set-practice-mode':
       app.state.practiceMode = d.mode;
+      app.state.activeTrack = d.mode === 'passline' ? 'passline' : 'textbook';
       if (d.mode !== 'simulator') resetPracticeSession();
       renderView();
       break;
     case 'practice-answer':
-      handlePracticeAnswer(d.questionId, Number(d.answerIndex));
+      handlePracticeAnswer(d.questionId, d.answerIndex !== undefined ? Number(d.answerIndex) : d.answerValue === 'true');
+      renderView();
+      break;
+    case 'practice-fill-submit':
+      handlePracticeAnswer(d.questionId, app.session.practiceAnswers[d.questionId] || '');
       renderView();
       break;
     case 'test-answer':
@@ -963,6 +1190,7 @@ function handleClick(event) {
       break;
     case 'review-topic':
       app.state.selectedChapterId = d.chapterId;
+      app.state.activeTrack = 'textbook';
       app.state.view = 'chapter';
       app.state.progress.lastPointId = d.topicId;
       renderView();
@@ -970,6 +1198,7 @@ function handleClick(event) {
     case 'open-simulator':
     case 'select-simulator':
       app.state.selectedSimulatorId = d.simulatorId;
+      app.state.activeTrack = 'textbook';
       app.state.view = 'practice';
       app.state.practiceMode = 'simulator';
       renderView();
@@ -995,12 +1224,18 @@ function handleChange(event) {
     resetPracticeSession();
     renderView();
   }
+  if (event.target.matches('[data-change="practice-fill"]')) {
+    app.session.practiceAnswers[event.target.dataset.questionId] = event.target.value;
+  }
   if (event.target.matches('[data-change="test-fill"]')) {
     app.session.testAnswers[event.target.dataset.questionId] = event.target.value;
   }
 }
 
 function handleInput(event) {
+  if (event.target.matches('[data-change="practice-fill"]')) {
+    app.session.practiceAnswers[event.target.dataset.questionId] = event.target.value;
+  }
   if (event.target.matches('[data-change="test-fill"]')) {
     app.session.testAnswers[event.target.dataset.questionId] = event.target.value;
   }
@@ -1010,16 +1245,17 @@ function handlePracticeAnswer(questionId, answerIndex) {
   const question = getPracticeQuestions().find((item) => item.id === questionId);
   if (!question) return;
   app.session.practiceAnswers[questionId] = answerIndex;
-  const correct = answerIndex === question.answerIndex;
+  const correct = isAnswerCorrect(question, answerIndex);
   app.session.practiceFeedback[questionId] = {
     status: correct ? 'correct' : 'wrong',
-    message: correct ? '回答正确。' : `正确答案：${String.fromCharCode(65 + question.answerIndex)}。`,
+    message: correct ? '回答正确。' : `正确答案：${formatAnswer(question, correctAnswerFor(question))}。`,
   };
   if (correct) {
     markQuestionReview(question);
   } else {
-    recordWrongAnswer(question, String.fromCharCode(65 + answerIndex), String.fromCharCode(65 + question.answerIndex));
+    recordWrongAnswer(question, formatAnswer(question, answerIndex), formatAnswer(question, correctAnswerFor(question)));
   }
+  if (app.state.practiceMode === 'passline') updatePasslineProgress(question.chapterId);
 }
 
 function submitTest(chapterId) {
@@ -1051,6 +1287,11 @@ function submitTest(chapterId) {
     lastQuizScore: `${correct}/${questions.length}`,
     lastStudyAt: new Date().toISOString(),
   };
+  app.state.trackProgress.textbook[chapterId] = {
+    lastScore: `${correct}/${questions.length}`,
+    completedAt: new Date().toISOString(),
+  };
+  updatePasslineProgress(chapterId);
 }
 
 function setPointStatus(pointId, status) {
@@ -1064,6 +1305,7 @@ function setPointStatus(pointId, status) {
       read: true,
       lastStudyAt: new Date().toISOString(),
     };
+    updatePasslineProgress(chapter.id);
   }
   renderView();
 }
@@ -1072,6 +1314,7 @@ function markQuestionReview(question) {
   if (question.relatedTopicId) {
     app.state.progress.points[question.relatedTopicId] = { status: 'mastered', lastViewedAt: new Date().toISOString() };
   }
+  if (question.chapterId) updatePasslineProgress(question.chapterId);
 }
 
 function recordWrongAnswer(question, userAnswer, correctAnswer) {
@@ -1091,6 +1334,9 @@ function recordWrongAnswer(question, userAnswer, correctAnswer) {
     wrongCount: (existing?.wrongCount || 0) + 1,
     lastWrongAt: new Date().toISOString(),
   };
+  const weakness = app.state.chapterWeakness[question.chapterId] || {};
+  weakness[question.sectionId] = (weakness[question.sectionId] || 0) + 1;
+  app.state.chapterWeakness[question.chapterId] = weakness;
 }
 
 function getProgressStats() {
@@ -1116,6 +1362,13 @@ function getContinueChapter() {
   return app.data.chapters.find((chapter) => chapter.id === app.state.progress.lastChapterId) || app.data.chapters[0];
 }
 
+function getTrackChapter(track) {
+  if (track === 'passline') {
+    return app.data.chapters.find((chapter) => !getTrainingOverview(chapter.id).passlineReady) || app.data.chapters[0];
+  }
+  return getContinueChapter();
+}
+
 function getContinueLabel() {
   const chapter = getContinueChapter();
   const point = app.state.progress.lastPointId ? findPointById(app.state.progress.lastPointId) : null;
@@ -1126,12 +1379,13 @@ function getRecommendation() {
   if (getWrongbookCount() > 0) {
     return {
       text: `当前推荐任务为错题回看。可先处理最近 ${Math.min(3, getWrongbookCount())} 道错题，再安排综合测试。`,
-      actions: `<button class="btn primary" data-action="switch-view" data-view="practice">进入错题复习</button><button class="btn subtle" data-action="open-test" data-chapter-id="${getContinueChapter().id}">开始综合测试</button>`,
+      actions: `<button class="btn primary" data-action="open-passline" data-chapter-id="${getTrackChapter('passline').id}">先补过线题</button><button class="btn subtle" data-action="switch-view" data-view="practice">进入错题复习</button>`,
     };
   }
+  const passlineTarget = getTrackChapter('passline');
   return {
-    text: '当前错题记录较少，适合继续推进章节学习，并结合相关模拟器巩固抽象概念。',
-    actions: `<button class="btn primary" data-action="open-chapter" data-chapter-id="${getContinueChapter().id}">进入章节学习</button><button class="btn subtle" data-action="open-simulator" data-simulator-id="${getContinueChapter().relatedSimulatorIds[0] || SIMULATORS[0].id}">查看相关模拟器</button>`,
+    text: `当前适合先拿下第 ${passlineTarget.number} 章的必会点，再回到教材学习轨把细节补完整。`,
+    actions: `<button class="btn primary" data-action="open-passline" data-chapter-id="${passlineTarget.id}">开始过线练习</button><button class="btn subtle" data-action="open-chapter" data-chapter-id="${getContinueChapter().id}">进入章节学习</button>`,
   };
 }
 
@@ -1145,10 +1399,16 @@ function getWeakChapters() {
 function getTrainingOverview(chapterId) {
   const bundle = getQuizBundle(chapterId);
   const history = [...app.state.quizHistory].reverse().find((item) => item.chapterId === chapterId);
+  const weakness = app.state.chapterWeakness[chapterId] || {};
+  const weakSectionId = Object.entries(weakness).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const weakSection = bundle?.practiceSections?.find((item) => item.sectionId === weakSectionId)?.sectionTitle || '';
+  const passline = getChapterPassline(app.data.chapters.find((item) => item.id === chapterId));
   return {
     lastScore: history ? `${history.score}/${history.total}` : '--',
     wrongCount: wrongbookEntries().filter((item) => item.chapterId === chapterId).length,
     practiceSectionCount: bundle?.practiceSections?.length || 0,
+    weakSection,
+    passlineReady: passline.readyTopics === passline.totalTopics || getPasslineScorePercent(chapterId) >= 60 || parseInt(app.state.lastPasslineScore[chapterId], 10) >= 60,
   };
 }
 
@@ -1158,24 +1418,11 @@ function getStudyTime(chapter) {
 }
 
 function getPointConclusion(point) {
-  return sanitizePointText(point.tip || point.summary || point.title);
+  return sanitizePointText(point.conclusion || point.tip || point.summary || point.title);
 }
 
 function getPointExcerpt(point) {
-  const conclusion = getPointConclusion(point);
-  const detail = sanitizePointText(point.detail || '');
-  const summary = sanitizePointText(point.summary || '');
-  let source = detail || summary;
-
-  if (detail && conclusion) {
-    source = stripLeadingDuplicate(detail, conclusion);
-  }
-  if (!source && summary && summary !== conclusion) source = summary;
-  if (!source || source === conclusion) return '';
-
-  const sentence = firstMeaningfulSentence(source);
-  if (!sentence || sentence === conclusion) return '';
-  return sentence.length > 64 ? `${sentence.slice(0, 64)}...` : sentence;
+  return sanitizePointText(point.preview || '');
 }
 
 function sanitizePointText(text) {
@@ -1213,7 +1460,10 @@ function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.
 function getSelectedPracticeSection(chapter, bundle) {
   return bundle.practiceSections.find((item) => item.sectionId === app.state.selectedSectionId) || bundle.practiceSections[0];
 }
-function getPracticeQuestions() { return getSelectedPracticeSection(getSelectedChapter(), getQuizBundle(getSelectedChapter().id)).questions; }
+function getPracticeQuestions() {
+  if (app.state.practiceMode === 'passline') return getPasslineQuestionSet(getSelectedChapter().id);
+  return getSelectedPracticeSection(getSelectedChapter(), getQuizBundle(getSelectedChapter().id)).questions;
+}
 function getChapterTestQuestions(chapterId) { return getQuizBundle(chapterId)?.chapterTest || []; }
 function findChapterByPointId(pointId) {
   return app.data.chapters.find((chapter) => chapter.sections.some((section) => section.points.some((point) => point.id === pointId)));
@@ -1259,4 +1509,128 @@ function safeParse(value) { try { return value ? JSON.parse(value) : null; } cat
 function persistState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(app.state)); }
 function escapeHtml(value) {
   return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function derivePointConclusion(point) {
+  const tip = sanitizePointText(point.tip || '');
+  const summary = sanitizePointText(point.summary || '');
+  if (tip && tip.length <= 30) return tip;
+  if (summary && summary.length <= 34) return summary;
+  const sentence = firstMeaningfulSentence(stripMnemonicLead(summary || point.detail || point.title));
+  return sentence.length > 34 ? `${sentence.slice(0, 34)}...` : sentence;
+}
+
+function derivePointPreview(point, conclusion) {
+  const summary = sanitizePointText(stripMnemonicLead(point.summary || ''));
+  const detail = sanitizePointText(cleanLeadText(stripLeadingDuplicate(point.detail || '', conclusion)));
+  const source = summary && summary !== conclusion ? summary : detail;
+  if (!source || source === conclusion) return '';
+  const sentences = source.split(/[。！？!?；;]/).map((item) => item.trim()).filter(Boolean);
+  return sentences.slice(0, 2).join('，').slice(0, 72);
+}
+
+function derivePointPitfall(point, chapter) {
+  const tip = sanitizePointText(stripMnemonicLead(point.tip || ''));
+  if (tip && tip !== getPointConclusion(point)) return tip;
+  const confusion = getConfusionHints(chapter, point)[0];
+  if (confusion) return `别和 ${confusion} 混在一起，做题时先看定义、作用和适用条件。`;
+  return '做题时先抓“定义是什么、解决什么问题、和谁最容易混”这三件事。';
+}
+
+function stripMnemonicLead(text) {
+  return sanitizePointText(String(text || '').replace(/^口诀[:：]\s*/, ''));
+}
+
+function cleanLeadText(text) {
+  const normalized = sanitizePointText(text);
+  return normalized.replace(/^[，。、；：:()\-\s]+/, '');
+}
+
+function getChapterPassline(chapter) {
+  const points = chapter.sections.flatMap((section) => section.points).filter((point) => chapter.passlineTopics.includes(point.id));
+  const readyTopics = points.filter((point) => app.state?.progress?.points?.[point.id]?.status === 'mastered').length;
+  return { points, readyTopics, totalTopics: points.length };
+}
+
+function getPasslineQuestionSet(chapterId) {
+  const bundle = getQuizBundle(chapterId);
+  if (!bundle) return [];
+  const merged = [
+    ...bundle.practiceSections.flatMap((section) => section.questions),
+    ...bundle.chapterTest,
+  ].filter((question) => question.isPassline);
+  return dedupeQuestions(merged).slice(0, 8);
+}
+
+function dedupeQuestions(questions) {
+  const seen = new Set();
+  return questions.filter((question) => {
+    const key = `${question.sectionId}-${question.stem}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function updatePasslineProgress(chapterId) {
+  const chapter = app.data?.chapters?.find((item) => item.id === chapterId);
+  if (!chapter) return;
+  const passline = getChapterPassline(chapter);
+  const score = getPasslineScorePercent(chapterId);
+  app.state.trackProgress.passline[chapterId] = {
+    readyTopics: passline.readyTopics,
+    totalTopics: passline.totalTopics,
+    updatedAt: new Date().toISOString(),
+  };
+  app.state.lastPasslineScore[chapterId] = score ? `${score}%` : app.state.lastPasslineScore[chapterId] || '--';
+}
+
+function getPasslineScorePercent(chapterId) {
+  const questions = getPasslineQuestionSet(chapterId);
+  if (!questions.length) return 0;
+  const answers = app.session.practiceAnswers;
+  const scored = questions.filter((question) => answers[question.id] !== undefined);
+  if (!scored.length) return 0;
+  const correct = scored.filter((question) => isAnswerCorrect(question, answers[question.id])).length;
+  return Math.round((correct / scored.length) * 100);
+}
+
+function getPasslineOverview() {
+  const chapters = app.data.chapters.filter((chapter) => chapter.isEssentialChapter);
+  const chapterCards = chapters.map((chapter) => {
+    const passline = getChapterPassline(chapter);
+    const score = app.state.lastPasslineScore[chapter.id] || '--';
+    const ready = passline.readyTopics === passline.totalTopics || parseInt(score, 10) >= 60;
+    return {
+      id: chapter.id,
+      number: chapter.number,
+      title: chapter.title,
+      readyTopics: passline.readyTopics,
+      totalTopics: passline.totalTopics,
+      lastScore: score,
+      statusText: ready ? '当前已达到基础过线要求' : '还需要继续补基础题和核心概念',
+      ready,
+    };
+  });
+  const totalTopics = chapterCards.reduce((sum, item) => sum + item.totalTopics, 0);
+  const readyTopics = chapterCards.reduce((sum, item) => sum + item.readyTopics, 0);
+  return {
+    chapterCards,
+    targetChapters: chapters.length,
+    completedChapters: chapterCards.filter((item) => item.ready).length,
+    totalTopics,
+    readyTopics,
+    percent: totalTopics ? Math.round((readyTopics / totalTopics) * 100) : 0,
+  };
+}
+
+function groupSectionPoints(section) {
+  const groups = [
+    ['essential', '基础必会', '先把定义、规律和常见出题点看懂。'],
+    ['standard', '进阶理解', '在主干之外，把原理和条件补完整。'],
+    ['advanced', '易错混淆', '这里最容易在选择题和简答题里掉分。'],
+  ];
+  return groups
+    .map(([key, label, description]) => ({ key, label, description, points: section.points.filter((point) => point.importance === key) }))
+    .filter((group) => group.points.length);
 }

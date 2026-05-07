@@ -1157,8 +1157,8 @@ function getStudyTime(chapter) {
 }
 
 function getPointExcerpt(point) {
-  const source = point.detail || point.summary || '';
-  const trimmed = source.replace(/<[^>]*>/g, '').trim();
+  const source = point.summary || point.detail || '';
+  const trimmed = source.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
   return trimmed.length > 92 ? `${trimmed.slice(0, 92)}...` : trimmed;
 }
 

@@ -1,8 +1,6 @@
 import { SIMULATORS, mountSimulator } from './simulators.js';
 
-const STORAGE_KEY = 'coa.v2.state';
 const AUTH_STORAGE_KEY = 'coa.v2.auth';
-const SYNC_META_KEY = 'coa.v2.syncMeta';
 const LEGACY_PROGRESS_KEY = 'coa_p';
 const LEGACY_WRONG_KEY = 'coa_wrong';
 
@@ -183,33 +181,8 @@ function renderBootError(error) {
 }
 
 function buildInitialState(chapters, quizzes) {
-  const saved = safeParse(localStorage.getItem(STORAGE_KEY));
   const defaults = createDefaultState(chapters);
-  const state = { ...defaults, ...saved };
-  state.progress = { ...defaults.progress, ...(saved?.progress || {}) };
-  state.progress.points = { ...(saved?.progress?.points || {}) };
-  state.progress.chapters = { ...(saved?.progress?.chapters || {}) };
-  state.quizHistory = Array.isArray(saved?.quizHistory) ? saved.quizHistory : [];
-  state.wrongbook = saved?.wrongbook || {};
-  state.trackProgress = {
-    textbook: { ...(saved?.trackProgress?.textbook || {}) },
-    passline: { ...(saved?.trackProgress?.passline || {}) },
-  };
-  state.chapterWeakness = { ...(saved?.chapterWeakness || {}) };
-  state.lastPasslineScore = { ...(saved?.lastPasslineScore || {}) };
-  state.meta = { updatedAt: saved?.meta?.updatedAt || null };
-  migrateLegacyState(state, chapters, quizzes);
-  if (!PRIMARY_VIEWS.includes(state.view)) {
-    state.view = state.view === 'simulators' ? 'practice' : 'dashboard';
-  }
-  if (!PRACTICE_MODES.includes(state.practiceMode)) {
-    state.practiceMode = state.view === 'simulators' ? 'simulator' : 'passline';
-  }
-  if (saved?.view === 'archive') state.view = 'dashboard';
-  if (saved?.view === 'simulators') {
-    state.view = 'practice';
-    state.practiceMode = 'simulator';
-  }
+  const state = { ...defaults };
   if (!state.meta.updatedAt) state.meta.updatedAt = new Date().toISOString();
   return state;
 }
@@ -231,48 +204,6 @@ function createDefaultState(chapters) {
     lastPasslineScore: {},
     meta: { updatedAt: null },
   };
-}
-
-function migrateLegacyState(state, chapters, quizzes) {
-  const legacyProgress = safeParse(localStorage.getItem(LEGACY_PROGRESS_KEY));
-  const legacyWrongs = safeParse(localStorage.getItem(LEGACY_WRONG_KEY));
-  if (legacyProgress && Object.keys(state.progress.chapters).length === 0) {
-    Object.entries(legacyProgress).forEach(([chapterId, flags]) => {
-      state.progress.chapters[chapterId] = {
-        read: Boolean(flags?.read),
-        quizCompleted: Boolean(flags?.quiz),
-        lastQuizScore: null,
-        lastStudyAt: null,
-      };
-      if (flags?.read) {
-        const chapter = chapters.find((item) => item.id === chapterId);
-        chapter?.sections.forEach((section) => section.points.forEach((point) => {
-          state.progress.points[point.id] = { status: 'mastered', lastViewedAt: null };
-        }));
-      }
-    });
-  }
-  if (Array.isArray(legacyWrongs) && Object.keys(state.wrongbook).length === 0) {
-    legacyWrongs.forEach((item, index) => {
-      const chapter = chapters.find((entry) => entry.id === item.ch);
-      const firstPoint = chapter?.sections[0]?.points[0];
-      const id = `${item.ch}-${index + 1}`;
-      state.wrongbook[id] = {
-        id,
-        chapterId: item.ch,
-        chapterTitle: chapter?.title || item.ch,
-        stem: item.question,
-        type: item.type || 'single',
-        userAnswer: item.userAns,
-        correctAnswer: item.correctAns,
-        explanation: item.exp || '',
-        relatedTopicId: firstPoint?.id || null,
-        relatedSimulatorId: firstPoint?.relatedSimulatorIds?.[0] || quizzes.find((q) => q.chapterId === item.ch)?.chapterTest?.[0]?.relatedSimulatorId || null,
-        wrongCount: 1,
-        lastWrongAt: item.time || null,
-      };
-    });
-  }
 }
 
 function renderView() {
@@ -1710,7 +1641,7 @@ function formatDate(value) {
 }
 function normalizeText(value) { return String(value || '').trim().toLowerCase(); }
 function safeParse(value) { try { return value ? JSON.parse(value) : null; } catch { return null; } }
-function persistState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(app.state)); }
+function persistState() {}
 function persistAuthState() {
   localStorage.setItem(
     AUTH_STORAGE_KEY,
@@ -1720,34 +1651,23 @@ function persistAuthState() {
       generated: app.auth.generated,
     }),
   );
-  localStorage.setItem(
-    SYNC_META_KEY,
-    JSON.stringify({
-      syncStatus: app.auth.syncStatus,
-      lastSyncedAt: app.auth.lastSyncedAt,
-      pendingChanges: app.auth.pendingChanges,
-      pending: app.syncMeta.pending,
-      lastSuccessfulStateAt: app.syncMeta.lastSuccessfulStateAt,
-      lastAttemptAt: app.syncMeta.lastAttemptAt,
-    }),
-  );
 }
 
 function loadAuthState() {
   const authSaved = safeParse(localStorage.getItem(AUTH_STORAGE_KEY));
-  const syncSaved = safeParse(localStorage.getItem(SYNC_META_KEY));
   app.auth.token = authSaved?.token || null;
   app.auth.user = authSaved?.user || null;
   app.auth.generated = authSaved?.generated || null;
-  app.auth.syncStatus = syncSaved?.syncStatus || (app.auth.user ? 'syncing' : 'local-only');
-  app.auth.lastSyncedAt = syncSaved?.lastSyncedAt || null;
-  app.auth.pendingChanges = Boolean(syncSaved?.pendingChanges);
-  app.syncMeta.pending = Boolean(syncSaved?.pending);
-  app.syncMeta.lastSuccessfulStateAt = syncSaved?.lastSuccessfulStateAt || null;
-  app.syncMeta.lastAttemptAt = syncSaved?.lastAttemptAt || null;
+  app.auth.syncStatus = app.auth.user ? 'syncing' : 'local-only';
+  app.auth.lastSyncedAt = null;
+  app.auth.pendingChanges = false;
+  app.syncMeta.pending = false;
+  app.syncMeta.lastSuccessfulStateAt = null;
+  app.syncMeta.lastAttemptAt = null;
 }
 
 async function restoreRemoteSession() {
+  clearLegacyLocalProgress();
   if (!app.auth.token) {
     app.auth.syncStatus = 'local-only';
     return;
@@ -1756,12 +1676,9 @@ async function restoreRemoteSession() {
     app.auth.syncStatus = 'syncing';
     const me = await apiFetch('/api/me');
     app.auth.user = me.user;
-    const merged = await apiFetch('/api/progress/merge', {
-      method: 'POST',
-      body: JSON.stringify({ state: serializeProgressState() }),
-    });
-    applySyncedState(merged.state);
-    app.auth.lastSyncedAt = merged.meta?.updatedAt || nowIso();
+    const remote = await apiFetch('/api/progress');
+    applySyncedState(remote.state);
+    app.auth.lastSyncedAt = remote.meta?.updatedAt || nowIso();
     app.auth.syncStatus = 'synced';
     app.auth.pendingChanges = false;
     app.syncMeta.pending = false;
@@ -1902,12 +1819,10 @@ async function submitAuth(path, auto = false) {
       app.session.authDraft.username = result.generated.username;
       app.session.authDraft.password = result.generated.password;
     }
-    const merged = await apiFetch('/api/progress/merge', {
-      method: 'POST',
-      body: JSON.stringify({ state: serializeProgressState() }),
-    });
-    applySyncedState(merged.state);
-    app.auth.lastSyncedAt = merged.meta?.updatedAt || nowIso();
+    clearLegacyLocalProgress();
+    const remote = await apiFetch('/api/progress');
+    applySyncedState(remote.state);
+    app.auth.lastSyncedAt = remote.meta?.updatedAt || nowIso();
     app.auth.syncStatus = 'synced';
     app.auth.pendingChanges = false;
     app.syncMeta.pending = false;
@@ -1936,7 +1851,12 @@ async function handleLogout() {
   app.auth.pendingChanges = false;
   app.auth.modalOpen = false;
   app.auth.error = '';
+  app.auth.generated = null;
   app.syncMeta.pending = false;
+  app.state = createDefaultState(app.data.chapters);
+  app.session.authDraft.username = '';
+  app.session.authDraft.password = '';
+  clearLegacyLocalProgress();
   renderView();
 }
 
@@ -1968,7 +1888,6 @@ async function handleResetProgress() {
 }
 
 function clearLegacyLocalProgress() {
-  localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(LEGACY_PROGRESS_KEY);
   localStorage.removeItem(LEGACY_WRONG_KEY);
 }
@@ -2002,7 +1921,7 @@ async function apiFetch(path, options = {}, requireAuth = true) {
 
 function syncStatusLabel() {
   return ({
-    'local-only': '未登录，仅保存在本机',
+    'local-only': '未登录，不保存进度',
     pending: '有未同步变更',
     syncing: '同步中',
     synced: '已同步',

@@ -298,6 +298,12 @@ function renderDashboard() {
           <span class="eyebrow">学习总览</span>
           <h3 class="hero-title">计算机组成原理学习平台</h3>
           <p class="body-copy">以章节学习为主线，结合练习、测试、错题复习与模拟器强化，帮助梳理知识结构并持续巩固重点概念。</p>
+          <div class="hero-kicker-row">
+            <span class="hero-kicker">课程学习</span>
+            <span class="hero-kicker">章节训练</span>
+            <span class="hero-kicker">错题回看</span>
+            <span class="hero-kicker">模拟器强化</span>
+          </div>
           <div class="overview-route" aria-label="学习路径">
             <div class="route-step"><strong>1</strong><span>进入章节</span></div>
             <div class="route-step"><strong>2</strong><span>阅读知识点</span></div>
@@ -324,6 +330,31 @@ function renderDashboard() {
               <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong></div>
               <div class="metric-card"><span>最近测试记录</span><strong>${app.state.quizHistory.length}</strong></div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-overview-band surface-panel">
+        <div class="hero-band-grid">
+          <div class="hero-band-item">
+            <span>继续学习</span>
+            <strong>${continueChapter.title}</strong>
+            <small>${getContinueLabel()}</small>
+          </div>
+          <div class="hero-band-item">
+            <span>总体掌握度</span>
+            <strong>${stats.percent}%</strong>
+            <small>${stats.masteredPoints}/${stats.totalPoints} 个知识点已掌握</small>
+          </div>
+          <div class="hero-band-item">
+            <span>近期训练</span>
+            <strong>${app.state.quizHistory.length}</strong>
+            <small>${history[0] ? `${history[0].chapterTitle} · ${history[0].score}/${history[0].total}` : '等待首次训练记录'}</small>
+          </div>
+          <div class="hero-band-item">
+            <span>待处理错题</span>
+            <strong>${getWrongbookCount()}</strong>
+            <small>${recentWrongs[0] ? `${recentWrongs[0].chapterTitle} 有最近错题` : '当前没有错题记录'}</small>
           </div>
         </div>
       </section>

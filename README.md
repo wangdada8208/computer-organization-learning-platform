@@ -54,6 +54,7 @@
 - 自动记录每个章节的完成状态
 - 进度条实时显示整体完成度（浏览器 localStorage 持久化）
 - 支持跨会话的进度保持
+- 支持注册账号、登录同步、跨设备恢复学习进度
 
 ---
 
@@ -137,9 +138,10 @@ python3 build_step3.py   # 修复重复、加入核心 JS 逻辑、闭合 HTML
 | 方面 | 技术 |
 |------|------|
 | 前端 | 纯 HTML + CSS + JavaScript |
+| 后端 | Python 标准库 API + SQLite |
 | 图表 | 内嵌 SVG 矢量图 |
-| 存储 | 浏览器 localStorage |
-| 依赖 | **零外部依赖** —— 无需 npm、无需后端 |
+| 存储 | 浏览器 localStorage + 账号云同步 |
+| 依赖 | 无 npm 依赖，后端无需额外 Python 包 |
 | 兼容 | 所有现代浏览器（Chrome/Firefox/Safari/Edge） |
 
 ---
@@ -150,6 +152,7 @@ python3 build_step3.py   # 修复重复、加入核心 JS 逻辑、闭合 HTML
 - **域名**：[https://wangdada8208.xyz](https://wangdada8208.xyz)
 - **HTTPS**：Let's Encrypt 自动续期
 - **反向代理**：Nginx，HTTP 301 自动跳转 HTTPS
+- **账号同步 API**：同域名 `/api/*`，由 Python 服务提供
 
 ### GitHub
 - 仓库：[https://github.com/wangdada8208/computer-organization-platform](https://github.com/wangdada8208/computer-organization-platform)
@@ -161,7 +164,13 @@ python3 build_step3.py   # 修复重复、加入核心 JS 逻辑、闭合 HTML
 
 ```
 computer-organization-platform/
-├── 计算机组成原理学习平台🦞.html   # 主页面（可直接运行）
+├── index.html                        # 静态站入口
+├── app.js                            # 前端状态、渲染、同步逻辑
+├── styles.css                        # 样式
+├── data/                             # 章节与题库数据
+├── backend/                          # 账号与进度同步 API
+├── ops/                              # 服务器部署脚本
+├── 计算机组成原理学习平台🦞.html   # 旧单文件版本
 ├── build_step1.py                    # 构建脚本 1：骨架写入
 ├── build_step2.py                    # 构建脚本 2：数据增强
 ├── build_step3.py                    # 构建脚本 3：逻辑补充

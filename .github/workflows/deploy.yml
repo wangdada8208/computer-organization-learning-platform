@@ -37,9 +37,18 @@ jobs:
             "$GITHUB_WORKSPACE/sw.js" \
             "$GITHUB_WORKSPACE/manifest.json" \
             "$GITHUB_WORKSPACE/data" \
+            "$GITHUB_WORKSPACE/backend" \
+            "$GITHUB_WORKSPACE/ops" \
             "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: 部署后端服务
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
+            "bash $DEPLOY_PATH/ops/deploy_backend.sh"
 
       - name: 校验线上目录
         shell: bash
         run: |
-          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST"             "test -f $DEPLOY_PATH/index.html && test -f $DEPLOY_PATH/app.js && test -f $DEPLOY_PATH/data/chapters.json"
+          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
+            "test -f $DEPLOY_PATH/index.html && test -f $DEPLOY_PATH/app.js && test -f $DEPLOY_PATH/data/chapters.json && test -f $DEPLOY_PATH/backend/server.py && systemctl is-active --quiet coa-sync.service"

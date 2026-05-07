@@ -1,6 +1,8 @@
 import { SIMULATORS, mountSimulator } from './simulators.js';
 
 const STORAGE_KEY = 'coa.v2.state';
+const AUTH_STORAGE_KEY = 'coa.v2.auth';
+const SYNC_META_KEY = 'coa.v2.syncMeta';
 const LEGACY_PROGRESS_KEY = 'coa_p';
 const LEGACY_WRONG_KEY = 'coa_wrong';
 
@@ -8,6 +10,9 @@ const appShellEl = document.querySelector('.app-shell');
 const sidebarEl = document.getElementById('sidebar');
 const topbarEl = document.getElementById('topbar');
 const pageEl = document.getElementById('page');
+const authLayerEl = document.createElement('div');
+authLayerEl.className = 'auth-layer';
+document.body.appendChild(authLayerEl);
 
 const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
 const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator'];
@@ -21,11 +26,35 @@ const SIMULATOR_GROUPS = [
 const app = {
   data: null,
   state: null,
+  auth: {
+    token: null,
+    user: null,
+    syncStatus: 'local-only',
+    lastSyncedAt: null,
+    pendingChanges: false,
+    modalOpen: false,
+    modalMode: 'login',
+    error: '',
+    generated: null,
+  },
+  syncMeta: {
+    pending: false,
+    lastSuccessfulStateAt: null,
+    lastAttemptAt: null,
+  },
+  runtime: {
+    syncTimer: null,
+    syncReady: false,
+  },
   session: {
     practiceAnswers: {},
     practiceFeedback: {},
     testAnswers: {},
     testSubmitted: false,
+    authDraft: {
+      username: '',
+      password: '',
+    },
   },
   parts: {
     p1: '概论',
@@ -51,10 +80,14 @@ async function boot() {
     const quizzes = normalizeQuizzes(rawQuizzes, chapters);
     app.data = { chapters, quizzes };
     app.state = buildInitialState(chapters, quizzes);
+    loadAuthState();
+    await restoreRemoteSession();
+    app.runtime.syncReady = true;
     renderView();
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
+    window.addEventListener('beforeunload', flushSyncOnLeave);
   } catch (error) {
     console.error(error);
     renderBootError(error);
@@ -151,7 +184,38 @@ function renderBootError(error) {
 
 function buildInitialState(chapters, quizzes) {
   const saved = safeParse(localStorage.getItem(STORAGE_KEY));
-  const defaults = {
+  const defaults = createDefaultState(chapters);
+  const state = { ...defaults, ...saved };
+  state.progress = { ...defaults.progress, ...(saved?.progress || {}) };
+  state.progress.points = { ...(saved?.progress?.points || {}) };
+  state.progress.chapters = { ...(saved?.progress?.chapters || {}) };
+  state.quizHistory = Array.isArray(saved?.quizHistory) ? saved.quizHistory : [];
+  state.wrongbook = saved?.wrongbook || {};
+  state.trackProgress = {
+    textbook: { ...(saved?.trackProgress?.textbook || {}) },
+    passline: { ...(saved?.trackProgress?.passline || {}) },
+  };
+  state.chapterWeakness = { ...(saved?.chapterWeakness || {}) };
+  state.lastPasslineScore = { ...(saved?.lastPasslineScore || {}) };
+  state.meta = { updatedAt: saved?.meta?.updatedAt || null };
+  migrateLegacyState(state, chapters, quizzes);
+  if (!PRIMARY_VIEWS.includes(state.view)) {
+    state.view = state.view === 'simulators' ? 'practice' : 'dashboard';
+  }
+  if (!PRACTICE_MODES.includes(state.practiceMode)) {
+    state.practiceMode = state.view === 'simulators' ? 'simulator' : 'passline';
+  }
+  if (saved?.view === 'archive') state.view = 'dashboard';
+  if (saved?.view === 'simulators') {
+    state.view = 'practice';
+    state.practiceMode = 'simulator';
+  }
+  if (!state.meta.updatedAt) state.meta.updatedAt = new Date().toISOString();
+  return state;
+}
+
+function createDefaultState(chapters) {
+  return {
     view: 'dashboard',
     activeTrack: 'textbook',
     mobileSidebarOpen: false,
@@ -165,32 +229,8 @@ function buildInitialState(chapters, quizzes) {
     trackProgress: { textbook: {}, passline: {} },
     chapterWeakness: {},
     lastPasslineScore: {},
+    meta: { updatedAt: null },
   };
-  const state = { ...defaults, ...saved };
-  state.progress = { ...defaults.progress, ...(saved?.progress || {}) };
-  state.progress.points = { ...(saved?.progress?.points || {}) };
-  state.progress.chapters = { ...(saved?.progress?.chapters || {}) };
-  state.quizHistory = Array.isArray(saved?.quizHistory) ? saved.quizHistory : [];
-  state.wrongbook = saved?.wrongbook || {};
-  state.trackProgress = {
-    textbook: { ...(saved?.trackProgress?.textbook || {}) },
-    passline: { ...(saved?.trackProgress?.passline || {}) },
-  };
-  state.chapterWeakness = { ...(saved?.chapterWeakness || {}) };
-  state.lastPasslineScore = { ...(saved?.lastPasslineScore || {}) };
-  migrateLegacyState(state, chapters, quizzes);
-  if (!PRIMARY_VIEWS.includes(state.view)) {
-    state.view = state.view === 'simulators' ? 'practice' : 'dashboard';
-  }
-  if (!PRACTICE_MODES.includes(state.practiceMode)) {
-    state.practiceMode = state.view === 'simulators' ? 'simulator' : 'passline';
-  }
-  if (saved?.view === 'archive') state.view = 'dashboard';
-  if (saved?.view === 'simulators') {
-    state.view = 'practice';
-    state.practiceMode = 'simulator';
-  }
-  return state;
 }
 
 function migrateLegacyState(state, chapters, quizzes) {
@@ -246,7 +286,9 @@ function renderView() {
     practice: renderPracticeView,
   };
   views[app.state.view]?.();
+  renderAuthLayer();
   persistState();
+  persistAuthState();
 }
 
 function renderSidebar() {
@@ -357,10 +399,23 @@ function renderTopbar() {
           <p>${subtitle}</p>
         </div>
       </div>
-      <nav class="primary-tabs" aria-label="主导航">
-        ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
-          .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
-      </nav>
+      <div class="topbar-right">
+        <nav class="primary-tabs" aria-label="主导航">
+          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
+            .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
+        </nav>
+        <div class="account-bar">
+          <span class="sync-pill ${app.auth.syncStatus}">${syncStatusLabel()}</span>
+          ${app.auth.user ? `
+            <button class="btn tiny subtle" data-action="sync-now">立即同步</button>
+            <button class="btn tiny subtle" data-action="open-auth-modal" data-mode="account">${app.auth.user.username}</button>
+            <button class="btn tiny subtle" data-action="logout">退出</button>
+          ` : `
+            <button class="btn tiny subtle" data-action="open-auth-modal" data-mode="login">登录</button>
+            <button class="btn tiny primary" data-action="open-auth-modal" data-mode="register">注册</button>
+          `}
+        </div>
+      </div>
     </div>
   `;
 }
@@ -489,6 +544,25 @@ function renderDashboard() {
           <article class="surface-panel">
             <div class="section-heading">
               <div>
+                <span class="eyebrow">账号与同步</span>
+                <h3>${app.auth.user ? `当前账号：${app.auth.user.username}` : '当前进度仅保存在本机'}</h3>
+              </div>
+            </div>
+            <div class="overview-stat-list">
+              <div class="overview-stat-row"><span>同步状态</span><strong>${syncStatusLabel()}</strong></div>
+              <div class="overview-stat-row"><span>最近同步</span><strong>${app.auth.lastSyncedAt ? formatDate(app.auth.lastSyncedAt) : '--'}</strong></div>
+              <div class="overview-stat-row"><span>待上传变更</span><strong>${app.auth.pendingChanges ? '有' : '无'}</strong></div>
+            </div>
+            <div class="action-row">
+              ${app.auth.user
+                ? `<button class="btn tiny subtle" data-action="sync-now">立即同步</button><button class="btn tiny subtle" data-action="open-auth-modal" data-mode="account">查看账号</button>`
+                : `<button class="btn tiny primary" data-action="open-auth-modal" data-mode="register">注册账号</button><button class="btn tiny subtle" data-action="open-auth-modal" data-mode="login">登录同步</button>`}
+            </div>
+          </article>
+
+          <article class="surface-panel">
+            <div class="section-heading">
+              <div>
                 <span class="eyebrow">学习概况</span>
                 <h3>当前掌握状态</h3>
               </div>
@@ -535,6 +609,69 @@ function renderDashboard() {
         </div>
         <div class="chapter-overview-grid">${app.data.chapters.map(renderChapterOverviewCard).join('')}</div>
       </section>
+    </div>
+  `;
+}
+
+function renderAuthLayer() {
+  if (!app.auth.modalOpen) {
+    authLayerEl.innerHTML = '';
+    authLayerEl.classList.remove('open');
+    return;
+  }
+  authLayerEl.classList.add('open');
+  const isAccount = app.auth.modalMode === 'account';
+  authLayerEl.innerHTML = `
+    <div class="auth-backdrop" data-action="close-auth-modal"></div>
+    <div class="auth-modal surface-panel">
+      <div class="auth-modal-head">
+        <div>
+          <span class="eyebrow">${isAccount ? '账号中心' : app.auth.modalMode === 'register' ? '注册账号' : '登录账号'}</span>
+          <h3>${isAccount ? (app.auth.user ? app.auth.user.username : '未登录') : app.auth.modalMode === 'register' ? '创建可同步学习进度的账号' : '登录后同步学习进度'}</h3>
+        </div>
+        <button class="icon-btn" data-action="close-auth-modal" aria-label="关闭">关</button>
+      </div>
+      ${isAccount ? renderAccountPanel() : renderAuthForm()}
+    </div>
+  `;
+}
+
+function renderAccountPanel() {
+  return `
+    <div class="auth-stack">
+      <div class="auth-info-card">
+        <div class="auth-info-row"><span>当前账号</span><strong>${app.auth.user?.username || '--'}</strong></div>
+        <div class="auth-info-row"><span>同步状态</span><strong>${syncStatusLabel()}</strong></div>
+        <div class="auth-info-row"><span>最近同步</span><strong>${app.auth.lastSyncedAt ? formatDate(app.auth.lastSyncedAt) : '--'}</strong></div>
+        <div class="auth-info-row"><span>本机待上传</span><strong>${app.auth.pendingChanges ? '有变更' : '已同步'}</strong></div>
+      </div>
+      ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">最近生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
+      <div class="action-row">
+        <button class="btn subtle" data-action="sync-now">立即同步</button>
+        <button class="btn subtle" data-action="logout">退出登录</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAuthForm() {
+  const isRegister = app.auth.modalMode === 'register';
+  return `
+    <div class="auth-stack">
+      <label class="field-stack">
+        <span class="field-label">账号</span>
+        <input class="input" data-change="auth-username" value="${escapeHtml(app.session.authDraft.username)}" placeholder="自己取一个好记的账号"/>
+      </label>
+      <label class="field-stack">
+        <span class="field-label">密码</span>
+        <input class="input" type="password" data-change="auth-password" value="${escapeHtml(app.session.authDraft.password)}" placeholder="密码可以简单一点，但别留空"/>
+      </label>
+      ${app.auth.error ? `<div class="feedback wrong">${app.auth.error}</div>` : ''}
+      ${app.auth.generated ? `<div class="generated-box"><span class="eyebrow">已自动生成</span><p>账号：${app.auth.generated.username}</p><p>密码：${app.auth.generated.password}</p><button class="btn tiny subtle" data-action="copy-generated">复制账号密码</button></div>` : ''}
+      <div class="action-row">
+        <button class="btn primary" data-action="${isRegister ? 'register' : 'login'}">${isRegister ? '注册并登录' : '登录'}</button>
+        ${isRegister ? '<button class="btn subtle" data-action="register-auto">自动生成账号密码</button>' : '<button class="btn subtle" data-action="open-auth-modal" data-mode="register">去注册</button>'}
+      </div>
     </div>
   `;
 }
@@ -1095,6 +1232,35 @@ function handleClick(event) {
   if (!target) return;
   const d = target.dataset;
   switch (d.action) {
+    case 'open-auth-modal':
+      app.auth.modalOpen = true;
+      app.auth.modalMode = d.mode || 'login';
+      app.auth.error = '';
+      renderView();
+      break;
+    case 'close-auth-modal':
+      app.auth.modalOpen = false;
+      app.auth.error = '';
+      renderView();
+      break;
+    case 'register':
+      handleRegister();
+      break;
+    case 'register-auto':
+      handleAutoRegister();
+      break;
+    case 'login':
+      handleLogin();
+      break;
+    case 'logout':
+      handleLogout();
+      break;
+    case 'sync-now':
+      flushSyncNow(true);
+      break;
+    case 'copy-generated':
+      copyGeneratedCredentials();
+      break;
     case 'toggle-sidebar':
       app.state.mobileSidebarOpen = !app.state.mobileSidebarOpen;
       renderView();
@@ -1103,6 +1269,7 @@ function handleClick(event) {
       app.state.view = PRIMARY_VIEWS.includes(d.view) ? d.view : 'dashboard';
       app.state.mobileSidebarOpen = false;
       if (app.state.view !== 'practice') resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'open-track':
@@ -1116,6 +1283,7 @@ function handleClick(event) {
       }
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'open-chapter':
@@ -1123,6 +1291,7 @@ function handleClick(event) {
       app.state.activeTrack = 'textbook';
       app.state.view = 'chapter';
       app.state.mobileSidebarOpen = false;
+      touchState();
       renderView();
       break;
     case 'focus-point':
@@ -1141,6 +1310,7 @@ function handleClick(event) {
       app.state.view = 'practice';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'open-passline':
@@ -1150,6 +1320,7 @@ function handleClick(event) {
       app.state.practiceMode = 'passline';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'open-test':
@@ -1159,12 +1330,14 @@ function handleClick(event) {
       app.state.practiceMode = 'test';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'set-practice-mode':
       app.state.practiceMode = d.mode;
       app.state.activeTrack = d.mode === 'passline' ? 'passline' : 'textbook';
       if (d.mode !== 'simulator') resetPracticeSession();
+      touchState();
       renderView();
       break;
     case 'practice-answer':
@@ -1201,27 +1374,37 @@ function handleClick(event) {
       app.state.activeTrack = 'textbook';
       app.state.view = 'practice';
       app.state.practiceMode = 'simulator';
+      touchState();
       renderView();
       break;
     case 'clear-wrongbook':
       Object.keys(app.state.wrongbook).forEach((key) => {
         if (app.state.wrongbook[key].chapterId === d.chapterId) delete app.state.wrongbook[key];
       });
+      touchState();
       renderView();
       break;
   }
 }
 
 function handleChange(event) {
+  if (event.target.matches('[data-change="auth-username"]')) {
+    app.session.authDraft.username = event.target.value;
+  }
+  if (event.target.matches('[data-change="auth-password"]')) {
+    app.session.authDraft.password = event.target.value;
+  }
   if (event.target.matches('[data-change="select-practice-chapter"]')) {
     app.state.selectedChapterId = event.target.value;
     app.state.selectedSectionId = getSelectedChapter().sections[0]?.id || null;
     resetPracticeSession();
+    touchState();
     renderView();
   }
   if (event.target.matches('[data-change="select-practice-section"]')) {
     app.state.selectedSectionId = event.target.value;
     resetPracticeSession();
+    touchState();
     renderView();
   }
   if (event.target.matches('[data-change="practice-fill"]')) {
@@ -1233,6 +1416,12 @@ function handleChange(event) {
 }
 
 function handleInput(event) {
+  if (event.target.matches('[data-change="auth-username"]')) {
+    app.session.authDraft.username = event.target.value;
+  }
+  if (event.target.matches('[data-change="auth-password"]')) {
+    app.session.authDraft.password = event.target.value;
+  }
   if (event.target.matches('[data-change="practice-fill"]')) {
     app.session.practiceAnswers[event.target.dataset.questionId] = event.target.value;
   }
@@ -1256,6 +1445,7 @@ function handlePracticeAnswer(questionId, answerIndex) {
     recordWrongAnswer(question, formatAnswer(question, answerIndex), formatAnswer(question, correctAnswerFor(question)));
   }
   if (app.state.practiceMode === 'passline') updatePasslineProgress(question.chapterId);
+  touchState();
 }
 
 function submitTest(chapterId) {
@@ -1292,6 +1482,7 @@ function submitTest(chapterId) {
     completedAt: new Date().toISOString(),
   };
   updatePasslineProgress(chapterId);
+  touchState();
 }
 
 function setPointStatus(pointId, status) {
@@ -1307,6 +1498,7 @@ function setPointStatus(pointId, status) {
     };
     updatePasslineProgress(chapter.id);
   }
+  touchState();
   renderView();
 }
 
@@ -1315,6 +1507,7 @@ function markQuestionReview(question) {
     app.state.progress.points[question.relatedTopicId] = { status: 'mastered', lastViewedAt: new Date().toISOString() };
   }
   if (question.chapterId) updatePasslineProgress(question.chapterId);
+  touchState();
 }
 
 function recordWrongAnswer(question, userAnswer, correctAnswer) {
@@ -1337,6 +1530,7 @@ function recordWrongAnswer(question, userAnswer, correctAnswer) {
   const weakness = app.state.chapterWeakness[question.chapterId] || {};
   weakness[question.sectionId] = (weakness[question.sectionId] || 0) + 1;
   app.state.chapterWeakness[question.chapterId] = weakness;
+  touchState();
 }
 
 function getProgressStats() {
@@ -1507,6 +1701,280 @@ function formatDate(value) {
 function normalizeText(value) { return String(value || '').trim().toLowerCase(); }
 function safeParse(value) { try { return value ? JSON.parse(value) : null; } catch { return null; } }
 function persistState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(app.state)); }
+function persistAuthState() {
+  localStorage.setItem(
+    AUTH_STORAGE_KEY,
+    JSON.stringify({
+      token: app.auth.token,
+      user: app.auth.user,
+      generated: app.auth.generated,
+    }),
+  );
+  localStorage.setItem(
+    SYNC_META_KEY,
+    JSON.stringify({
+      syncStatus: app.auth.syncStatus,
+      lastSyncedAt: app.auth.lastSyncedAt,
+      pendingChanges: app.auth.pendingChanges,
+      pending: app.syncMeta.pending,
+      lastSuccessfulStateAt: app.syncMeta.lastSuccessfulStateAt,
+      lastAttemptAt: app.syncMeta.lastAttemptAt,
+    }),
+  );
+}
+
+function loadAuthState() {
+  const authSaved = safeParse(localStorage.getItem(AUTH_STORAGE_KEY));
+  const syncSaved = safeParse(localStorage.getItem(SYNC_META_KEY));
+  app.auth.token = authSaved?.token || null;
+  app.auth.user = authSaved?.user || null;
+  app.auth.generated = authSaved?.generated || null;
+  app.auth.syncStatus = syncSaved?.syncStatus || (app.auth.user ? 'syncing' : 'local-only');
+  app.auth.lastSyncedAt = syncSaved?.lastSyncedAt || null;
+  app.auth.pendingChanges = Boolean(syncSaved?.pendingChanges);
+  app.syncMeta.pending = Boolean(syncSaved?.pending);
+  app.syncMeta.lastSuccessfulStateAt = syncSaved?.lastSuccessfulStateAt || null;
+  app.syncMeta.lastAttemptAt = syncSaved?.lastAttemptAt || null;
+}
+
+async function restoreRemoteSession() {
+  if (!app.auth.token) {
+    app.auth.syncStatus = 'local-only';
+    return;
+  }
+  try {
+    app.auth.syncStatus = 'syncing';
+    const me = await apiFetch('/api/me');
+    app.auth.user = me.user;
+    const merged = await apiFetch('/api/progress/merge', {
+      method: 'POST',
+      body: JSON.stringify({ state: serializeProgressState() }),
+    });
+    applySyncedState(merged.state);
+    app.auth.lastSyncedAt = merged.meta?.updatedAt || nowIso();
+    app.auth.syncStatus = 'synced';
+    app.auth.pendingChanges = false;
+    app.syncMeta.pending = false;
+    app.syncMeta.lastSuccessfulStateAt = app.state.meta.updatedAt;
+  } catch (error) {
+    app.auth.syncStatus = 'sync-error';
+    app.auth.error = '';
+    console.error(error);
+  }
+}
+
+function serializeProgressState() {
+  return {
+    view: app.state.view,
+    activeTrack: app.state.activeTrack,
+    mobileSidebarOpen: false,
+    selectedChapterId: app.state.selectedChapterId,
+    selectedSectionId: app.state.selectedSectionId,
+    selectedSimulatorId: app.state.selectedSimulatorId,
+    practiceMode: app.state.practiceMode,
+    progress: cloneData(app.state.progress),
+    quizHistory: cloneData(app.state.quizHistory),
+    wrongbook: cloneData(app.state.wrongbook),
+    trackProgress: cloneData(app.state.trackProgress),
+    chapterWeakness: cloneData(app.state.chapterWeakness),
+    lastPasslineScore: cloneData(app.state.lastPasslineScore),
+    meta: cloneData(app.state.meta),
+  };
+}
+
+function applySyncedState(nextState) {
+  const defaults = createDefaultState(app.data.chapters);
+  const incoming = nextState || {};
+  app.state = {
+    ...defaults,
+    ...incoming,
+    progress: {
+      ...defaults.progress,
+      ...(incoming.progress || {}),
+      points: { ...defaults.progress.points, ...(incoming.progress?.points || {}) },
+      chapters: { ...defaults.progress.chapters, ...(incoming.progress?.chapters || {}) },
+    },
+    wrongbook: { ...(incoming.wrongbook || {}) },
+    trackProgress: {
+      textbook: { ...(incoming.trackProgress?.textbook || {}) },
+      passline: { ...(incoming.trackProgress?.passline || {}) },
+    },
+    chapterWeakness: { ...(incoming.chapterWeakness || {}) },
+    lastPasslineScore: { ...(incoming.lastPasslineScore || {}) },
+    quizHistory: Array.isArray(incoming.quizHistory) ? incoming.quizHistory : [],
+    meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
+  };
+}
+
+function touchState() {
+  app.state.meta.updatedAt = nowIso();
+  if (app.runtime.syncReady && app.auth.user) {
+    app.auth.pendingChanges = true;
+    app.auth.syncStatus = 'pending';
+    app.syncMeta.pending = true;
+    scheduleSync();
+  }
+}
+
+function scheduleSync() {
+  if (!app.auth.user || !app.runtime.syncReady) return;
+  clearTimeout(app.runtime.syncTimer);
+  app.runtime.syncTimer = setTimeout(() => {
+    flushSyncNow(false);
+  }, 1200);
+}
+
+async function flushSyncNow(manual) {
+  if (!app.auth.user) return;
+  try {
+    app.auth.syncStatus = 'syncing';
+    app.syncMeta.lastAttemptAt = nowIso();
+    renderView();
+    const result = await apiFetch('/api/progress', {
+      method: 'PUT',
+      body: JSON.stringify({ state: serializeProgressState() }),
+    });
+    applySyncedState(result.state);
+    app.auth.lastSyncedAt = result.meta?.updatedAt || nowIso();
+    app.auth.syncStatus = 'synced';
+    app.auth.pendingChanges = false;
+    app.syncMeta.pending = false;
+    app.syncMeta.lastSuccessfulStateAt = app.state.meta.updatedAt;
+    renderView();
+  } catch (error) {
+    console.error(error);
+    app.auth.syncStatus = 'sync-error';
+    app.auth.pendingChanges = true;
+    app.syncMeta.pending = true;
+    renderView();
+  }
+}
+
+function flushSyncOnLeave() {
+  if (!app.auth.user || !app.auth.pendingChanges) return;
+  fetch('/api/progress', {
+    method: 'PUT',
+    keepalive: true,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${app.auth.token}`,
+    },
+    body: JSON.stringify({ state: serializeProgressState() }),
+  }).catch(() => {});
+}
+
+async function handleRegister() {
+  await submitAuth('/api/auth/register');
+}
+
+async function handleAutoRegister() {
+  await submitAuth('/api/auth/register-auto', true);
+}
+
+async function handleLogin() {
+  await submitAuth('/api/auth/login');
+}
+
+async function submitAuth(path, auto = false) {
+  try {
+    app.auth.error = '';
+    app.auth.syncStatus = 'syncing';
+    renderView();
+    const payload = auto ? {} : {
+      username: app.session.authDraft.username.trim(),
+      password: app.session.authDraft.password,
+    };
+    const result = await apiFetch(path, { method: 'POST', body: JSON.stringify(payload) }, false);
+    app.auth.token = result.token;
+    app.auth.user = result.user;
+    app.auth.generated = result.generated || app.auth.generated;
+    if (result.generated) {
+      app.session.authDraft.username = result.generated.username;
+      app.session.authDraft.password = result.generated.password;
+    }
+    const merged = await apiFetch('/api/progress/merge', {
+      method: 'POST',
+      body: JSON.stringify({ state: serializeProgressState() }),
+    });
+    applySyncedState(merged.state);
+    app.auth.lastSyncedAt = merged.meta?.updatedAt || nowIso();
+    app.auth.syncStatus = 'synced';
+    app.auth.pendingChanges = false;
+    app.syncMeta.pending = false;
+    app.auth.modalMode = 'account';
+    app.auth.modalOpen = true;
+    renderView();
+  } catch (error) {
+    app.auth.syncStatus = app.auth.user ? 'sync-error' : 'local-only';
+    app.auth.error = error.message || '操作失败';
+    renderView();
+  }
+}
+
+async function handleLogout() {
+  try {
+    if (app.auth.token) {
+      await apiFetch('/api/auth/logout', { method: 'POST' });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  app.auth.token = null;
+  app.auth.user = null;
+  app.auth.syncStatus = 'local-only';
+  app.auth.lastSyncedAt = null;
+  app.auth.pendingChanges = false;
+  app.auth.modalOpen = false;
+  app.auth.error = '';
+  app.syncMeta.pending = false;
+  renderView();
+}
+
+async function copyGeneratedCredentials() {
+  if (!app.auth.generated) return;
+  const text = `账号：${app.auth.generated.username}\n密码：${app.auth.generated.password}`;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function apiFetch(path, options = {}, requireAuth = true) {
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (app.auth.token) headers.Authorization = `Bearer ${app.auth.token}`;
+  const response = await fetch(path, { ...options, headers });
+  if (response.status === 401 && requireAuth) {
+    app.auth.token = null;
+    app.auth.user = null;
+    app.auth.syncStatus = 'local-only';
+    throw new Error('登录状态已失效，请重新登录');
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || `请求失败 (${response.status})`);
+  }
+  return data;
+}
+
+function syncStatusLabel() {
+  return ({
+    'local-only': '未登录，仅保存在本机',
+    pending: '有未同步变更',
+    syncing: '同步中',
+    synced: '已同步',
+    'sync-error': '同步失败',
+  })[app.auth.syncStatus] || '未同步';
+}
+
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 function escapeHtml(value) {
   return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

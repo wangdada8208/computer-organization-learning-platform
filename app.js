@@ -590,7 +590,7 @@ function renderPointCard(chapter, section, point, pointIndex) {
           </div>
           <span class="status-pill ${status}">${statusLabel(status)}</span>
         </div>
-        <div class="point-conclusion">${point.tip || point.summary}</div>
+        <div class="point-conclusion">${getPointConclusion(point)}</div>
         <div class="point-excerpt"><span>精炼解释</span><p>${getPointExcerpt(point)}</p></div>
         <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
@@ -1156,10 +1156,33 @@ function getStudyTime(chapter) {
   return `${Math.max(20, points * 6)} 分钟`;
 }
 
+function getPointConclusion(point) {
+  return sanitizePointText(point.tip || point.summary || point.title);
+}
+
 function getPointExcerpt(point) {
-  const source = point.summary || point.detail || '';
-  const trimmed = source.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  const conclusion = getPointConclusion(point);
+  const detail = sanitizePointText(point.detail || '');
+  const summary = sanitizePointText(point.summary || '');
+  let source = detail || summary;
+
+  if (detail && conclusion) {
+    source = stripLeadingDuplicate(detail, conclusion);
+  }
+  if (!source) source = summary || conclusion;
+
+  const trimmed = source.trim();
   return trimmed.length > 92 ? `${trimmed.slice(0, 92)}...` : trimmed;
+}
+
+function sanitizePointText(text) {
+  return String(text || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function stripLeadingDuplicate(detail, lead) {
+  const escaped = lead.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const stripped = detail.replace(new RegExp(`^${escaped}[，。、；：:,.!！?？\\s-]*`), '').trim();
+  return stripped || detail;
 }
 
 function getConfusionHints(chapter, point) {

@@ -593,13 +593,18 @@ function renderPracticeView() {
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
       <section class="training-hero surface-panel">
-        <div class="section-heading spread">
-          <div>
+        <div class="training-hero-layout">
+          <div class="training-hero-copy">
             <span class="eyebrow">训练强化</span>
-            <h3>第 ${chapter.number} 章 · ${chapter.title} 训练中枢</h3>
-            <p class="body-copy">先选择章节，再切换章节练习、综合测试、错题复习或模拟器强化。</p>
+            <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
+            <p class="body-copy">围绕当前章节完成章节练习、综合测试、错题复习与模拟器强化，让训练过程更专注、更连续。</p>
+            <div class="training-hero-tags">
+              <span>${bundle.practiceSections.length} 个练习小节</span>
+              <span>${bundle.chapterTest.length} 道综合测试题</span>
+              <span>${wrongs.length} 道本章错题</span>
+            </div>
           </div>
-          <div class="hero-meta-grid">
+          <div class="hero-meta-grid training-hero-metrics">
             <div class="metric-card"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
             <div class="metric-card"><span>错题数量</span><strong>${overview.wrongCount}</strong></div>
             <div class="metric-card"><span>薄弱章节数</span><strong>${getWeakChapters().length}</strong></div>
@@ -607,33 +612,42 @@ function renderPracticeView() {
         </div>
       </section>
 
-      <section class="surface-panel training-controls">
-        <div class="toolbar-grid">
-          <div>
-            <label class="field-label">章节</label>
-            <select class="select" data-change="select-practice-chapter">
-              ${app.data.chapters.map((item) => `<option value="${item.id}" ${item.id === chapter.id ? 'selected' : ''}>第 ${item.number} 章 · ${item.title}</option>`).join('')}
-            </select>
+      <section class="surface-panel training-shell">
+        <div class="training-shell-head">
+          <div class="training-controls">
+            <div class="toolbar-grid">
+              <div>
+                <label class="field-label">章节</label>
+                <select class="select" data-change="select-practice-chapter">
+                  ${app.data.chapters.map((item) => `<option value="${item.id}" ${item.id === chapter.id ? 'selected' : ''}>第 ${item.number} 章 · ${item.title}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="field-label">小节</label>
+                <select class="select" data-change="select-practice-section">
+                  ${bundle.practiceSections.map((item) => `<option value="${item.sectionId}" ${item.sectionId === section.sectionId ? 'selected' : ''}>${item.sectionTitle}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="segment-tabs training-tabs" role="tablist">
+              ${renderModeTab('section', '章节练习')}
+              ${renderModeTab('test', '综合测试')}
+              ${renderModeTab('wrongbook', '错题复习')}
+              ${renderModeTab('simulator', '模拟器')}
+            </div>
           </div>
-          <div>
-            <label class="field-label">小节</label>
-            <select class="select" data-change="select-practice-section">
-              ${bundle.practiceSections.map((item) => `<option value="${item.sectionId}" ${item.sectionId === section.sectionId ? 'selected' : ''}>${item.sectionTitle}</option>`).join('')}
-            </select>
+          <div class="training-status-card">
+            <span class="eyebrow">训练状态</span>
+            <h4>${modeSummaryLabel()}</h4>
+            <p class="body-copy">${modeSummaryText(chapter, section, wrongs)}</p>
           </div>
         </div>
-        <div class="segment-tabs" role="tablist">
-          ${renderModeTab('section', '章节练习')}
-          ${renderModeTab('test', '综合测试')}
-          ${renderModeTab('wrongbook', '错题复习')}
-          ${renderModeTab('simulator', '模拟器')}
-        </div>
-      </section>
 
-      ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
-      ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
-      ${app.state.practiceMode === 'wrongbook' ? renderWrongbook(chapter, wrongs) : ''}
-      ${app.state.practiceMode === 'simulator' ? renderSimulatorWorkbench(chapter) : ''}
+        ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
+        ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
+        ${app.state.practiceMode === 'wrongbook' ? renderWrongbook(chapter, wrongs) : ''}
+        ${app.state.practiceMode === 'simulator' ? renderSimulatorWorkbench(chapter) : ''}
+      </section>
     </div>
   `;
   if (app.state.practiceMode === 'simulator') {
@@ -648,13 +662,14 @@ function renderModeTab(mode, label) {
 
 function renderSectionPractice(section) {
   return `
-    <section class="surface-panel training-panel">
-      <div class="section-heading">
+    <section class="training-panel training-panel-sheet">
+      <div class="section-heading training-panel-head">
         <div>
           <span class="eyebrow">章节练习</span>
           <h3>${section.sectionTitle}</h3>
           <p class="body-copy">即时反馈模式，适合边学边做，判断自己对刚刚那一节的掌握程度。</p>
         </div>
+        <span class="soft-badge">${section.questions.length} 题</span>
       </div>
       <div class="quiz-list">${section.questions.map(renderPracticeQuestion).join('')}</div>
     </section>
@@ -688,13 +703,14 @@ function renderPracticeQuestion(question) {
 
 function renderChapterTest(chapter, bundle) {
   return `
-    <section class="surface-panel training-panel">
-      <div class="section-heading">
+    <section class="training-panel training-panel-sheet test-sheet">
+      <div class="section-heading training-panel-head">
         <div>
           <span class="eyebrow">综合测试</span>
           <h3>${chapter.title}</h3>
           <p class="body-copy">按整章交卷评分，用于检验本章知识点的整体掌握情况。</p>
         </div>
+        <span class="soft-badge">${bundle.chapterTest.length} 题</span>
       </div>
       <div class="quiz-list">${bundle.chapterTest.map((question, index) => renderTestQuestion(question, index)).join('')}</div>
       <div class="action-row">
@@ -739,13 +755,14 @@ function renderTestScore(chapterId) {
 
 function renderWrongbook(chapter, wrongs) {
   return `
-    <section class="surface-panel training-panel">
-      <div class="section-heading">
+    <section class="training-panel training-panel-sheet">
+      <div class="section-heading training-panel-head">
         <div>
           <span class="eyebrow">错题复习</span>
           <h3>${chapter.title}</h3>
           <p class="body-copy">先回看对应概念，再结合模拟器补强理解薄弱点。</p>
         </div>
+        <span class="soft-badge">${wrongs.length} 道</span>
       </div>
       ${wrongs.length ? `<div class="wrongbook-list">${wrongs.map((item) => `
         <article class="wrong-item">
@@ -767,10 +784,10 @@ function renderWrongbook(chapter, wrongs) {
 
 function renderSimulatorWorkbench(chapter) {
   return `
-    <section class="simulator-workbench">
+    <section class="training-panel simulator-workbench">
       <div class="simulator-layout">
-        <aside class="surface-panel simulator-rail">
-          <div class="section-heading">
+        <aside class="simulator-rail">
+          <div class="section-heading training-panel-head">
             <div>
               <span class="eyebrow">模拟器</span>
               <h3>先按理解难点选择工具</h3>
@@ -788,7 +805,7 @@ function renderSimulatorWorkbench(chapter) {
           </div>
         </aside>
         <div class="simulator-main">
-          <section class="surface-panel simulator-context">
+          <section class="simulator-context">
             <span class="eyebrow">当前强化工具</span>
             <h3>${getSelectedSimulator().title}</h3>
             <p class="body-copy">${getSelectedSimulator().summary}</p>
@@ -798,6 +815,31 @@ function renderSimulatorWorkbench(chapter) {
       </div>
     </section>
   `;
+}
+
+function modeSummaryLabel() {
+  const labels = {
+    section: '当前处于章节练习',
+    test: '当前处于综合测试',
+    wrongbook: '当前处于错题复习',
+    simulator: '当前处于模拟器强化',
+  };
+  return labels[app.state.practiceMode] || '当前训练中';
+}
+
+function modeSummaryText(chapter, section, wrongs) {
+  if (app.state.practiceMode === 'section') {
+    return `${section.sectionTitle} 提供即时反馈，适合配合刚完成的知识点阅读继续巩固。`;
+  }
+  if (app.state.practiceMode === 'test') {
+    return `本章共 ${getChapterTestQuestions(chapter.id).length} 题，适合用整章测试确认当前得分能力。`;
+  }
+  if (app.state.practiceMode === 'wrongbook') {
+    return wrongs.length
+      ? `本章已有 ${wrongs.length} 道错题，可依次回看知识点并补齐薄弱概念。`
+      : '本章暂时没有错题记录，可以转入章节练习或综合测试继续训练。';
+  }
+  return `${chapter.relatedSimulatorIds.length} 个相关模拟器已关联到本章，可配合概念复习一起使用。`;
 }
 
 function renderSimulatorCard(simId, chapter) {

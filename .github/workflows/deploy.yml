@@ -32,6 +32,7 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key" \
             "$GITHUB_WORKSPACE/index.html" \
             "$GITHUB_WORKSPACE/app.js" \
+            "$GITHUB_WORKSPACE/illustrations.js" \
             "$GITHUB_WORKSPACE/styles.css" \
             "$GITHUB_WORKSPACE/simulators.js" \
             "$GITHUB_WORKSPACE/sw.js" \

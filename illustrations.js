@@ -1,16 +1,16 @@
 const palette = {
-  bg: '#0f1b2d',
-  panel: '#16263d',
-  panelSoft: '#1d3150',
-  line: '#365379',
-  text: '#eaf2fb',
-  muted: '#9db2cb',
-  teal: '#5fb3a4',
-  mint: '#8bd4bf',
-  blue: '#7fb2ff',
-  amber: '#f0c36b',
-  rose: '#ef8f9d',
-  violet: '#a995ff',
+  bg: '#f6faf8',
+  panel: '#ffffff',
+  panelSoft: '#f1f6f4',
+  line: '#c6d5ce',
+  text: '#22313a',
+  muted: '#71818c',
+  teal: '#4e8f83',
+  mint: '#5f9f8f',
+  blue: '#5d86c9',
+  amber: '#c48b2a',
+  rose: '#c06a78',
+  violet: '#7a6bc2',
 };
 
 function wrapSvg({ title, subtitle = '', viewBox = '0 0 760 420', body }) {
@@ -18,8 +18,8 @@ function wrapSvg({ title, subtitle = '', viewBox = '0 0 760 420', body }) {
     <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${title}">
       <defs>
         <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="${palette.panelSoft}"/>
-          <stop offset="100%" stop-color="${palette.panel}"/>
+          <stop offset="0%" stop-color="${palette.panel}"/>
+          <stop offset="100%" stop-color="${palette.panelSoft}"/>
         </linearGradient>
       </defs>
       <rect x="8" y="8" width="744" height="404" rx="28" fill="${palette.bg}" stroke="${palette.line}" stroke-width="2"/>

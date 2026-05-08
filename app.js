@@ -935,15 +935,6 @@ function renderPointCard(chapter, section, point, pointIndex) {
         </div>
         <div class="point-conclusion">${point.conclusion}</div>
         ${point.preview ? `<div class="point-excerpt"><span>为什么是这样</span><p>${point.preview}</p></div>` : ''}
-        ${point.svg ? `
-          <div class="point-visual-preview">
-            <div class="point-visual-head">
-              <span>图解预览</span>
-              <em>展开后看完整图</em>
-            </div>
-            <div class="svg-box preview">${point.svg}</div>
-          </div>
-        ` : ''}
         <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
       <div class="point-detail-wrap">

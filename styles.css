@@ -842,28 +842,6 @@ ul { margin: 0; padding-left: 18px; }
   letter-spacing: .06em;
 }
 .point-excerpt p { color: var(--muted-strong); line-height: 1.7; }
-.point-visual-preview {
-  display: grid;
-  gap: 8px;
-}
-.point-visual-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  font-size: 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 700;
-}
-.point-visual-head em {
-  font-style: normal;
-  color: var(--muted);
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 500;
-}
 .point-hint-row {
   display: flex;
   justify-content: space-between;
@@ -895,8 +873,8 @@ ul { margin: 0; padding-left: 18px; }
 .svg-box {
   padding: 14px;
   border-radius: 12px;
-  background: linear-gradient(180deg, #13263d 0%, #102032 100%);
-  border: 1px solid rgba(97, 125, 163, 0.24);
+  background: linear-gradient(180deg, #f7faf8 0%, #eef4f1 100%);
+  border: 1px solid rgba(183, 198, 190, 0.95);
   overflow: auto;
 }
 .svg-box svg {
@@ -904,13 +882,6 @@ ul { margin: 0; padding-left: 18px; }
   height: auto;
   display: block;
   min-width: 540px;
-}
-.svg-box.preview {
-  padding: 10px;
-  max-height: 220px;
-}
-.svg-box.preview svg {
-  min-width: 0;
 }
 .select, .input {
   width: 100%;

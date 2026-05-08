@@ -345,7 +345,7 @@ function renderSidebarTree() {
 
 function renderTopbar() {
   const titleMap = {
-    dashboard: ['学习总览', '用教材学习轨建立理解，用过线冲刺轨先把及格盘稳住。'],
+    dashboard: ['学习总览', '继续当前章节，或者先做及格线练习。'],
     chapter: ['章节学习', '先抓每章必会，再顺着知识点把概念真正读懂。'],
     practice: ['训练强化', '先过线，再提分；做题、错题和模拟器放在同一条补强回路里。'],
   };
@@ -384,235 +384,118 @@ function renderTopbar() {
 function renderDashboard() {
   const stats = getProgressStats();
   const continueChapter = getContinueChapter();
-  const recommendation = getRecommendation();
-  const history = [...app.state.quizHistory].reverse().slice(0, 5);
-  const weakChapters = getWeakChapters();
-  const recentWrongs = wrongbookEntries().slice(0, 4);
+  const history = [...app.state.quizHistory].reverse();
+  const recentWrongs = wrongbookEntries().slice(0, 2);
   const passline = getPasslineOverview();
-  const dailyPlan = getDailyPlan();
+  const latestHistory = history[0];
+  const latestWrong = recentWrongs[0];
+  const nextAction = getDashboardNextAction();
+  const heroChapterProgress = getChapterProgress(continueChapter);
   pageEl.innerHTML = `
     <div class="overview-stack">
       <section class="overview-hero">
         <div class="hero-copy">
-          <span class="eyebrow">学习总览</span>
+          <span class="eyebrow">现在开始</span>
           <h3 class="hero-title">计算机组成原理学习平台</h3>
-          <p class="body-copy">给零基础学习者准备的双轨学习工作台。一条按教材把概念学懂，一条按考试把及格分先拿稳，减少“看了很多但不知道下一步”的挫败感。</p>
-          <div class="hero-kicker-row">
-            <span class="hero-kicker">教材学习轨</span>
-            <span class="hero-kicker">过线冲刺轨</span>
-            <span class="hero-kicker">错题补救</span>
-            <span class="hero-kicker">模拟器强化</span>
-          </div>
-          <div class="dual-track-grid" aria-label="学习双轨">
-            <article class="track-card">
-              <span class="eyebrow">按教材学</span>
-              <h4>先把主干概念学明白</h4>
-              <p class="body-copy">从当前章节继续，先看必会点，再顺着章节结构补理解。</p>
-              <div class="track-meta"><span>当前章节：第 ${continueChapter.number} 章</span><span>${getChapterProgress(continueChapter).percent}% 已掌握</span></div>
-              <button class="btn primary" data-action="open-track" data-track="textbook">进入教材学习轨</button>
-            </article>
-            <article class="track-card accent">
-              <span class="eyebrow">先过线</span>
-              <h4>先拿下本周及格分主干</h4>
-              <p class="body-copy">只做最低必会点和高频题，先把最容易丢分的地方补起来。</p>
-              <div class="track-meta"><span>${passline.completedChapters}/${passline.targetChapters} 章已达及格线</span><span>${passline.readyTopics}/${passline.totalTopics} 个必会点已完成</span></div>
-              <button class="btn subtle strong" data-action="open-track" data-track="passline">进入过线冲刺轨</button>
-            </article>
-          </div>
-          <div class="action-row">
-            <button class="btn primary" data-action="open-track" data-track="textbook">从上次进度继续</button>
-            <button class="btn subtle" data-action="open-track" data-track="passline">先做过线练习</button>
-            <button class="btn subtle" data-action="open-teacher">刷老师题</button>
+          <p class="body-copy">先继续当前章节，或者先做及格线练习。首页只保留最直接的入口，让你一进来就知道下一步点哪里。</p>
+          <div class="action-row hero-actions">
+            <button class="btn primary" data-action="open-track" data-track="textbook">继续学当前章节</button>
+            <button class="btn subtle" data-action="open-track" data-track="passline">先做及格线练习</button>
           </div>
         </div>
         <div class="hero-side">
-          <div class="surface-panel compact-panel hero-note">
+          <div class="surface-panel compact-panel hero-note hero-status-card">
             <div class="hero-note-head">
               <div>
-                <span class="eyebrow">推荐下一步</span>
-                <h4>${getContinueLabel()}</h4>
+                <span class="eyebrow">当前进度</span>
+                <h4>第 ${continueChapter.number} 章 · ${continueChapter.title}</h4>
               </div>
-              <span class="soft-badge">推荐任务</span>
+              <span class="soft-badge">${heroChapterProgress.percent}%</span>
             </div>
-            <p class="body-copy">${recommendation.text}</p>
             <div class="metric-grid single-column">
-              <div class="metric-card"><span>总体掌握度</span><strong>${stats.percent}%</strong></div>
-              <div class="metric-card"><span>过线完成度</span><strong>${passline.percent}%</strong></div>
-              <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong></div>
-              <div class="metric-card"><span>最近测试记录</span><strong>${app.state.quizHistory.length}</strong></div>
+              <div class="metric-card"><span>当前章节</span><strong>第 ${continueChapter.number} 章</strong><small>${continueChapter.title}</small></div>
+              <div class="metric-card"><span>总体进度</span><strong>${stats.percent}%</strong><small>${stats.masteredPoints}/${stats.totalPoints} 个知识点已掌握</small></div>
+              <div class="metric-card"><span>过线进度</span><strong>${passline.percent}%</strong><small>${passline.readyTopics}/${passline.totalTopics} 个必会点完成</small></div>
+              <div class="metric-card"><span>待回看错题</span><strong>${getWrongbookCount()}</strong><small>${latestWrong ? latestWrong.chapterTitle : '当前没有错题'}</small></div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="hero-overview-band surface-panel">
-        <div class="hero-band-grid">
-          <div class="hero-band-item">
-            <span>继续学习</span>
-            <strong>${continueChapter.title}</strong>
-            <small>${getContinueLabel()}</small>
-          </div>
-          <div class="hero-band-item">
-            <span>过线进度</span>
-            <strong>${passline.percent}%</strong>
-            <small>${passline.readyTopics}/${passline.totalTopics} 个必会点已完成</small>
-          </div>
-          <div class="hero-band-item">
-            <span>近期训练</span>
-            <strong>${app.state.quizHistory.length}</strong>
-            <small>${history[0] ? `${history[0].chapterTitle} · ${history[0].score}/${history[0].total}` : '等待首次训练记录'}</small>
-          </div>
-          <div class="hero-band-item">
-            <span>待处理错题</span>
-            <strong>${getWrongbookCount()}</strong>
-            <small>${recentWrongs[0] ? `${recentWrongs[0].chapterTitle} 有最近错题` : '当前没有错题记录'}</small>
-          </div>
-          <div class="hero-band-item">
-            <span>老师题库</span>
-            <strong>${app.data.teacherQuizzes.length}</strong>
-            <small>课堂测试与课件重点题已单独整理</small>
-          </div>
-        </div>
-      </section>
-
-      <section class="surface-panel route-panel">
+      <section class="surface-panel overview-metrics-panel">
         <div class="section-heading">
           <div>
-            <span class="eyebrow">三步学习路线</span>
-            <h3>今天按这条线走，最不容易乱</h3>
+            <span class="eyebrow">我现在学到哪</span>
+            <h3>当前学习状态</h3>
           </div>
-          <span class="soft-badge">${dailyPlan.kicker}</span>
         </div>
-        <div class="route-grid">
-          ${dailyPlan.steps.map((step, index) => `
-            <article class="route-card ${step.tone}">
-              <div class="route-step-row">
-                <span class="route-step-index">0${index + 1}</span>
-                <span class="tiny-pill">${step.tag}</span>
-              </div>
-              <h4>${step.title}</h4>
-              <p>${step.text}</p>
-              <button class="btn tiny ${step.primary ? 'primary' : 'subtle'}" data-action="${step.action}"${step.chapterId ? ` data-chapter-id="${step.chapterId}"` : ''}${step.sectionId ? ` data-section-id="${step.sectionId}"` : ''}${step.track ? ` data-track="${step.track}"` : ''}>${step.cta}</button>
-            </article>
-          `).join('')}
+        <div class="overview-metrics-grid">
+          <article class="overview-number-card">
+            <span>已掌握知识点</span>
+            <strong>${stats.masteredPoints}/${stats.totalPoints}</strong>
+            <small>当前总掌握度 ${stats.percent}%</small>
+          </article>
+          <article class="overview-number-card">
+            <span>已过线章节</span>
+            <strong>${passline.completedChapters}/${passline.targetChapters}</strong>
+            <small>${passline.readyTopics}/${passline.totalTopics} 个必会点已完成</small>
+          </article>
+          <article class="overview-number-card">
+            <span>最近一次测试</span>
+            <strong>${latestHistory ? `${latestHistory.score}/${latestHistory.total}` : '--'}</strong>
+            <small>${latestHistory ? `${latestHistory.chapterTitle} · ${formatDate(latestHistory.completedAt)}` : '还没有测试记录'}</small>
+          </article>
+          <article class="overview-number-card">
+            <span>待回看错题</span>
+            <strong>${getWrongbookCount()}</strong>
+            <small>${latestWrong ? `${latestWrong.chapterTitle} 有最近错题` : '当前没有错题'}</small>
+          </article>
         </div>
       </section>
 
-      <section class="workspace-grid">
-        <div class="overview-main">
-          <article class="surface-panel emphasis-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">继续学习</span>
-                <h3>${app.state.activeTrack === 'passline' ? '先把过线主干拿下' : getContinueLabel()}</h3>
-              </div>
-              <span class="soft-badge">${app.state.activeTrack === 'passline' ? '过线冲刺轨' : '教材学习轨'}</span>
+      <section class="surface-panel overview-next-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">接下来做什么</span>
+            <h3>${nextAction.title}</h3>
+          </div>
+          <button class="text-link" data-action="${nextAction.primaryAction}"${nextAction.primaryChapterId ? ` data-chapter-id="${nextAction.primaryChapterId}"` : ''}>${nextAction.primaryLabel}</button>
+        </div>
+        <div class="overview-next-layout">
+          <div class="next-main-card">
+            <p class="body-copy">${nextAction.text}</p>
+            <div class="action-row">
+              <button class="btn primary" data-action="${nextAction.primaryAction}"${nextAction.primaryChapterId ? ` data-chapter-id="${nextAction.primaryChapterId}"` : ''}>${nextAction.primaryLabel}</button>
             </div>
-            <p class="body-copy">${recommendation.text}</p>
-            <div class="action-row">${recommendation.actions}</div>
-          </article>
-
-          <article class="surface-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">过线进度</span>
-                <h3>哪些章节已经稳住，哪些还在掉分</h3>
-              </div>
-            </div>
-            <div class="timeline-list">
-              ${passline.chapterCards.map((item) => `
-                <div class="timeline-item">
-                  <strong>第 ${item.number} 章 · ${item.title}</strong>
-                  <span>${item.readyTopics}/${item.totalTopics} 个必会点已拿下 · 最近过线分 ${item.lastScore}</span>
-                  <small>${item.statusText}</small>
-                </div>
+            <div class="next-links">
+              ${nextAction.secondary.map((item) => `
+                <button class="text-link" data-action="${item.action}"${item.chapterId ? ` data-chapter-id="${item.chapterId}"` : ''}${item.sectionId ? ` data-section-id="${item.sectionId}"` : ''}>${item.label}</button>
               `).join('')}
             </div>
-          </article>
-        </div>
-
-        <aside class="overview-side">
-          <article class="surface-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">账号与同步</span>
-                <h3>${app.auth.user ? `当前账号：${app.auth.user.username}` : '登录后才会保存学习进度'}</h3>
-              </div>
-            </div>
-            <div class="overview-stat-list">
-              <div class="overview-stat-row"><span>同步状态</span><strong>${syncStatusLabel()}</strong></div>
-              <div class="overview-stat-row"><span>最近同步</span><strong>${app.auth.lastSyncedAt ? formatDate(app.auth.lastSyncedAt) : '--'}</strong></div>
-              <div class="overview-stat-row"><span>待上传变更</span><strong>${app.auth.pendingChanges ? '有' : '无'}</strong></div>
-            </div>
-            <div class="action-row">
-              ${app.auth.user
-                ? `<button class="btn tiny subtle" data-action="sync-now">立即同步</button><button class="btn tiny subtle" data-action="open-auth-modal" data-mode="account">查看账号</button>`
-                : `<button class="btn tiny primary" data-action="open-auth-modal" data-mode="register">注册账号</button><button class="btn tiny subtle" data-action="open-auth-modal" data-mode="login">登录同步</button>`}
-            </div>
-          </article>
-
-          <article class="surface-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">学习概况</span>
-                <h3>当前掌握状态</h3>
-              </div>
-            </div>
-            <div class="overview-stat-list">
-              <div class="overview-stat-row"><span>已掌握知识点</span><strong>${stats.masteredPoints}/${stats.totalPoints}</strong></div>
-              <div class="overview-stat-row"><span>待复习知识点</span><strong>${stats.reviewPoints}</strong></div>
-              <div class="overview-stat-row"><span>已过线章节</span><strong>${passline.completedChapters}/${passline.targetChapters}</strong></div>
-              <div class="overview-stat-row"><span>最近学习章节</span><strong>第 ${continueChapter.number} 章</strong></div>
-            </div>
-          </article>
-
-          <article class="surface-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">薄弱章节</span>
-                <h3>优先修补失分区域</h3>
-              </div>
-            </div>
-            <div class="dense-list">
-              ${weakChapters.map((chapter) => `<button class="dense-row" data-action="open-chapter" data-chapter-id="${chapter.id}"><div><strong>第 ${chapter.number} 章 · ${chapter.title}</strong><span>${chapter.progress.mastered}/${chapter.progress.total} 已掌握</span></div><em>${chapter.progress.percent}%</em></button>`).join('')}
-            </div>
-          </article>
-
-          <article class="surface-panel">
-            <div class="section-heading">
-              <div>
-                <span class="eyebrow">老师题库</span>
-                <h3>先刷老师强调过的题型</h3>
-              </div>
-            </div>
-            <div class="overview-stat-list">
-              <div class="overview-stat-row"><span>已整理题目</span><strong>${app.data.teacherQuizzes.length}</strong></div>
-              <div class="overview-stat-row"><span>覆盖来源</span><strong>${app.data.teacherSources.length}</strong></div>
-              <div class="overview-stat-row"><span>重点章节</span><strong>第 1 / 3 / 4 章</strong></div>
-            </div>
-            <div class="action-row">
-              <button class="btn tiny primary" data-action="open-teacher">进入老师题库</button>
-            </div>
-          </article>
-        </aside>
-      </section>
-
-      <section class="surface-panel">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">错题摘要</span>
-            <h3>需要回看的概念与对应入口</h3>
           </div>
-          <button class="text-link" data-action="switch-view" data-view="practice">去训练强化</button>
+          <aside class="next-side-card">
+            <span class="eyebrow">最近提醒</span>
+            ${recentWrongs.length ? `
+              ${recentWrongs.map((item) => `
+                <div class="mini-wrong-row">
+                  <strong>${item.chapterTitle}</strong>
+                  <span>错 ${item.wrongCount} 次 · ${formatDate(item.lastWrongAt)}</span>
+                </div>
+              `).join('')}
+            ` : `<div class="mini-wrong-row empty"><strong>没有待回看错题</strong><span>可以直接继续章节学习或做题。</span></div>`}
+            <div class="next-side-actions">
+              <button class="btn tiny subtle" data-action="open-teacher">刷老师题</button>
+              <button class="btn tiny subtle" data-action="switch-view" data-view="practice">进入训练强化</button>
+            </div>
+          </aside>
         </div>
-        ${recentWrongs.length ? `<div class="wrong-grid">${recentWrongs.map((item) => `<article class="wrong-card"><strong>${item.chapterTitle}</strong><p>${item.stem}</p><div class="wrong-meta">错 ${item.wrongCount} 次 · ${formatDate(item.lastWrongAt)}</div><div class="action-row small">${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">回到知识点</button>` : ''}${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">打开模拟器</button>` : ''}</div></article>`).join('')}</div>` : '<div class="empty-state">暂时还没有错题记录，可进入章节练习或综合测试建立复习清单。</div>'}
       </section>
 
       <section class="surface-panel">
         <div class="section-heading">
           <div>
-            <span class="eyebrow">章节学习</span>
-            <h3>课程目录与章节进度</h3>
+            <span class="eyebrow">课程章节</span>
+            <h3>按章节进入学习或训练</h3>
           </div>
         </div>
         <div class="chapter-overview-grid">${app.data.chapters.map(renderChapterOverviewCard).join('')}</div>
@@ -693,8 +576,6 @@ function renderAuthForm() {
 
 function renderChapterOverviewCard(chapter) {
   const progress = getChapterProgress(chapter);
-  const totalSections = chapter.sections.length;
-  const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   const passline = getChapterPassline(chapter);
   const training = getTrainingOverview(chapter.id);
   const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
@@ -708,18 +589,19 @@ function renderChapterOverviewCard(chapter) {
         </div>
         <span class="soft-badge">${chapter.difficulty}</span>
       </div>
-      <div class="chapter-card-meta">
-        <span>${totalSections} 节</span>
-        <span>${totalPoints} 个知识点</span>
-        <span>${passline.readyTopics}/${passline.totalTopics} 个必会点</span>
-        <span>最近训练 ${training.lastScore}</span>
-        <span>老师题 ${teacherCount} 道</span>
+      <div class="chapter-card-progress-row">
+        <span>当前进度</span>
+        <strong>${progress.percent}%</strong>
       </div>
       <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
+      <div class="chapter-card-meta secondary">
+        <span>${passline.readyTopics}/${passline.totalTopics} 个必会点</span>
+        <span>最近测试 ${training.lastScore}</span>
+        <span>老师题 ${teacherCount} 道</span>
+      </div>
       <div class="card-actions">
         <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${chapter.id}">进入学习</button>
-        <button class="btn tiny subtle" data-action="open-passline" data-chapter-id="${chapter.id}">进入过线训练</button>
-        <button class="btn tiny subtle" data-action="open-teacher" data-chapter-id="${chapter.id}">老师题</button>
+        <button class="btn tiny subtle" data-action="open-passline" data-chapter-id="${chapter.id}">去做题</button>
       </div>
     </article>
   `;
@@ -1818,6 +1700,37 @@ function getContinueLabel() {
   const chapter = getContinueChapter();
   const point = app.state.progress.lastPointId ? findPointById(app.state.progress.lastPointId) : null;
   return point ? `${chapter.title} · ${point.title}` : `${chapter.title} · 延续上次进度`;
+}
+
+function getDashboardNextAction() {
+  const continueChapter = getContinueChapter();
+  const passlineTarget = getTrackChapter('passline');
+  const latestWrong = wrongbookEntries()[0];
+  const firstSection = getQuizBundle(continueChapter.id)?.practiceSections?.[0];
+  if (latestWrong) {
+    return {
+      title: `回看 ${latestWrong.chapterTitle} 的最近错题`,
+      text: `你最近在 ${latestWrong.chapterTitle} 有错题，先把这几道题对应的知识点补明白，再去做新的综合测试会更稳。`,
+      primaryAction: 'open-wrongbook',
+      primaryChapterId: latestWrong.chapterId,
+      primaryLabel: '回看最近错题',
+      secondary: [
+        { label: `先做第 ${passlineTarget.number} 章及格线题`, action: 'open-passline', chapterId: passlineTarget.id },
+        { label: '刷老师题', action: 'open-teacher', chapterId: latestWrong.chapterId },
+      ],
+    };
+  }
+  return {
+    title: `继续第 ${continueChapter.number} 章 · ${continueChapter.title}`,
+    text: `先把当前章节的主干知识点读完，再接一轮短题量练习，最容易把今天的内容真正学进去。`,
+    primaryAction: 'open-chapter',
+    primaryChapterId: continueChapter.id,
+    primaryLabel: '继续当前章节',
+    secondary: [
+      { label: `先做第 ${passlineTarget.number} 章及格线题`, action: 'open-passline', chapterId: passlineTarget.id },
+      ...(firstSection ? [{ label: `做 ${firstSection.sectionTitle} 练习`, action: 'open-practice', chapterId: continueChapter.id, sectionId: firstSection.sectionId }] : []),
+    ],
+  };
 }
 
 function getRecommendation() {

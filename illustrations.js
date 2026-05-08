@@ -77,8 +77,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch1-s1-p3': wrapSvg({
-    title: '组成 vs 体系结构',
-    subtitle: '同一套程序员可见能力，可以由不同内部实现完成。',
+    title: '计算机组成与体系结构',
+    subtitle: '这张图用来区分程序员可见规则和机器内部实现。',
     body: `
       <rect x="46" y="112" width="286" height="226" rx="24" fill="url(#cardGrad)" stroke="${palette.mint}" stroke-width="2"/>
       <rect x="426" y="112" width="286" height="226" rx="24" fill="url(#cardGrad)" stroke="${palette.blue}" stroke-width="2"/>
@@ -99,8 +99,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch1-s2-p3': wrapSvg({
-    title: '取指周期微操作',
-    subtitle: '目标：把下一条指令从主存取到 IR，并让 PC 指向后继地址。',
+    title: '取指周期',
+    subtitle: '这张图展示一条指令被取到 IR 的基本过程。',
     body: `
       ${block(40, 144, 110, 82, 'PC', palette.mint, '下一条地址')}
       ${block(174, 144, 110, 82, 'MAR', palette.blue, '地址寄存器')}
@@ -117,8 +117,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch1-s2-p5': wrapSvg({
-    title: '主存储器基本结构',
-    subtitle: '地址由 MAR 给出，数据通过 MDR 进出，存储体按单元编号存放信息。',
+    title: '主存储器结构',
+    subtitle: '这张图帮助理解 MAR、MDR 和存储体之间如何配合。',
     body: `
       ${block(52, 154, 118, 82, 'MAR', palette.blue, '地址输入')}
       ${block(52, 258, 118, 82, 'MDR', palette.rose, '数据输入 / 输出')}
@@ -136,8 +136,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch1-s2-p6': wrapSvg({
-    title: '运算器基本结构',
-    subtitle: 'ACC、MQ、X 和 ALU 协同工作，不同运算时寄存器角色不同。',
+    title: '运算器结构',
+    subtitle: '这张图帮助理解 ACC、MQ、X 和 ALU 的分工。',
     body: `
       ${block(56, 134, 124, 84, 'ACC', palette.mint, '被加数 / 结果')}
       ${block(56, 240, 124, 84, 'MQ', palette.rose, '乘数 / 商')}
@@ -152,8 +152,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch3-s1-p1': wrapSvg({
-    title: '什么是总线',
-    subtitle: '总线就是多部件共享的一组公共传输线，用来搬运地址、数据和控制信号。',
+    title: '总线的概念',
+    subtitle: '这张图说明 CPU、主存和 I/O 怎样共用同一条传输通路。',
     body: `
       ${block(52, 118, 132, 74, 'CPU', palette.mint, '处理中心')}
       ${block(52, 244, 132, 74, '主存', palette.amber, '指令与数据')}
@@ -184,8 +184,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch3-s4-p1': wrapSvg({
-    title: '为什么需要总线仲裁',
-    subtitle: '总线是共享资源，多个主设备同时申请时，必须先决定“谁先说话”。',
+    title: '总线仲裁',
+    subtitle: '这张图说明多个主设备同时申请总线时，仲裁器如何分配使用权。',
     body: `
       ${block(64, 156, 126, 74, 'CPU', palette.mint, '请求总线')}
       ${block(64, 258, 126, 74, 'DMA', palette.rose, '请求总线')}
@@ -278,8 +278,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch6-s1-p3': wrapSvg({
-    title: '补码表示法',
-    subtitle: '最高位仍是符号位，但负数按“按位取反再加 1”得到补码。',
+    title: '补码表示',
+    subtitle: '这张图展示负数怎样由原码变成补码。',
     body: `
       <rect x="56" y="126" width="298" height="224" rx="24" fill="url(#cardGrad)" stroke="${palette.mint}" stroke-width="2"/>
       <rect x="406" y="126" width="298" height="224" rx="24" fill="url(#cardGrad)" stroke="${palette.rose}" stroke-width="2"/>
@@ -294,8 +294,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch6-s2-p3': wrapSvg({
-    title: 'Booth 算法核心判断',
-    subtitle: '每次看乘数末两位，决定是加、减还是跳过，然后整体右移。',
+    title: 'Booth 乘法',
+    subtitle: '这张图帮助记住 Booth 算法每轮判断与移位的规则。',
     body: `
       <rect x="58" y="118" width="644" height="246" rx="24" fill="url(#cardGrad)" stroke="${palette.violet}" stroke-width="2"/>
       <text x="380" y="158" text-anchor="middle" fill="${palette.violet}" font-size="24" font-weight="700">观察 MQn 与 MQn+1</text>
@@ -351,7 +351,7 @@ const POINT_ILLUSTRATIONS = {
   }),
   'ch8-s3-p2': wrapSvg({
     title: '流水线三种冒险',
-    subtitle: '资源冲突、数据相关、控制转移都会让流水线不能理想满速前进。',
+    subtitle: '这张图把结构冒险、数据冒险和控制冒险放在一起对照。',
     body: `
       <rect x="50" y="124" width="200" height="228" rx="24" fill="url(#cardGrad)" stroke="${palette.amber}" stroke-width="2"/>
       <rect x="280" y="124" width="200" height="228" rx="24" fill="url(#cardGrad)" stroke="${palette.rose}" stroke-width="2"/>
@@ -371,8 +371,8 @@ const POINT_ILLUSTRATIONS = {
     `,
   }),
   'ch10-s2-p5': wrapSvg({
-    title: '水平型 vs 垂直型微指令',
-    subtitle: '水平型并行度高但字长长，垂直型更省位但需要译码。',
+    title: '微指令编码方式',
+    subtitle: '这张图用来对比水平型微指令和垂直型微指令的差别。',
     body: `
       <rect x="52" y="124" width="302" height="228" rx="24" fill="url(#cardGrad)" stroke="${palette.mint}" stroke-width="2"/>
       <rect x="406" y="124" width="302" height="228" rx="24" fill="url(#cardGrad)" stroke="${palette.blue}" stroke-width="2"/>

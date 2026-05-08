@@ -491,14 +491,24 @@ function renderDashboard() {
         </div>
       </section>
 
-      <section class="surface-panel">
+      <section class="surface-panel overview-chapter-entry">
         <div class="section-heading">
           <div>
             <span class="eyebrow">课程章节</span>
-            <h3>按章节进入学习或训练</h3>
+            <h3>章节目录放在单独页面</h3>
+          </div>
+          <button class="btn tiny primary" data-action="switch-view" data-view="chapter">进入章节学习</button>
+        </div>
+        <div class="overview-entry-row">
+          <div class="overview-entry-copy">
+            <strong>从章节页面再选章就够了</strong>
+            <p class="body-copy">首页不再重复铺开 10 章目录。需要系统看目录、切章节、顺着知识点学习时，直接进入 `章节学习` 页面。</p>
+          </div>
+          <div class="overview-entry-actions">
+            <button class="btn subtle" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续第 ${continueChapter.number} 章</button>
+            <button class="btn subtle" data-action="switch-view" data-view="chapter">打开章节目录</button>
           </div>
         </div>
-        <div class="chapter-overview-grid">${app.data.chapters.map(renderChapterOverviewCard).join('')}</div>
       </section>
     </div>
   `;
@@ -585,7 +595,7 @@ function renderChapterOverviewCard(chapter) {
         <div>
           <span class="eyebrow">第 ${chapter.number} 章</span>
           <h4>${chapter.title}</h4>
-          <p class="chapter-card-summary">${chapter.summary}</p>
+          <p class="chapter-card-summary">${getChapterCardSummary(chapter)}</p>
         </div>
         <span class="soft-badge">${chapter.difficulty}</span>
       </div>
@@ -2538,6 +2548,13 @@ function stripMnemonicLead(text) {
 function cleanLeadText(text) {
   const normalized = sanitizePointText(text);
   return normalized.replace(/^[，。、；：:()\-\s]+/, '');
+}
+
+function getChapterCardSummary(chapter) {
+  const source = cleanLeadText(chapter.summary || '');
+  const firstSentence = firstMeaningfulSentence(source);
+  const compact = firstSentence || source || chapter.title;
+  return compact.length <= 36 ? compact : `${compact.slice(0, 34)}...`;
 }
 
 function getChapterPassline(chapter) {

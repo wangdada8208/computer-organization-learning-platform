@@ -476,6 +476,34 @@ ul { margin: 0; padding-left: 18px; }
   grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
   gap: 18px;
 }
+.overview-chapter-entry {
+  display: grid;
+  gap: 16px;
+}
+.overview-entry-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid rgba(197, 208, 202, 0.8);
+  border-radius: 14px;
+  background: rgba(250, 252, 250, 0.9);
+}
+.overview-entry-copy {
+  display: grid;
+  gap: 8px;
+}
+.overview-entry-copy strong {
+  font-size: 18px;
+  color: var(--ink);
+}
+.overview-entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
 .next-main-card,
 .next-side-card {
   border: 1px solid rgba(197, 208, 202, 0.8);
@@ -571,6 +599,10 @@ ul { margin: 0; padding-left: 18px; }
   margin-top: 8px;
   color: var(--muted);
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .chapter-card-progress-row {
   display: flex;
@@ -1495,7 +1527,7 @@ ul { margin: 0; padding-left: 18px; }
 }
 
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .overview-next-layout, .overview-metrics-grid, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .route-grid, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .overview-next-layout, .overview-metrics-grid, .overview-entry-row, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .route-grid, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
   .teacher-paper-grid, .teacher-active-paper-meta, .teacher-selection-strip, .section-snapshot-grid { grid-template-columns: 1fr; }
@@ -1534,5 +1566,5 @@ ul { margin: 0; padding-left: 18px; }
   .hero-note-head, .overview-stat-row { flex-direction: column; align-items: flex-start; }
   .score-box { flex-direction: column; align-items: flex-start; }
   .teacher-paper-head { flex-direction: column; align-items: flex-start; }
-  .next-links, .next-side-actions { flex-direction: column; align-items: flex-start; }
+  .next-links, .next-side-actions, .overview-entry-actions { flex-direction: column; align-items: flex-start; }
 }

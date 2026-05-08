@@ -441,9 +441,55 @@ ul { margin: 0; padding-left: 18px; }
 .metric-card strong { font-size: 24px; font-weight: 700; }
 .hero-meta-grid { display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 12px; }
 .overview-metrics-panel,
-.overview-next-panel {
+.overview-next-panel,
+.overview-passline-panel {
   display: grid;
   gap: 16px;
+}
+.overview-passline-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) auto auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid rgba(197, 208, 202, 0.82);
+  border-radius: 14px;
+  background: rgba(248, 252, 249, 0.92);
+}
+.overview-passline-copy {
+  display: grid;
+  gap: 8px;
+}
+.overview-passline-copy strong {
+  font-size: 18px;
+  color: var(--ink);
+}
+.overview-passline-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  gap: 12px;
+}
+.overview-passline-meta div {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(197, 208, 202, 0.7);
+}
+.overview-passline-meta span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.overview-passline-meta strong {
+  font-size: 18px;
+  color: var(--ink);
+}
+.overview-passline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
 }
 .overview-metrics-grid {
   display: grid;
@@ -1527,10 +1573,10 @@ ul { margin: 0; padding-left: 18px; }
 }
 
 @media (max-width: 1180px) {
-  .workspace-grid, .overview-hero, .overview-next-layout, .overview-metrics-grid, .overview-entry-row, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .route-grid, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
+  .workspace-grid, .overview-hero, .overview-next-layout, .overview-metrics-grid, .overview-entry-row, .overview-passline-row, .guide-grid, .summary-board, .simulator-layout, .simulator-stage-host .sim-help, .wrong-grid, .overview-route, .route-grid, .chapter-hero-layout, .training-hero-layout, .training-shell-head, .hero-band-grid, .dual-track-grid, .chapter-guide-grid, .checklist-grid, .passline-summary-strip { grid-template-columns: 1fr; }
   .chapter-overview-grid { grid-template-columns: 1fr; }
   .hero-title { max-width: none; }
-  .teacher-paper-grid, .teacher-active-paper-meta, .teacher-selection-strip, .section-snapshot-grid { grid-template-columns: 1fr; }
+  .teacher-paper-grid, .teacher-active-paper-meta, .teacher-selection-strip, .section-snapshot-grid, .overview-passline-meta { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 920px) {
@@ -1566,5 +1612,5 @@ ul { margin: 0; padding-left: 18px; }
   .hero-note-head, .overview-stat-row { flex-direction: column; align-items: flex-start; }
   .score-box { flex-direction: column; align-items: flex-start; }
   .teacher-paper-head { flex-direction: column; align-items: flex-start; }
-  .next-links, .next-side-actions, .overview-entry-actions { flex-direction: column; align-items: flex-start; }
+  .next-links, .next-side-actions, .overview-entry-actions, .overview-passline-actions { flex-direction: column; align-items: flex-start; }
 }

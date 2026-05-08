@@ -422,6 +422,31 @@ function renderDashboard() {
         </div>
       </section>
 
+      <section class="surface-panel overview-passline-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">及格冲刺</span>
+            <h3>先把基础分拿稳</h3>
+          </div>
+          <button class="btn tiny primary" data-action="open-track" data-track="passline">进入及格冲刺</button>
+        </div>
+        <div class="overview-passline-row">
+          <div class="overview-passline-copy">
+            <strong>第 ${getTrackChapter('passline').number} 章优先补强</strong>
+            <p class="body-copy">只刷必会点和高频基础题，先把最容易丢的分守住，再回去补完整理解。</p>
+          </div>
+          <div class="overview-passline-meta">
+            <div><span>已过线章节</span><strong>${passline.completedChapters}/${passline.targetChapters}</strong></div>
+            <div><span>必会点进度</span><strong>${passline.readyTopics}/${passline.totalTopics}</strong></div>
+            <div><span>当前目标</span><strong>第 ${getTrackChapter('passline').number} 章</strong></div>
+          </div>
+          <div class="overview-passline-actions">
+            <button class="btn subtle" data-action="open-track" data-track="passline">开始及格线练习</button>
+            <button class="btn subtle" data-action="open-passline" data-chapter-id="${getTrackChapter('passline').id}">直达当前目标章</button>
+          </div>
+        </div>
+      </section>
+
       <section class="surface-panel overview-metrics-panel">
         <div class="section-heading">
           <div>

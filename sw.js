@@ -1,9 +1,10 @@
-const CACHE_NAME = 'coa-v2-static-20260507b';
+const CACHE_NAME = 'coa-v2-static-20260508c';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './illustrations.js',
   './simulators.js',
   './manifest.json',
   './favicon.ico',
@@ -29,7 +30,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   const isSameOrigin = url.origin === self.location.origin;
-  const isCoreAsset = isSameOrigin && /\/(app|simulators)\.js$|\/styles\.css$|\/data\/.+\.json$|\/manifest\.json$/.test(url.pathname);
+  const isCoreAsset = isSameOrigin && /\/(app|simulators|illustrations)\.js$|\/styles\.css$|\/data\/.+\.json$|\/manifest\.json$/.test(url.pathname);
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {

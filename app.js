@@ -1,4 +1,5 @@
 import { SIMULATORS, mountSimulator } from './simulators.js';
+import { POINT_ILLUSTRATIONS } from './illustrations.js';
 
 const AUTH_STORAGE_KEY = 'coa.v2.auth';
 const LEGACY_PROGRESS_KEY = 'coa_p';
@@ -130,7 +131,7 @@ function normalizePoint(point, chapter, section, pointIndex, passlineTopics) {
   const preview = derivePointPreview(point, conclusion);
   const pitfall = derivePointPitfall(point, chapter);
   const importance = passlineTopics.includes(point.id) ? 'essential' : pointIndex === section.points.length - 1 ? 'advanced' : 'standard';
-  return { ...point, conclusion, preview, pitfall, importance };
+  return { ...point, svg: point.svg || POINT_ILLUSTRATIONS[point.id] || '', conclusion, preview, pitfall, importance };
 }
 
 function normalizeQuizzes(quizzes, chapters) {
@@ -220,7 +221,10 @@ function createDefaultState(chapters) {
     selectedSimulatorId: SIMULATORS[0]?.id || null,
     teacherChapterId: 'all',
     teacherSource: 'all',
+    teacherSourceType: 'all',
     teacherType: 'all',
+    teacherQuickMode: 'chapter-current',
+    teacherRandomIds: [],
     practiceMode: 'passline',
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
@@ -385,6 +389,7 @@ function renderDashboard() {
   const weakChapters = getWeakChapters();
   const recentWrongs = wrongbookEntries().slice(0, 4);
   const passline = getPasslineOverview();
+  const dailyPlan = getDailyPlan();
   pageEl.innerHTML = `
     <div class="overview-stack">
       <section class="overview-hero">
@@ -467,6 +472,29 @@ function renderDashboard() {
             <strong>${app.data.teacherQuizzes.length}</strong>
             <small>课堂测试与课件重点题已单独整理</small>
           </div>
+        </div>
+      </section>
+
+      <section class="surface-panel route-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">三步学习路线</span>
+            <h3>今天按这条线走，最不容易乱</h3>
+          </div>
+          <span class="soft-badge">${dailyPlan.kicker}</span>
+        </div>
+        <div class="route-grid">
+          ${dailyPlan.steps.map((step, index) => `
+            <article class="route-card ${step.tone}">
+              <div class="route-step-row">
+                <span class="route-step-index">0${index + 1}</span>
+                <span class="tiny-pill">${step.tag}</span>
+              </div>
+              <h4>${step.title}</h4>
+              <p>${step.text}</p>
+              <button class="btn tiny ${step.primary ? 'primary' : 'subtle'}" data-action="${step.action}"${step.chapterId ? ` data-chapter-id="${step.chapterId}"` : ''}${step.sectionId ? ` data-section-id="${step.sectionId}"` : ''}${step.track ? ` data-track="${step.track}"` : ''}>${step.cta}</button>
+            </article>
+          `).join('')}
         </div>
       </section>
 
@@ -837,6 +865,7 @@ function renderChapterView() {
 
 function renderSectionCard(chapter, section, sectionIndex) {
   const grouped = groupSectionPoints(section);
+  const sectionSnapshot = getSectionSnapshot(grouped);
   return `
     <section class="surface-panel section-block">
       <div class="section-heading spread align-start">
@@ -856,6 +885,23 @@ function renderSectionCard(chapter, section, sectionIndex) {
           const point = section.points.find((item) => item.id === pointId);
           return point ? `<button class="must-topic-chip compact" data-action="review-topic" data-topic-id="${point.id}" data-chapter-id="${chapter.id}">${point.title}</button>` : '';
         }).join('')}</div>
+        <div class="section-snapshot-grid">
+          <div class="section-snapshot-card essential">
+            <span>先掌握</span>
+            <strong>${sectionSnapshot.essential}</strong>
+            <small>${sectionSnapshot.essentialHint}</small>
+          </div>
+          <div class="section-snapshot-card standard">
+            <span>再理解</span>
+            <strong>${sectionSnapshot.standard}</strong>
+            <small>${sectionSnapshot.standardHint}</small>
+          </div>
+          <div class="section-snapshot-card review">
+            <span>易混提醒</span>
+            <strong>${sectionSnapshot.review}</strong>
+            <small>${sectionSnapshot.reviewHint}</small>
+          </div>
+        </div>
       </div>
       <div class="point-lane-list">
         ${grouped.map((group) => `
@@ -889,6 +935,15 @@ function renderPointCard(chapter, section, point, pointIndex) {
         </div>
         <div class="point-conclusion">${point.conclusion}</div>
         ${point.preview ? `<div class="point-excerpt"><span>为什么是这样</span><p>${point.preview}</p></div>` : ''}
+        ${point.svg ? `
+          <div class="point-visual-preview">
+            <div class="point-visual-head">
+              <span>图解预览</span>
+              <em>展开后看完整图</em>
+            </div>
+            <div class="svg-box preview">${point.svg}</div>
+          </div>
+        ` : ''}
         <div class="point-hint-row"><span>展开完整说明</span><em>${section.title}</em></div>
       </summary>
       <div class="point-detail-wrap">
@@ -1010,6 +1065,8 @@ function renderTeacherPractice(chapter) {
     app.data.teacherSources.map((source) => ({ value: source.id, label: source.label })),
   );
   const stats = getTeacherStats();
+  const quickPresets = getTeacherQuickPresets(chapter);
+  const selection = getTeacherSelectionStats(questions);
   return `
       <section class="training-panel training-panel-sheet teacher-sheet">
         <div class="section-heading training-panel-head">
@@ -1027,40 +1084,99 @@ function renderTeacherPractice(chapter) {
           <div><span>课件重点题</span><strong>${stats.courseware}</strong></div>
         </div>
 
-        <div class="teacher-filter-shell">
-          <div class="toolbar-grid teacher-toolbar">
-          <div>
-            <label class="field-label">章节</label>
-            <select class="select" data-change="teacher-chapter">
-              ${chapterOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherChapterId ? 'selected' : ''}>${item.label}</option>`).join('')}
-            </select>
+        <div class="teacher-paper-shell">
+          <div class="teacher-paper-head">
+            <div>
+              <span class="eyebrow">小卷模式</span>
+              <h4>先选一套小卷，再继续细筛</h4>
+            </div>
+            <p class="body-copy">把老师题收成几种常见刷法。临考时直接点一套，就能马上开刷。</p>
           </div>
-          <div>
-            <label class="field-label">来源</label>
-            <select class="select" data-change="teacher-source">
-              ${sourceOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherSource ? 'selected' : ''}>${item.label}</option>`).join('')}
-            </select>
+          <div class="teacher-paper-grid">
+            ${quickPresets.map((preset) => renderTeacherQuickCard(preset)).join('')}
           </div>
-          <div>
-            <label class="field-label">题型</label>
-            <select class="select" data-change="teacher-type">
-              <option value="all" ${app.state.teacherType === 'all' ? 'selected' : ''}>全部题型</option>
-              <option value="single" ${app.state.teacherType === 'single' ? 'selected' : ''}>选择题</option>
-              <option value="fill" ${app.state.teacherType === 'fill' ? 'selected' : ''}>填空题</option>
-            </select>
-          </div>
-        </div>
-          <div class="teacher-source-pills">
-            ${app.data.teacherSources.map((source) => `<span class="tiny-pill ${app.state.teacherSource === source.id ? 'active' : ''}">${source.label}</span>`).join('')}
+          <div class="teacher-paper-sequence">
+            <span class="eyebrow">推荐顺序</span>
+            <div class="teacher-sequence-row">
+              <span>5 题快刷</span>
+              <span>10 题标准卷</span>
+              <span>20 题冲刺卷</span>
+              <span>错题回炉</span>
+            </div>
           </div>
         </div>
 
-        <div class="teacher-helper-note">
-          <span class="eyebrow">当前模式</span>
-          <p class="body-copy">这里只显示老师题，不混普通题库。做错后照样会进入错题本，也能回知识点继续补。</p>
+        <div class="teacher-filter-shell">
+          <div class="teacher-focus-card teacher-active-paper">
+            <div class="teacher-active-paper-copy">
+              <span class="eyebrow">当前小卷</span>
+              <h4>${getTeacherActivePaperTitle(chapter)}</h4>
+              <p class="body-copy">${getTeacherQuickModeText(chapter, questions.length)}</p>
+            </div>
+            <div class="teacher-active-paper-meta">
+              <div><span>本卷题量</span><strong>${questions.length}</strong></div>
+              <div><span>当前章节</span><strong>${app.state.teacherChapterId === 'all' ? '全章节' : (app.data.chapters.find((item) => item.id === app.state.teacherChapterId)?.title || '当前章')}</strong></div>
+              <div><span>来源状态</span><strong>${getTeacherSourceSummary()}</strong></div>
+            </div>
+            <div class="teacher-selection-strip">
+              <div><span>选择题</span><strong>${selection.singleCount}</strong></div>
+              <div><span>填空题</span><strong>${selection.fillCount}</strong></div>
+              <div><span>覆盖章节</span><strong>${selection.chapterCount}</strong></div>
+              <div><span>错题回炉</span><strong>${selection.wrongCount}</strong></div>
+            </div>
+            <div class="action-row small">
+              ${isTeacherRandomMode() ? `<button class="btn tiny primary" data-action="set-teacher-quick-mode" data-mode="${app.state.teacherQuickMode}">重新抽这一卷</button>` : ''}
+              <button class="btn tiny subtle" data-action="set-teacher-quick-mode" data-mode="chapter-current">回到当前章老师题</button>
+            </div>
+          </div>
+
+          <div class="teacher-custom-shell">
+            <div class="toolbar-grid teacher-toolbar">
+              <div>
+                <label class="field-label">章节</label>
+                <select class="select" data-change="teacher-chapter">
+                  ${chapterOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherChapterId ? 'selected' : ''}>${item.label}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="field-label">来源</label>
+                <select class="select" data-change="teacher-source">
+                  ${sourceOptions.map((item) => `<option value="${item.value}" ${item.value === app.state.teacherSource ? 'selected' : ''}>${item.label}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="field-label">题型</label>
+                <select class="select" data-change="teacher-type">
+                  <option value="all" ${app.state.teacherType === 'all' ? 'selected' : ''}>全部题型</option>
+                  <option value="single" ${app.state.teacherType === 'single' ? 'selected' : ''}>选择题</option>
+                  <option value="fill" ${app.state.teacherType === 'fill' ? 'selected' : ''}>填空题</option>
+                </select>
+              </div>
+            </div>
+            <div class="teacher-source-pills">
+              ${app.data.teacherSources.map((source) => `<span class="tiny-pill ${app.state.teacherSource === source.id ? 'active' : ''}">${source.label}</span>`).join('')}
+            </div>
+            <div class="teacher-helper-note">
+              <span class="eyebrow">细筛区</span>
+              <p class="body-copy">如果这套小卷还不够窄，就继续按章节、具体来源和题型往下收。你一旦改动筛选，这里会自动转成自定义模式。</p>
+            </div>
+          </div>
         </div>
-        ${questions.length ? `<div class="quiz-list teacher-quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>` : '<div class="empty-state">当前筛选条件下还没有题目，可切换章节或来源查看。</div>'}
+        ${questions.length ? `<div class="quiz-list teacher-quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>` : renderTeacherEmptyState()}
       </section>
+  `;
+}
+
+function renderTeacherQuickCard(preset) {
+  return `
+    <button class="teacher-quick-card ${app.state.teacherQuickMode === preset.mode ? 'active' : ''}" data-action="set-teacher-quick-mode" data-mode="${preset.mode}">
+      <div class="teacher-quick-card-head">
+        <span class="tiny-pill">${preset.badge}</span>
+        <strong>${preset.count} 题</strong>
+      </div>
+      <h4>${preset.label}</h4>
+      <p>${preset.description}</p>
+    </button>
   `;
 }
 
@@ -1109,11 +1225,13 @@ function renderSectionPractice(section) {
 function renderPracticeQuestion(question) {
   const current = app.session.practiceAnswers[question.id];
   const feedback = app.session.practiceFeedback[question.id];
+  const teacherMeta = question.teacherFocus ? getTeacherQuestionMeta(question) : '';
   return `
     <article class="quiz-card ${feedback?.status || ''} ${question.teacherFocus ? 'teacher-focus-card' : ''}">
       <div class="question-head">
         <span class="eyebrow">${question.teacherFocus ? '老师题即时反馈' : '即时反馈'}</span>
         <h4>${question.stem}</h4>
+        ${teacherMeta ? `<div class="teacher-question-meta">${teacherMeta}</div>` : ''}
         ${question.teacherFocus ? `<div class="teacher-tag-row">${question.tags.map((tag) => `<span class="tiny-pill">${tag}</span>`).join('')}</div>` : ''}
       </div>
       ${renderPracticeInput(question, current, feedback)}
@@ -1365,8 +1483,17 @@ function handleClick(event) {
       app.state.mobileSidebarOpen = false;
       app.state.teacherChapterId = d.chapterId || app.state.selectedChapterId || app.state.teacherChapterId || 'all';
       app.state.teacherSource = d.sourceId || 'all';
+      app.state.teacherSourceType = 'all';
       app.state.teacherType = 'all';
+      app.state.teacherQuickMode = d.chapterId ? 'chapter-current' : 'chapter-current';
+      app.state.teacherRandomIds = [];
       if (d.chapterId) app.state.selectedChapterId = d.chapterId;
+      resetPracticeSession();
+      touchState();
+      renderView();
+      break;
+    case 'set-teacher-quick-mode':
+      applyTeacherQuickMode(d.mode);
       resetPracticeSession();
       touchState();
       renderView();
@@ -1417,6 +1544,16 @@ function handleClick(event) {
       app.state.activeTrack = 'passline';
       app.state.view = 'practice';
       app.state.practiceMode = 'passline';
+      app.state.mobileSidebarOpen = false;
+      resetPracticeSession();
+      touchState();
+      renderView();
+      break;
+    case 'open-wrongbook':
+      app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
+      app.state.activeTrack = 'textbook';
+      app.state.view = 'practice';
+      app.state.practiceMode = 'wrongbook';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
       touchState();
@@ -1514,17 +1651,23 @@ function handleChange(event) {
   }
   if (event.target.matches('[data-change="teacher-chapter"]')) {
     app.state.teacherChapterId = event.target.value;
+    app.state.teacherQuickMode = 'custom';
+    app.state.teacherRandomIds = [];
     if (event.target.value !== 'all') app.state.selectedChapterId = event.target.value;
     resetPracticeSession();
     renderView();
   }
   if (event.target.matches('[data-change="teacher-source"]')) {
     app.state.teacherSource = event.target.value;
+    app.state.teacherQuickMode = 'custom';
+    app.state.teacherRandomIds = [];
     resetPracticeSession();
     renderView();
   }
   if (event.target.matches('[data-change="teacher-type"]')) {
     app.state.teacherType = event.target.value;
+    app.state.teacherQuickMode = 'custom';
+    app.state.teacherRandomIds = [];
     resetPracticeSession();
     renderView();
   }
@@ -1630,10 +1773,12 @@ function recordWrongAnswer(question, userAnswer, correctAnswer) {
   const existing = app.state.wrongbook[key];
   app.state.wrongbook[key] = {
     id: key,
+    questionId: question.id,
     chapterId: question.chapterId,
     chapterTitle: app.data.chapters.find((item) => item.id === question.chapterId)?.title || question.chapterId,
     stem: question.stem,
     type: question.type,
+    teacherFocus: Boolean(question.teacherFocus),
     userAnswer,
     correctAnswer,
     explanation: question.explanation || '',
@@ -1695,6 +1840,54 @@ function getRecommendation() {
   return {
     text: `当前适合先拿下第 ${passlineTarget.number} 章的必会点，再回到教材学习轨把细节补完整。`,
     actions: `<button class="btn primary" data-action="open-passline" data-chapter-id="${passlineTarget.id}">开始过线练习</button><button class="btn subtle" data-action="open-chapter" data-chapter-id="${getContinueChapter().id}">进入章节学习</button>`,
+  };
+}
+
+function getDailyPlan() {
+  const continueChapter = getContinueChapter();
+  const passlineTarget = getTrackChapter('passline');
+  const latestWrong = wrongbookEntries()[0];
+  const bundle = getQuizBundle(continueChapter.id);
+  const firstSection = bundle?.practiceSections?.[0];
+  return {
+    kicker: latestWrong ? '先补错，再提分' : '先学主干，再做题',
+    steps: [
+      {
+        tag: '看主干',
+        title: `先看第 ${continueChapter.number} 章的必会点`,
+        text: `从 ${continueChapter.title} 开始，把这一章的低门槛主干先扫清，别一上来全章硬啃。`,
+        cta: '进入章节学习',
+        action: 'open-chapter',
+        chapterId: continueChapter.id,
+        primary: true,
+        tone: 'accent',
+      },
+      {
+        tag: '做小测',
+        title: latestWrong ? '再刷一轮过线题稳住基本盘' : '接着做一轮本章过线题',
+        text: latestWrong
+          ? `你现在还有错题待处理，先用第 ${passlineTarget.number} 章的过线题把基础分守住。`
+          : `学完马上做题记得更牢，先用短题量检查自己有没有真的读懂。`,
+        cta: '开始过线练习',
+        action: 'open-passline',
+        chapterId: passlineTarget.id,
+        primary: false,
+        tone: 'plain',
+      },
+      {
+        tag: latestWrong ? '回错题' : '做验收',
+        title: latestWrong ? '最后把最近错题回炉一遍' : '最后做一次小节练习验收',
+        text: latestWrong
+          ? `${latestWrong.chapterTitle} 里有最近错题，回看一次比继续堆新题更有效。`
+          : `${firstSection?.sectionTitle || '本章第一节'} 适合当今天的收尾验收，看看自己有没有会而不熟。`,
+        cta: latestWrong ? '去错题复习' : '做章节练习',
+        action: latestWrong ? 'open-wrongbook' : 'open-practice',
+        chapterId: latestWrong ? latestWrong.chapterId : continueChapter.id,
+        sectionId: latestWrong ? undefined : firstSection?.sectionId,
+        primary: false,
+        tone: 'plain',
+      },
+    ],
   };
 }
 
@@ -1769,14 +1962,110 @@ function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.
 function getTeacherQuestionsByChapter(chapterId) {
   return app.data.teacherQuizzes.filter((question) => question.chapterId === chapterId);
 }
-function getFilteredTeacherQuestions() {
+function getTeacherQuickPresets(chapter) {
+  return [
+    {
+      mode: 'random-5',
+      label: '5 题快刷老师卷',
+      description: '刚坐下学习时先来一小轮，快速热身，看看老师题的手感还在不在。',
+      badge: '快刷卷',
+      count: getTeacherPresetCount('random-5', chapter),
+    },
+    {
+      mode: 'chapter-one',
+      label: '只刷第 1 章老师题',
+      description: '先把老师最早讲的概论和基础题型刷顺，适合零基础起步。',
+      badge: '起步卷',
+      count: getTeacherPresetCount('chapter-one', chapter),
+    },
+    {
+      mode: 'fill-only',
+      label: '只刷填空题',
+      description: '专盯关键词、结论和固定表述，适合考前短时间记忆回补。',
+      badge: '记忆卷',
+      count: getTeacherPresetCount('fill-only', chapter),
+    },
+    {
+      mode: 'rain-only',
+      label: '只刷雨课堂原题',
+      description: '只看老师课堂测验原题，不混课件题，更贴近平时出题口吻。',
+      badge: '原题卷',
+      count: getTeacherPresetCount('rain-only', chapter),
+    },
+    {
+      mode: 'random-10',
+      label: '10 题随机老师卷',
+      description: '从老师题库里固定抽一轮 10 题，适合随时做一份小测。',
+      badge: '随机卷',
+      count: getTeacherPresetCount('random-10', chapter),
+    },
+    {
+      mode: 'random-20',
+      label: '20 题冲刺老师卷',
+      description: '题量更完整，适合考前集中冲一轮，检验整体稳定度。',
+      badge: '冲刺卷',
+      count: getTeacherPresetCount('random-20', chapter),
+    },
+    {
+      mode: 'wrong-only',
+      label: '只刷我错过的老师题',
+      description: '专门回炉做错过的老师题，把最容易反复丢分的点清掉。',
+      badge: '回炉卷',
+      count: getTeacherPresetCount('wrong-only', chapter),
+    },
+  ];
+}
+function getTeacherPresetCount(mode, chapter) {
+  return getTeacherQuickModeQuestions(mode, chapter).length;
+}
+function getTeacherQuickModeQuestions(mode, chapter) {
+  if (mode === 'random-5') {
+    return app.data.teacherQuizzes.slice(0, Math.min(5, app.data.teacherQuizzes.length));
+  }
+  if (mode === 'chapter-one') {
+    return app.data.teacherQuizzes.filter((question) => question.chapterId === 'ch1');
+  }
+  if (mode === 'fill-only') {
+    return app.data.teacherQuizzes.filter((question) => question.type === 'fill');
+  }
+  if (mode === 'rain-only') {
+    return app.data.teacherQuizzes.filter((question) => question.sourceType === 'rainclassroom');
+  }
+  if (mode === 'random-10') {
+    return app.data.teacherQuizzes.slice(0, Math.min(10, app.data.teacherQuizzes.length));
+  }
+  if (mode === 'random-20') {
+    return app.data.teacherQuizzes.slice(0, Math.min(20, app.data.teacherQuizzes.length));
+  }
+  if (mode === 'wrong-only') {
+    return getTeacherWrongQuestions();
+  }
+  const currentChapterId = app.state.teacherChapterId !== 'all'
+    ? app.state.teacherChapterId
+    : app.state.selectedChapterId || chapter?.id;
+  return app.data.teacherQuizzes.filter((question) => currentChapterId ? question.chapterId === currentChapterId : true);
+}
+function getTeacherBaseQuestions() {
   return app.data.teacherQuizzes.filter((question) => {
     if (app.state.teacherChapterId !== 'all' && question.chapterId !== app.state.teacherChapterId) return false;
     if (app.state.teacherSource !== 'all' && question.sourceId !== app.state.teacherSource) return false;
+    if (app.state.teacherSourceType !== 'all' && question.sourceType !== app.state.teacherSourceType) return false;
     if (app.state.teacherType === 'single' && question.type !== 'single') return false;
     if (app.state.teacherType === 'fill' && question.type !== 'fill') return false;
     return true;
   });
+}
+function getFilteredTeacherQuestions() {
+  const base = getTeacherBaseQuestions();
+  if (['random-5', 'random-10', 'random-20'].includes(app.state.teacherQuickMode) && app.state.teacherRandomIds.length) {
+    const idSet = new Set(app.state.teacherRandomIds);
+    return base.filter((question) => idSet.has(question.id));
+  }
+  if (app.state.teacherQuickMode === 'wrong-only') {
+    const wrongIdSet = new Set(getTeacherWrongQuestions().map((item) => item.id));
+    return base.filter((question) => wrongIdSet.has(question.id));
+  }
+  return base;
 }
 function getTeacherStats() {
   const questions = app.data.teacherQuizzes;
@@ -1788,6 +2077,157 @@ function getTeacherStats() {
     rainclassroom: questions.filter((item) => item.sourceType === 'rainclassroom').length,
     courseware: questions.filter((item) => item.sourceType === 'courseware').length,
   };
+}
+function getTeacherQuickModeText(chapter, count) {
+  const currentChapter = app.data.chapters.find((item) => item.id === app.state.teacherChapterId) || chapter;
+  const labels = {
+    'chapter-current': `当前锁定在 ${currentChapter.title} 的老师题，适合看完本章后直接刷老师原题表达。现在共 ${count} 题。`,
+    'random-5': `当前是 5 题快刷卷，适合学习前热身或睡前快速过一轮。现在共 ${count} 题。`,
+    'chapter-one': `当前只刷第 1 章老师题，适合零基础先把老师最早讲过的系统概论题型吃透。现在共 ${count} 题。`,
+    'fill-only': `当前只刷老师填空题，适合考前补关键词、公式结果和固定表述。现在共 ${count} 题。`,
+    'rain-only': `当前只刷雨课堂原题，不混课件题，更贴近你老师平时发测验的出题口吻。现在共 ${count} 题。`,
+    'random-10': `当前是 10 题随机老师卷，这一轮会固定住，不会刷新一下就乱跳。现在共 ${count} 题。`,
+    'random-20': `当前是 20 题冲刺卷，适合正式模拟一轮老师题强度。现在共 ${count} 题。`,
+    'wrong-only': `当前只刷你做错过的老师题，优先把老师重复强调过但你还会错的地方打掉。现在共 ${count} 题。`,
+    custom: `你现在在自定义筛选老师题。这里只显示老师题，不混普通题库。做错后照样会进入错题本，也能回知识点继续补。`,
+  };
+  return labels[app.state.teacherQuickMode] || labels.custom;
+}
+function getTeacherSelectionStats(questions) {
+  const wrongIds = new Set(getTeacherWrongQuestions().map((item) => item.id));
+  return {
+    singleCount: questions.filter((item) => item.type === 'single').length,
+    fillCount: questions.filter((item) => item.type === 'fill').length,
+    chapterCount: new Set(questions.map((item) => item.chapterId)).size,
+    wrongCount: questions.filter((item) => wrongIds.has(item.id)).length,
+  };
+}
+function getTeacherSourceSummary() {
+  if (app.state.teacherSource !== 'all') {
+    return app.data.teacherSources.find((item) => item.id === app.state.teacherSource)?.label || '指定来源';
+  }
+  if (app.state.teacherQuickMode === 'rain-only') return '仅雨课堂';
+  if (app.state.teacherType === 'fill') return '填空题筛选';
+  return '全部来源';
+}
+function isTeacherRandomMode() {
+  return ['random-5', 'random-10', 'random-20'].includes(app.state.teacherQuickMode);
+}
+function getTeacherActivePaperTitle(chapter) {
+  if (app.state.teacherQuickMode === 'chapter-current') {
+    const currentChapter = app.data.chapters.find((item) => item.id === app.state.teacherChapterId) || chapter;
+    return `${currentChapter.title} · 当前章老师题`;
+  }
+  if (app.state.teacherQuickMode === 'custom') {
+    return '自定义老师题筛选';
+  }
+  return getTeacherQuickPresets(chapter).find((item) => item.mode === app.state.teacherQuickMode)?.label || '老师题小卷';
+}
+function getTeacherQuestionMeta(question) {
+  const chapter = app.data.chapters.find((item) => item.id === question.chapterId);
+  const source = app.data.teacherSources.find((item) => item.id === question.sourceId);
+  const parts = [
+    chapter ? `第 ${chapter.number} 章` : '',
+    question.sectionTitle || '',
+    source?.label || '',
+  ].filter(Boolean);
+  return parts.map((item) => `<span>${item}</span>`).join('');
+}
+function getTeacherWrongQuestions() {
+  const teacherIdSet = new Set(
+    wrongbookEntries()
+      .filter((item) => item.teacherFocus || String(item.questionId || '').startsWith('teacher-'))
+      .map((item) => teacherQuestionIdFromWrong(item))
+      .filter(Boolean),
+  );
+  return app.data.teacherQuizzes.filter((question) => teacherIdSet.has(question.id));
+}
+function renderTeacherEmptyState() {
+  if (app.state.teacherQuickMode === 'wrong-only') {
+    return `
+      <div class="empty-state teacher-empty-state">
+        <strong>你还没有老师题错题记录</strong>
+        <p>先刷一套老师题，做错的题会自动进入这里，后面就能直接回炉重做。</p>
+        <div class="action-row">
+          <button class="btn tiny primary" data-action="set-teacher-quick-mode" data-mode="random-5">先来 5 题快刷</button>
+          <button class="btn tiny subtle" data-action="set-teacher-quick-mode" data-mode="chapter-current">回到当前章老师题</button>
+        </div>
+      </div>
+    `;
+  }
+  return `
+    <div class="empty-state teacher-empty-state">
+      <strong>当前筛选下还没有题目</strong>
+      <p>可以切回当前章老师题，或者放宽来源和题型筛选再看。</p>
+      <div class="action-row">
+        <button class="btn tiny primary" data-action="set-teacher-quick-mode" data-mode="chapter-current">回到当前章老师题</button>
+        <button class="btn tiny subtle" data-action="set-teacher-quick-mode" data-mode="rain-only">只刷雨课堂原题</button>
+      </div>
+    </div>
+  `;
+}
+function teacherQuestionIdFromWrong(item) {
+  if (String(item.questionId || '').startsWith('teacher-')) return item.questionId;
+  const prefix = `${item.chapterId}-`;
+  const maybeId = item.id?.startsWith(prefix) ? item.id.slice(prefix.length) : null;
+  return String(maybeId || '').startsWith('teacher-') ? maybeId : null;
+}
+function applyTeacherQuickMode(mode) {
+  app.state.teacherSource = 'all';
+  app.state.teacherSourceType = 'all';
+  app.state.teacherType = 'all';
+  app.state.teacherRandomIds = [];
+  if (mode === 'random-5') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    app.state.teacherRandomIds = getRandomTeacherIds(5);
+    return;
+  }
+  if (mode === 'chapter-one') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'ch1';
+    app.state.selectedChapterId = 'ch1';
+    return;
+  }
+  if (mode === 'fill-only') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    app.state.teacherType = 'fill';
+    return;
+  }
+  if (mode === 'rain-only') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    app.state.teacherSourceType = 'rainclassroom';
+    return;
+  }
+  if (mode === 'random-10') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    app.state.teacherRandomIds = getRandomTeacherIds(10);
+    return;
+  }
+  if (mode === 'random-20') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    app.state.teacherRandomIds = getRandomTeacherIds(20);
+    return;
+  }
+  if (mode === 'wrong-only') {
+    app.state.teacherQuickMode = mode;
+    app.state.teacherChapterId = 'all';
+    return;
+  }
+  app.state.teacherQuickMode = 'chapter-current';
+  app.state.teacherChapterId = app.state.selectedChapterId || 'all';
+}
+function getRandomTeacherIds(size) {
+  const pool = [...app.data.teacherQuizzes];
+  for (let i = pool.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(size, pool.length)).map((item) => item.id);
 }
 function getSelectedPracticeSection(chapter, bundle) {
   return bundle.practiceSections.find((item) => item.sectionId === app.state.selectedSectionId) || bundle.practiceSections[0];
@@ -1906,7 +2346,10 @@ function serializeProgressState() {
     selectedSimulatorId: app.state.selectedSimulatorId,
     teacherChapterId: app.state.teacherChapterId,
     teacherSource: app.state.teacherSource,
+    teacherSourceType: app.state.teacherSourceType,
     teacherType: app.state.teacherType,
+    teacherQuickMode: app.state.teacherQuickMode,
+    teacherRandomIds: cloneData(app.state.teacherRandomIds),
     practiceMode: app.state.practiceMode,
     progress: cloneData(app.state.progress),
     quizHistory: cloneData(app.state.quizHistory),
@@ -1941,7 +2384,10 @@ function applySyncedState(nextState) {
     view: incoming.view === 'teacher' ? 'practice' : (incoming.view || defaults.view),
     teacherChapterId: incoming.teacherChapterId || defaults.teacherChapterId,
     teacherSource: incoming.teacherSource || defaults.teacherSource,
+    teacherSourceType: incoming.teacherSourceType || defaults.teacherSourceType,
     teacherType: incoming.teacherType || defaults.teacherType,
+    teacherQuickMode: incoming.teacherQuickMode || defaults.teacherQuickMode,
+    teacherRandomIds: Array.isArray(incoming.teacherRandomIds) ? incoming.teacherRandomIds : defaults.teacherRandomIds,
     practiceMode: incoming.view === 'teacher' ? 'teacher' : (incoming.practiceMode || defaults.practiceMode),
     meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
   };
@@ -2135,7 +2581,7 @@ async function apiFetch(path, options = {}, requireAuth = true) {
 
 function syncStatusLabel() {
   return ({
-    'local-only': '未登录，进度不会保存',
+    'local-only': '未登录，当前浏览不留学习档案',
     pending: '有未同步变更',
     syncing: '同步中',
     synced: '已同步',
@@ -2277,4 +2723,24 @@ function groupSectionPoints(section) {
   return groups
     .map(([key, label, description]) => ({ key, label, description, points: section.points.filter((point) => point.importance === key) }))
     .filter((group) => group.points.length);
+}
+
+function getSectionSnapshot(grouped) {
+  const essentialGroup = grouped.find((group) => group.key === 'essential');
+  const standardGroup = grouped.find((group) => group.key === 'standard');
+  const advancedGroup = grouped.find((group) => group.key === 'advanced');
+  return {
+    essential: essentialGroup ? `${essentialGroup.points.length} 个基础点` : '先抓定义',
+    essentialHint: essentialGroup
+      ? `${essentialGroup.points.slice(0, 2).map((point) => point.title).join(' / ')}`
+      : '先把这一节最容易考的定义和规律盯住。',
+    standard: standardGroup ? `${standardGroup.points.length} 个理解点` : '补主干逻辑',
+    standardHint: standardGroup
+      ? `${standardGroup.points.slice(0, 2).map((point) => point.title).join(' / ')}`
+      : '顺着主线把为什么这样补完整。',
+    review: advancedGroup ? `${advancedGroup.points.length} 个易混点` : '对比着记',
+    reviewHint: advancedGroup
+      ? `${advancedGroup.points.slice(0, 2).map((point) => point.title).join(' / ')}`
+      : '把相近概念摆在一起看，会更不容易混。',
+  };
 }

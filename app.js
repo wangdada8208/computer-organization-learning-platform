@@ -495,14 +495,14 @@ function renderDashboard() {
         <div class="section-heading">
           <div>
             <span class="eyebrow">课程章节</span>
-            <h3>章节目录放在单独页面</h3>
+            <h3>进入章节学习</h3>
           </div>
           <button class="btn tiny primary" data-action="switch-view" data-view="chapter">进入章节学习</button>
         </div>
         <div class="overview-entry-row">
           <div class="overview-entry-copy">
-            <strong>从章节页面再选章就够了</strong>
-            <p class="body-copy">首页不再重复铺开 10 章目录。需要系统看目录、切章节、顺着知识点学习时，直接进入章节学习页面。</p>
+            <strong>按章节继续学习</strong>
+            <p class="body-copy">从章节目录进入当前课程内容，按顺序看知识点、做小测和回顾本章重点。</p>
           </div>
           <div class="overview-entry-actions">
             <button class="btn subtle" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续第 ${continueChapter.number} 章</button>

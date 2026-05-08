@@ -502,7 +502,7 @@ function renderDashboard() {
         <div class="overview-entry-row">
           <div class="overview-entry-copy">
             <strong>从章节页面再选章就够了</strong>
-            <p class="body-copy">首页不再重复铺开 10 章目录。需要系统看目录、切章节、顺着知识点学习时，直接进入 `章节学习` 页面。</p>
+            <p class="body-copy">首页不再重复铺开 10 章目录。需要系统看目录、切章节、顺着知识点学习时，直接进入章节学习页面。</p>
           </div>
           <div class="overview-entry-actions">
             <button class="btn subtle" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续第 ${continueChapter.number} 章</button>

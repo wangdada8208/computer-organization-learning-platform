@@ -359,15 +359,18 @@ function renderPracticeSidebarTree() {
               </div>
               ${isExpanded ? `
                 <div class="section-tree">
-                  ${chapter.sections.map((section, index) => `
-                    <button class="section-link ${currentSectionId === section.id && isActive ? 'active' : ''}" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
+                  ${chapter.sections.map((section, index) => {
+                    const isSectionActive = currentSectionId === section.id && isActive && app.state.practiceMode === 'section';
+                    return `
+                    <button class="section-link ${isSectionActive ? 'active' : ''}" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
                       <div class="section-link-row">
                         <strong>第 ${index + 1} 节 · ${section.title}</strong>
-                        ${currentSectionId === section.id && isActive ? '<span class="tiny-pill">当前</span>' : ''}
+                        ${isSectionActive ? '<span class="tiny-pill">当前</span>' : ''}
                       </div>
                       <span>${section.points.length} 个知识点</span>
                     </button>
-                  `).join('')}
+                  `;
+                  }).join('')}
                 </div>
               ` : ''}
             </div>
@@ -406,15 +409,18 @@ function renderChapterSidebarTree() {
               </div>
               ${isExpanded ? `
                 <div class="section-tree">
-                  ${chapter.sections.map((section, index) => `
-                    <button class="section-link ${currentSectionId === section.id && isActive && app.state.chapterContentMode === 'section' ? 'active' : ''}" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
+                  ${chapter.sections.map((section, index) => {
+                    const isSectionActive = currentSectionId === section.id && isActive && app.state.chapterContentMode === 'section';
+                    return `
+                    <button class="section-link ${isSectionActive ? 'active' : ''}" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
                       <div class="section-link-row">
                         <strong>第 ${index + 1} 节 · ${section.title}</strong>
-                        ${currentSectionId === section.id ? '<span class="tiny-pill">当前</span>' : ''}
+                        ${isSectionActive ? '<span class="tiny-pill">当前</span>' : ''}
                       </div>
                       <span>${section.points.length} 个知识点</span>
                     </button>
-                  `).join('')}
+                  `;
+                  }).join('')}
                 </div>
               ` : ''}
             </div>

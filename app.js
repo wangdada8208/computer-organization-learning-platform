@@ -14,7 +14,7 @@ authLayerEl.className = 'auth-layer';
 document.body.appendChild(authLayerEl);
 
 const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
-const PRACTICE_MODES = ['passline', 'section', 'test', 'wrongbook', 'simulator', 'teacher'];
+const PRACTICE_MODES = ['overview', 'passline', 'section', 'test', 'wrongbook', 'simulator', 'teacher'];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
   { label: '处理器执行', ids: ['sim-pipeline', 'sim-fetch'] },
@@ -228,7 +228,7 @@ function createDefaultState(chapters) {
     teacherType: 'all',
     teacherQuickMode: 'chapter-current',
     teacherRandomIds: [],
-    practiceMode: 'passline',
+    practiceMode: 'overview',
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
     wrongbook: {},
@@ -947,6 +947,7 @@ function renderPracticeView() {
               </div>
             </div>
             <div class="segment-tabs training-tabs" role="tablist">
+              ${renderModeTab('overview', '本章导览')}
               ${renderModeTab('passline', '过线练习')}
               ${renderModeTab('section', '章节练习')}
               ${renderModeTab('test', '综合测试')}
@@ -965,6 +966,7 @@ function renderPracticeView() {
           </div>
         </div>
 
+        ${app.state.practiceMode === 'overview' ? renderPracticeOverview(chapter, bundle, wrongs) : ''}
         ${app.state.practiceMode === 'passline' ? renderPasslinePractice(chapter, passlineSet) : ''}
         ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
         ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
@@ -1108,6 +1110,70 @@ function renderTeacherQuickCard(preset) {
 
 function renderModeTab(mode, label) {
   return `<button class="segment-tab ${app.state.practiceMode === mode ? 'active' : ''}" data-action="set-practice-mode" data-mode="${mode}">${label}</button>`;
+}
+
+function renderPracticeOverview(chapter, bundle, wrongs) {
+  const passline = getChapterPassline(chapter);
+  const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
+  return `
+    <section class="training-panel training-panel-sheet">
+      <div class="section-heading training-panel-head">
+        <div>
+          <span class="eyebrow">本章导览</span>
+          <h3>${chapter.title}</h3>
+          <p class="body-copy">先看这章有哪些训练入口，再决定先过线、先刷老师题，还是按节巩固。</p>
+        </div>
+      </div>
+      <div class="chapter-overview-grid">
+        <article class="chapter-overview-card">
+          <span class="eyebrow">先过线</span>
+          <h4>先把必会点拿下</h4>
+          <p class="body-copy">本章有 ${passline.totalTopics} 个及格线必会点，先稳住基础分。</p>
+          <div class="passline-summary-strip">
+            <div><span>已会必会点</span><strong>${passline.readyTopics}/${passline.totalTopics}</strong></div>
+            <div><span>最近过线分</span><strong>${app.state.lastPasslineScore[chapter.id] || '--'}</strong></div>
+          </div>
+          <div class="action-row small"><button class="btn tiny primary" data-action="open-passline" data-chapter-id="${chapter.id}">开始过线练习</button></div>
+        </article>
+        <article class="chapter-overview-card">
+          <span class="eyebrow">老师题</span>
+          <h4>按老师原题再过一遍</h4>
+          <p class="body-copy">这一章已经收了 ${teacherCount} 道老师题，临考前可以直接刷这里。</p>
+          <div class="passline-summary-strip">
+            <div><span>老师题</span><strong>${teacherCount}</strong></div>
+            <div><span>本章错题</span><strong>${wrongs.length}</strong></div>
+          </div>
+          <div class="action-row small"><button class="btn tiny subtle" data-action="open-teacher" data-chapter-id="${chapter.id}">进入老师题</button></div>
+        </article>
+      </div>
+      <section class="surface-panel section-overview-card">
+        <div class="section-heading spread align-start">
+          <div>
+            <span class="eyebrow">按节训练</span>
+            <h3>从具体小节进入练习</h3>
+            <p class="body-copy">如果你已经知道哪一节薄弱，就直接从下面挑对应小节。</p>
+          </div>
+        </div>
+        <div class="section-overview-stack">
+          ${bundle.practiceSections.map((item, index) => `
+            <section class="surface-panel section-overview-card">
+              <div class="section-heading spread align-start">
+                <div>
+                  <span class="eyebrow">第 ${index + 1} 节</span>
+                  <h3>${item.sectionTitle}</h3>
+                  <p class="body-copy">${item.questions.length} 道题，即时反馈，适合边学边练。</p>
+                </div>
+                <div class="section-head-actions">
+                  <span class="tiny-pill">${item.questions.length} 题</span>
+                  <button class="btn tiny primary" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${item.sectionId}">进入本节练习</button>
+                </div>
+              </div>
+            </section>
+          `).join('')}
+        </div>
+      </section>
+    </section>
+  `;
 }
 
 function renderPasslinePractice(chapter, questions) {
@@ -1304,6 +1370,7 @@ function renderSimulatorWorkbench(chapter) {
 
 function modeSummaryLabel() {
   const labels = {
+    overview: '当前处于本章导览',
     passline: '当前处于过线练习',
     section: '当前处于章节练习',
     test: '当前处于综合测试',
@@ -1315,6 +1382,10 @@ function modeSummaryLabel() {
 }
 
 function modeSummaryText(chapter, section, wrongs) {
+  if (app.state.practiceMode === 'overview') {
+    const teacherQuestions = getTeacherQuestionsByChapter(chapter.id).length;
+    return `这一章有 ${teacherQuestions} 道老师题、${getChapterTestQuestions(chapter.id).length} 道综合测试题，可以先看导览再决定从哪条训练线进去。`;
+  }
   if (app.state.practiceMode === 'passline') {
     const passline = getChapterPassline(chapter);
     return `本章先盯住 ${passline.totalTopics} 个及格线必会点，优先确保基础题不丢分。`;
@@ -1501,9 +1572,9 @@ function handleClick(event) {
       break;
     case 'open-practice-chapter':
       app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
-      app.state.activeTrack = 'passline';
+      app.state.activeTrack = 'textbook';
       app.state.view = 'practice';
-      app.state.practiceMode = 'passline';
+      app.state.practiceMode = 'overview';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
       touchState();
@@ -1616,6 +1687,7 @@ function handleChange(event) {
   if (event.target.matches('[data-change="select-practice-chapter"]')) {
     app.state.selectedChapterId = event.target.value;
     app.state.selectedSectionId = getSelectedChapter().sections[0]?.id || null;
+    app.state.practiceMode = 'overview';
     resetPracticeSession();
     touchState();
     renderView();

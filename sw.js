@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coa-v2-static-20260509b';
+const CACHE_NAME = 'coa-v2-static-20260509c';
 const APP_SHELL = [
   './',
   './index.html',

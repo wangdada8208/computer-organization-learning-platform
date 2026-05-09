@@ -37,6 +37,10 @@ jobs:
             "$GITHUB_WORKSPACE/simulators.js" \
             "$GITHUB_WORKSPACE/sw.js" \
             "$GITHUB_WORKSPACE/manifest.json" \
+            "$GITHUB_WORKSPACE/favicon.svg" \
+            "$GITHUB_WORKSPACE/favicon.ico" \
+            "$GITHUB_WORKSPACE/favicon-192.png" \
+            "$GITHUB_WORKSPACE/favicon-512.png" \
             "$GITHUB_WORKSPACE/data" \
             "$GITHUB_WORKSPACE/backend" \
             "$GITHUB_WORKSPACE/ops" \

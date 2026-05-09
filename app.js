@@ -930,13 +930,14 @@ function renderPracticeView() {
   const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
-      <section class="training-hero surface-panel">
-        <div class="training-hero-layout">
-          <div class="training-hero-copy">
-            <span class="eyebrow">训练强化</span>
-            <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
-            <p class="body-copy">先用过线练习把必会点拿下，再用章节练习和综合测试把得分盘做稳。做错以后，能直接回知识点或开模拟器补理解。</p>
-            <div class="training-hero-tags">
+      <section class="surface-panel training-shell">
+        <div class="training-strip">
+          <div class="training-strip-main">
+            <div>
+              <span class="eyebrow">训练强化</span>
+              <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
+            </div>
+            <div class="training-strip-tags">
               <span>${passlineSet.length} 道过线题</span>
               <span>${bundle.practiceSections.length} 个练习小节</span>
               <span>${bundle.chapterTest.length} 道综合测试题</span>
@@ -944,16 +945,14 @@ function renderPracticeView() {
               <span>${teacherCount} 道老师题</span>
             </div>
           </div>
-          <div class="hero-meta-grid training-hero-metrics">
-            <div class="metric-card"><span>当前章过线状态</span><strong>${overview.passlineReady ? '已达线' : '待补强'}</strong></div>
-            <div class="metric-card"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
-            <div class="metric-card"><span>错题数量</span><strong>${overview.wrongCount}</strong></div>
-            <div class="metric-card"><span>当前薄弱节</span><strong>${overview.weakSection || '--'}</strong></div>
+          <div class="training-strip-metrics">
+            <div class="training-strip-metric"><span>过线状态</span><strong>${overview.passlineReady ? '已达线' : '待补强'}</strong></div>
+            <div class="training-strip-metric"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
+            <div class="training-strip-metric"><span>错题</span><strong>${overview.wrongCount}</strong></div>
+            <div class="training-strip-metric"><span>薄弱节</span><strong>${overview.weakSection || '--'}</strong></div>
           </div>
         </div>
-      </section>
 
-      <section class="surface-panel training-shell">
         <div class="training-shell-head">
           <div class="training-controls">
             <div class="toolbar-grid">

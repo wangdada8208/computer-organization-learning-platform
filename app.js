@@ -339,11 +339,10 @@ function renderPracticeSidebarTree() {
           const isActive = app.state.selectedChapterId === chapter.id;
           const isExpanded = isChapterExpanded(chapter.id);
           const currentSectionId = getChapterLastSectionId(chapter);
-          const targetSectionId = currentSectionId || chapter.sections[0]?.id || null;
           return `
             <div class="chapter-node ${isActive ? 'active' : ''}">
               <div class="chapter-node-head">
-                <button class="chapter-link ${isActive ? 'active' : ''}" data-action="open-practice" data-chapter-id="${chapter.id}" ${targetSectionId ? `data-section-id="${targetSectionId}"` : ''}>
+                <button class="chapter-link ${isActive ? 'active' : ''}" data-action="open-practice-chapter" data-chapter-id="${chapter.id}">
                   <div class="chapter-link-row">
                     <strong>第 ${chapter.number} 章 · ${chapter.title}</strong>
                     ${app.state.progress.lastChapterId === chapter.id ? '<span class="tiny-pill">最近</span>' : ''}
@@ -1500,6 +1499,16 @@ function handleClick(event) {
       touchState();
       renderView();
       break;
+    case 'open-practice-chapter':
+      app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
+      app.state.activeTrack = 'passline';
+      app.state.view = 'practice';
+      app.state.practiceMode = 'passline';
+      app.state.mobileSidebarOpen = false;
+      resetPracticeSession();
+      touchState();
+      renderView();
+      break;
     case 'open-passline':
       app.state.selectedChapterId = d.chapterId || app.state.selectedChapterId;
       app.state.activeTrack = 'passline';
@@ -2018,12 +2027,7 @@ function openChapterSectionView(chapterId, sectionId) {
 }
 function openChapterView(chapterId) {
   const chapter = app.data.chapters.find((item) => item.id === chapterId) || getSelectedChapter();
-  const lastSectionId = app.state.progress.chapters[chapter.id]?.lastSectionId;
-  if (lastSectionId) {
-    openChapterSectionView(chapter.id, lastSectionId);
-    return;
-  }
-  openChapterSectionView(chapter.id, chapter.sections[0]?.id || null);
+  openChapterOverview(chapter.id);
 }
 function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.chapterId === chapterId); }
 function getTeacherQuestionsByChapter(chapterId) {

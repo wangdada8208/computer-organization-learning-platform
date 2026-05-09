@@ -50,6 +50,8 @@ const app = {
     practiceFeedback: {},
     testAnswers: {},
     testSubmitted: false,
+    practiceCursor: 0,
+    testCursor: 0,
     authDraft: {
       username: '',
       password: '',
@@ -984,6 +986,7 @@ function renderPracticeView() {
 
 function renderTeacherPractice(chapter) {
   const questions = getFilteredTeacherQuestions();
+  const currentIndex = getBoundedCursor(app.session.practiceCursor, questions.length);
   const chapterOptions = [{ value: 'all', label: '全部章节' }].concat(
     app.data.chapters
       .filter((item) => getTeacherQuestionsByChapter(item.id).length)
@@ -1090,7 +1093,7 @@ function renderTeacherPractice(chapter) {
             </div>
           </div>
         </div>
-        ${questions.length ? `<div class="quiz-list teacher-quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>` : renderTeacherEmptyState()}
+        ${questions.length ? renderSinglePracticeFlow(questions, currentIndex) : renderTeacherEmptyState()}
       </section>
   `;
 }
@@ -1178,6 +1181,8 @@ function renderPracticeOverview(chapter, bundle, wrongs) {
 
 function renderPasslinePractice(chapter, questions) {
   const passline = getChapterPassline(chapter);
+  const currentIndex = getBoundedCursor(app.session.practiceCursor, questions.length);
+  const question = questions[currentIndex];
   return `
     <section class="training-panel training-panel-sheet passline-sheet">
       <div class="section-heading training-panel-head">
@@ -1193,12 +1198,15 @@ function renderPasslinePractice(chapter, questions) {
         <div><span>最近过线分</span><strong>${app.state.lastPasslineScore[chapter.id] || '--'}</strong></div>
         <div><span>优先动作</span><strong>先对后难</strong></div>
       </div>
-      <div class="quiz-list">${questions.map(renderPracticeQuestion).join('')}</div>
+      ${question ? renderSinglePracticeFlow(questions, currentIndex) : '<div class="empty-state">这一组练习题暂时为空。</div>'}
     </section>
   `;
 }
 
 function renderSectionPractice(section) {
+  const questions = section.questions;
+  const currentIndex = getBoundedCursor(app.session.practiceCursor, questions.length);
+  const question = questions[currentIndex];
   return `
     <section class="training-panel training-panel-sheet">
       <div class="section-heading training-panel-head">
@@ -1207,10 +1215,29 @@ function renderSectionPractice(section) {
           <h3>${section.sectionTitle}</h3>
           <p class="body-copy">即时反馈模式，适合边学边做，判断自己对刚刚那一节的掌握程度。</p>
         </div>
-        <span class="soft-badge">${section.questions.length} 题</span>
+        <span class="soft-badge">${questions.length} 题</span>
       </div>
-      <div class="quiz-list">${section.questions.map(renderPracticeQuestion).join('')}</div>
+      ${question ? renderSinglePracticeFlow(questions, currentIndex) : '<div class="empty-state">这一节暂时没有练习题。</div>'}
     </section>
+  `;
+}
+
+function renderSinglePracticeFlow(questions, currentIndex) {
+  const question = questions[currentIndex];
+  const answeredCount = questions.filter((item) => app.session.practiceFeedback[item.id]).length;
+  return `
+    <div class="quiz-flow-head">
+      <div class="quiz-flow-progress">
+        <span class="eyebrow">当前进度</span>
+        <strong>第 ${currentIndex + 1} 题 / 共 ${questions.length} 题</strong>
+        <small>已完成 ${answeredCount} 题</small>
+      </div>
+      <div class="section-mode-switch">
+        <button class="btn tiny subtle" data-action="practice-prev" ${currentIndex === 0 ? 'disabled' : ''}>上一题</button>
+        <button class="btn tiny subtle" data-action="practice-next" ${currentIndex >= questions.length - 1 ? 'disabled' : ''}>下一题</button>
+      </div>
+    </div>
+    <div class="quiz-list">${renderPracticeQuestion(question)}</div>
   `;
 }
 
@@ -1253,6 +1280,10 @@ function renderPracticeInput(question, current, feedback) {
 }
 
 function renderChapterTest(chapter, bundle) {
+  const questions = bundle.chapterTest;
+  const currentIndex = getBoundedCursor(app.session.testCursor, questions.length);
+  const question = questions[currentIndex];
+  const isLast = currentIndex >= questions.length - 1;
   return `
     <section class="training-panel training-panel-sheet test-sheet">
       <div class="section-heading training-panel-head">
@@ -1261,15 +1292,32 @@ function renderChapterTest(chapter, bundle) {
           <h3>${chapter.title}</h3>
           <p class="body-copy">按整章交卷评分，用于检验本章知识点的整体掌握情况。</p>
         </div>
-        <span class="soft-badge">${bundle.chapterTest.length} 题</span>
+        <span class="soft-badge">${questions.length} 题</span>
       </div>
-      <div class="quiz-list">${bundle.chapterTest.map((question, index) => renderTestQuestion(question, index)).join('')}</div>
+      ${question ? renderSingleTestFlow(questions, currentIndex) : '<div class="empty-state">本章暂时没有综合测试题。</div>'}
       <div class="action-row">
-        <button class="btn primary" data-action="submit-test" data-chapter-id="${chapter.id}">交卷评分</button>
+        <button class="btn subtle" data-action="test-prev" ${currentIndex === 0 ? 'disabled' : ''}>上一题</button>
+        <button class="btn subtle" data-action="test-next" ${isLast ? 'disabled' : ''}>下一题</button>
+        <button class="btn primary" data-action="submit-test" data-chapter-id="${chapter.id}">${isLast ? '交卷评分' : '直接交卷'}</button>
         <button class="btn subtle" data-action="reset-test">重置作答</button>
       </div>
       ${app.session.testSubmitted ? renderTestScore(chapter.id) : ''}
     </section>
+  `;
+}
+
+function renderSingleTestFlow(questions, currentIndex) {
+  const question = questions[currentIndex];
+  const answeredCount = questions.filter((item) => app.session.testAnswers[item.id] !== undefined && app.session.testAnswers[item.id] !== '').length;
+  return `
+    <div class="quiz-flow-head">
+      <div class="quiz-flow-progress">
+        <span class="eyebrow">当前进度</span>
+        <strong>第 ${currentIndex + 1} 题 / 共 ${questions.length} 题</strong>
+        <small>已作答 ${answeredCount} 题</small>
+      </div>
+    </div>
+    <div class="quiz-list">${renderTestQuestion(question, currentIndex)}</div>
   `;
 }
 
@@ -1617,6 +1665,14 @@ function handleClick(event) {
       touchState();
       renderView();
       break;
+    case 'practice-prev':
+      app.session.practiceCursor = Math.max(0, app.session.practiceCursor - 1);
+      renderView();
+      break;
+    case 'practice-next':
+      app.session.practiceCursor = Math.min(getPracticeQuestions().length - 1, app.session.practiceCursor + 1);
+      renderView();
+      break;
     case 'practice-answer':
       handlePracticeAnswer(d.questionId, d.answerIndex !== undefined ? Number(d.answerIndex) : d.answerValue === 'true');
       renderView();
@@ -1627,6 +1683,21 @@ function handleClick(event) {
       break;
     case 'test-answer':
       app.session.testAnswers[d.questionId] = d.answerIndex !== undefined ? Number(d.answerIndex) : d.answerValue === 'true';
+      {
+        const questions = getChapterTestQuestions(app.state.selectedChapterId);
+        const currentIndex = questions.findIndex((item) => item.id === d.questionId);
+        if (currentIndex > -1 && currentIndex < questions.length - 1) {
+          app.session.testCursor = currentIndex + 1;
+        }
+      }
+      renderView();
+      break;
+    case 'test-prev':
+      app.session.testCursor = Math.max(0, app.session.testCursor - 1);
+      renderView();
+      break;
+    case 'test-next':
+      app.session.testCursor = Math.min(getChapterTestQuestions(app.state.selectedChapterId).length - 1, app.session.testCursor + 1);
       renderView();
       break;
     case 'submit-test':
@@ -1694,6 +1765,7 @@ function handleChange(event) {
   }
   if (event.target.matches('[data-change="select-practice-section"]')) {
     app.state.selectedSectionId = event.target.value;
+    app.state.practiceCursor = 0;
     resetPracticeSession();
     touchState();
     renderView();
@@ -1744,7 +1816,8 @@ function handleInput(event) {
 }
 
 function handlePracticeAnswer(questionId, answerIndex) {
-  const question = getPracticeQuestions().find((item) => item.id === questionId);
+  const questions = getPracticeQuestions();
+  const question = questions.find((item) => item.id === questionId);
   if (!question) return;
   app.session.practiceAnswers[questionId] = answerIndex;
   const correct = isAnswerCorrect(question, answerIndex);
@@ -1758,6 +1831,10 @@ function handlePracticeAnswer(questionId, answerIndex) {
     recordWrongAnswer(question, formatAnswer(question, answerIndex), formatAnswer(question, correctAnswerFor(question)));
   }
   if (app.state.practiceMode === 'passline') updatePasslineProgress(question.chapterId);
+  const currentIndex = questions.findIndex((item) => item.id === questionId);
+  if (currentIndex > -1 && currentIndex < questions.length - 1) {
+    app.session.practiceCursor = currentIndex + 1;
+  }
   touchState();
 }
 
@@ -2422,6 +2499,13 @@ function resetPracticeSession() {
   app.session.practiceFeedback = {};
   app.session.testAnswers = {};
   app.session.testSubmitted = false;
+  app.session.practiceCursor = 0;
+  app.session.testCursor = 0;
+}
+
+function getBoundedCursor(cursor, total) {
+  if (!total) return 0;
+  return Math.max(0, Math.min(cursor || 0, total - 1));
 }
 function statusLabel(status) { return ({ unseen: '未标记', mastered: '已掌握', review: '待复习' })[status] || '未标记'; }
 function formatDate(value) {

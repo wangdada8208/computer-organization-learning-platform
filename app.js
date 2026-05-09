@@ -337,19 +337,39 @@ function renderPracticeSidebarTree() {
         ${chapters.map((chapter) => {
           const progress = getChapterProgress(chapter);
           const isActive = app.state.selectedChapterId === chapter.id;
-          const isContinue = app.state.progress.lastChapterId === chapter.id;
+          const isExpanded = isChapterExpanded(chapter.id);
+          const currentSectionId = getChapterLastSectionId(chapter);
+          const targetSectionId = currentSectionId || chapter.sections[0]?.id || null;
           return `
-            <button class="chapter-link ${isActive ? 'active' : ''}" data-action="open-${app.state.view === 'practice' ? 'practice' : 'chapter'}" data-chapter-id="${chapter.id}">
-              <div class="chapter-link-row">
-                <strong>第 ${chapter.number} 章 · ${chapter.title}</strong>
-                ${isContinue ? '<span class="tiny-pill">最近</span>' : ''}
+            <div class="chapter-node ${isActive ? 'active' : ''}">
+              <div class="chapter-node-head">
+                <button class="chapter-link ${isActive ? 'active' : ''}" data-action="open-practice" data-chapter-id="${chapter.id}" ${targetSectionId ? `data-section-id="${targetSectionId}"` : ''}>
+                  <div class="chapter-link-row">
+                    <strong>第 ${chapter.number} 章 · ${chapter.title}</strong>
+                    ${app.state.progress.lastChapterId === chapter.id ? '<span class="tiny-pill">最近</span>' : ''}
+                  </div>
+                  <div class="chapter-link-meta">
+                    <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
+                    <span>${progress.percent}%</span>
+                    <span>${chapter.sections.length} 节</span>
+                  </div>
+                </button>
+                <button class="icon-btn chapter-expand-btn" data-action="toggle-chapter-expand" data-chapter-id="${chapter.id}" aria-label="${isExpanded ? '收起章节' : '展开章节'}">${isExpanded ? '收' : '展'}</button>
               </div>
-              <span>${chapter.summary}</span>
-              <div class="chapter-link-meta">
-                <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
-                <span>${progress.percent}%</span>
-              </div>
-            </button>
+              ${isExpanded ? `
+                <div class="section-tree">
+                  ${chapter.sections.map((section, index) => `
+                    <button class="section-link ${currentSectionId === section.id && isActive ? 'active' : ''}" data-action="open-practice" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
+                      <div class="section-link-row">
+                        <strong>第 ${index + 1} 节 · ${section.title}</strong>
+                        ${currentSectionId === section.id && isActive ? '<span class="tiny-pill">当前</span>' : ''}
+                      </div>
+                      <span>${section.points.length} 个知识点</span>
+                    </button>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
           `;
         }).join('')}
       </div>
@@ -1492,6 +1512,13 @@ function handleClick(event) {
       app.state.practiceMode = 'section';
       app.state.view = 'practice';
       app.state.mobileSidebarOpen = false;
+      if (app.state.selectedChapterId && app.state.selectedSectionId) {
+        app.state.progress.lastChapterId = app.state.selectedChapterId;
+        app.state.progress.chapters[app.state.selectedChapterId] = {
+          ...(app.state.progress.chapters[app.state.selectedChapterId] || {}),
+          lastSectionId: app.state.selectedSectionId,
+        };
+      }
       resetPracticeSession();
       touchState();
       renderView();

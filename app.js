@@ -925,34 +925,10 @@ function renderPracticeView() {
   const bundle = getQuizBundle(chapter.id);
   const section = getSelectedPracticeSection(chapter, bundle);
   const wrongs = wrongbookEntries().filter((item) => item.chapterId === chapter.id);
-  const overview = getTrainingOverview(chapter.id);
   const passlineSet = getPasslineQuestionSet(chapter.id);
-  const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
       <section class="surface-panel training-shell">
-        <div class="training-strip">
-          <div class="training-strip-main">
-            <div>
-              <span class="eyebrow">训练强化</span>
-              <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
-            </div>
-            <div class="training-strip-tags">
-              <span>${passlineSet.length} 道过线题</span>
-              <span>${bundle.practiceSections.length} 个练习小节</span>
-              <span>${bundle.chapterTest.length} 道综合测试题</span>
-              <span>${wrongs.length} 道本章错题</span>
-              <span>${teacherCount} 道老师题</span>
-            </div>
-          </div>
-          <div class="training-strip-metrics">
-            <div class="training-strip-metric"><span>过线状态</span><strong>${overview.passlineReady ? '已达线' : '待补强'}</strong></div>
-            <div class="training-strip-metric"><span>最近成绩</span><strong>${overview.lastScore}</strong></div>
-            <div class="training-strip-metric"><span>错题</span><strong>${overview.wrongCount}</strong></div>
-            <div class="training-strip-metric"><span>薄弱节</span><strong>${overview.weakSection || '--'}</strong></div>
-          </div>
-        </div>
-
         <div class="training-shell-head">
           <div class="training-controls">
             <div class="toolbar-grid">

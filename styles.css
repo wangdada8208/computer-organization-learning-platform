@@ -119,8 +119,8 @@ ul { margin: 0; padding-left: 18px; }
 .rail-stat span { color: var(--muted); }
 .rail-stat strong { color: var(--ink); }
 .rail-panel h3 { font-size: 14px; margin-bottom: 10px; }
-.chapter-tree.compact { display: grid; gap: 10px; }
-.chapter-part { display: grid; gap: 8px; }
+.chapter-tree.compact { display: grid; gap: 8px; }
+.chapter-part { display: grid; gap: 6px; }
 .chapter-part h4 {
   margin: 2px 0 0;
   font-size: 12px;
@@ -132,8 +132,8 @@ ul { margin: 0; padding-left: 18px; }
   width: 100%;
   text-align: left;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 9px 11px;
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
@@ -141,8 +141,8 @@ ul { margin: 0; padding-left: 18px; }
 }
 .chapter-link:hover { border-color: var(--line-strong); background: var(--surface-soft); }
 .chapter-link.active { border-color: var(--primary); background: #f1f6f4; }
-.chapter-link strong { display: block; font-size: 13px; }
-.chapter-link span { display: block; margin-top: 5px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.chapter-link strong { display: block; font-size: 13px; line-height: 1.28; }
+.chapter-link span { display: block; margin-top: 3px; font-size: 11px; line-height: 1.42; color: var(--muted); }
 .chapter-link-row {
   display: flex;
   justify-content: space-between;
@@ -152,37 +152,41 @@ ul { margin: 0; padding-left: 18px; }
 .chapter-link-meta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 7px;
+  font-size: 11px;
   color: var(--muted-strong);
 }
 .chapter-node {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 .chapter-node-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 34px;
-  gap: 8px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 30px;
+  gap: 6px;
+  align-items: stretch;
 }
 .chapter-expand-btn {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   padding: 0;
+  min-height: 30px;
+  border-radius: 9px;
+  font-size: 11px;
 }
 .section-tree {
   display: grid;
-  gap: 8px;
-  padding-left: 12px;
+  gap: 6px;
+  padding-left: 10px;
 }
 .section-link {
   width: 100%;
   text-align: left;
   border: 1px solid rgba(197, 208, 202, 0.85);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: 9px;
+  padding: 8px 10px;
   background: rgba(248, 250, 248, 0.92);
   color: var(--ink);
   cursor: pointer;
@@ -194,10 +198,10 @@ ul { margin: 0; padding-left: 18px; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
 }
-.section-link strong { display: block; font-size: 12px; }
-.section-link span { display: block; margin-top: 4px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.section-link strong { display: block; font-size: 12px; line-height: 1.28; }
+.section-link span { display: block; margin-top: 2px; font-size: 11px; line-height: 1.38; color: var(--muted); }
 .chapter-outline-list, .stack-xs, .featured-list, .dense-list, .timeline-list, .wrongbook-list, .point-list, .simulator-card-list { display: grid; gap: 10px; }
 .outline-chip, .map-row, .featured-item, .timeline-item {
   padding: 10px 12px;
@@ -1631,6 +1635,9 @@ ul { margin: 0; padding-left: 18px; }
   .page { padding: 18px; }
   .toolbar-grid { grid-template-columns: 1fr; }
   .topbar-right { width: 100%; justify-content: flex-start; }
+  .chapter-tree.compact { gap: 7px; }
+  .chapter-link { padding: 8px 10px; }
+  .section-link { padding: 7px 9px; }
 }
 
 @media (max-width: 640px) {
@@ -1648,4 +1655,43 @@ ul { margin: 0; padding-left: 18px; }
   .score-box { flex-direction: column; align-items: flex-start; }
   .teacher-paper-head { flex-direction: column; align-items: flex-start; }
   .next-links, .next-side-actions, .overview-entry-actions, .section-mode-nav, .section-mode-switch { flex-direction: column; align-items: flex-start; }
+  .chapter-tree.compact { gap: 6px; }
+  .chapter-node { gap: 5px; }
+  .chapter-node-head {
+    grid-template-columns: minmax(0, 1fr) 28px;
+    gap: 5px;
+  }
+  .chapter-link {
+    padding: 8px 9px;
+    border-radius: 9px;
+  }
+  .chapter-link strong,
+  .section-link strong {
+    font-size: 12px;
+  }
+  .chapter-link span,
+  .section-link span {
+    font-size: 11px;
+    line-height: 1.32;
+  }
+  .chapter-link-meta {
+    gap: 4px 8px;
+    margin-top: 6px;
+    font-size: 10px;
+  }
+  .chapter-expand-btn {
+    width: 28px;
+    height: 28px;
+    min-height: 28px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+  .section-tree {
+    gap: 5px;
+    padding-left: 8px;
+  }
+  .section-link {
+    padding: 7px 8px;
+    border-radius: 8px;
+  }
 }

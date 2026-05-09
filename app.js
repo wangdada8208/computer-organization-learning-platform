@@ -217,8 +217,8 @@ function createDefaultState(chapters) {
     activeTrack: 'textbook',
     mobileSidebarOpen: false,
     chapterSidebarCollapsed: false,
-    expandedChapterIds: chapters[0]?.id ? [chapters[0].id] : [],
-    chapterContentMode: 'overview',
+    expandedChapterIds: [],
+    chapterContentMode: 'section',
     selectedChapterId: chapters[0]?.id || null,
     selectedSectionId: chapters[0]?.sections[0]?.id || null,
     selectedSimulatorId: SIMULATORS[0]?.id || null,
@@ -682,7 +682,6 @@ function renderChapterView() {
   const chapter = getSelectedChapter();
   const progress = getChapterProgress(chapter);
   const chapterState = app.state.progress.chapters[chapter.id] || {};
-  const featured = chapter.sections.slice(0, 3);
   const totalSections = chapter.sections.length;
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   const passline = getChapterPassline(chapter);
@@ -710,78 +709,6 @@ function renderChapterView() {
             <div class="metric-card"><span>当前掌握度</span><strong>${progress.percent}%</strong></div>
             <div class="metric-card"><span>最近测试</span><strong>${chapterState.lastQuizScore ?? '--'}</strong></div>
           </div>
-        </div>
-      </section>
-
-      <section class="surface-panel chapter-guide-shell">
-        <div class="chapter-guide-grid">
-          <article class="chapter-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">这一章学什么</span>
-                <h3>本章完成后应掌握</h3>
-              </div>
-            </div>
-            <div class="pill-list">${chapter.learningGoals.map((goal) => `<span class="info-pill">${goal}</span>`).join('')}</div>
-          </article>
-          <article class="chapter-guide-card accent">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">及格线必会</span>
-                <h3>先拿下这几个最低必会点</h3>
-              </div>
-            </div>
-            <div class="must-topic-list">${passline.points.map((point) => `<button class="must-topic-chip" data-action="review-topic" data-topic-id="${point.id}" data-chapter-id="${chapter.id}">${point.title}</button>`).join('')}</div>
-            <p class="body-copy">先把这 ${passline.totalTopics} 个点做懂，再去补完整细节，效率会高很多。</p>
-          </article>
-          <article class="chapter-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">本章导览</span>
-                <h3>建议阅读顺序</h3>
-              </div>
-            </div>
-            <div class="chapter-map-list">${chapter.chapterMap.map((item) => `<div class="map-row">${item}</div>`).join('')}</div>
-          </article>
-          <article class="chapter-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">先修提醒</span>
-                <h3>阅读前先对齐前置概念</h3>
-              </div>
-            </div>
-            <ul class="plain-list">${chapter.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul>
-          </article>
-          <article class="chapter-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">必看知识块</span>
-                <h3>优先完成这几段</h3>
-              </div>
-            </div>
-            <div class="featured-list">${featured.map((section) => `<div class="featured-item"><strong>${section.title}</strong><span>${section.points.length} 个知识点</span></div>`).join('')}</div>
-          </article>
-          <article class="chapter-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">常见失分点</span>
-                <h3>做题前先避开这几类坑</h3>
-              </div>
-            </div>
-            <ul class="plain-list">${chapter.commonMistakes.map((item) => `<li>${item}</li>`).join('')}</ul>
-          </article>
-          <article class="chapter-guide-card accent teacher-guide-card">
-            <div class="section-heading compact-heading">
-              <div>
-                <span class="eyebrow">老师题库</span>
-                <h3>本章老师原题单独整理</h3>
-              </div>
-            </div>
-            <p class="body-copy">这一章已整理 ${teacherCount} 道老师发布或课件重点题，适合在看完主干后直接刷原题表达。</p>
-            <div class="action-row">
-              <button class="btn tiny primary" data-action="open-teacher" data-chapter-id="${chapter.id}">进入本章老师题</button>
-            </div>
-          </article>
         </div>
       </section>
 
@@ -1641,7 +1568,7 @@ function handleClick(event) {
             ...(app.state.progress.chapters[d.chapterId] || {}),
             lastSectionId: section.id,
           };
-          setExpandedChapter(d.chapterId, true);
+          app.state.expandedChapterIds = [];
         }
       }
       touchState();
@@ -2064,8 +1991,8 @@ function openChapterOverview(chapterId) {
   app.state.activeTrack = 'textbook';
   app.state.view = 'chapter';
   app.state.mobileSidebarOpen = false;
+  app.state.expandedChapterIds = [];
   app.state.progress.lastChapterId = chapter.id;
-  setExpandedChapter(chapter.id, true);
   touchState();
 }
 function openChapterSectionView(chapterId, sectionId) {
@@ -2077,12 +2004,12 @@ function openChapterSectionView(chapterId, sectionId) {
   app.state.activeTrack = 'textbook';
   app.state.view = 'chapter';
   app.state.mobileSidebarOpen = false;
+  app.state.expandedChapterIds = [];
   app.state.progress.lastChapterId = chapter.id;
   app.state.progress.chapters[chapter.id] = {
     ...(app.state.progress.chapters[chapter.id] || {}),
     lastSectionId: targetSectionId,
   };
-  setExpandedChapter(chapter.id, true);
   touchState();
 }
 function openChapterView(chapterId) {
@@ -2092,7 +2019,7 @@ function openChapterView(chapterId) {
     openChapterSectionView(chapter.id, lastSectionId);
     return;
   }
-  openChapterOverview(chapter.id);
+  openChapterSectionView(chapter.id, chapter.sections[0]?.id || null);
 }
 function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.chapterId === chapterId); }
 function getTeacherQuestionsByChapter(chapterId) {
@@ -2541,7 +2468,6 @@ function applySyncedState(nextState) {
     practiceMode: incoming.view === 'teacher' ? 'teacher' : (incoming.practiceMode || defaults.practiceMode),
     meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
   };
-  setExpandedChapter(app.state.selectedChapterId, true);
 }
 
 function touchState() {

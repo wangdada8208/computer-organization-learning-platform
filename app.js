@@ -710,27 +710,29 @@ function renderChapterView() {
   const activeSectionIndex = chapter.sections.findIndex((section) => section.id === activeSection?.id);
   pageEl.innerHTML = `
     <div class="page-stack chapter-stack">
-      <section class="chapter-hero surface-panel">
-        <div class="chapter-hero-layout">
-          <div class="chapter-hero-copy">
-            <span class="eyebrow">章节学习</span>
-            <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
-            <p class="body-copy">${chapter.summary}</p>
-            <div class="chapter-hero-tags">
-              <span>${totalSections} 节内容</span>
-              <span>${totalPoints} 个知识点</span>
-              <span>${passline.totalTopics} 个及格线必会点</span>
-              <span>${chapter.relatedSimulatorIds.length} 个相关模拟器</span>
-              <span>${teacherCount} 道老师题</span>
+      ${app.state.chapterContentMode === 'overview' ? `
+        <section class="chapter-hero surface-panel">
+          <div class="chapter-hero-layout">
+            <div class="chapter-hero-copy">
+              <span class="eyebrow">章节学习</span>
+              <h3>第 ${chapter.number} 章 · ${chapter.title}</h3>
+              <p class="body-copy">${chapter.summary}</p>
+              <div class="chapter-hero-tags">
+                <span>${totalSections} 节内容</span>
+                <span>${totalPoints} 个知识点</span>
+                <span>${passline.totalTopics} 个及格线必会点</span>
+                <span>${chapter.relatedSimulatorIds.length} 个相关模拟器</span>
+                <span>${teacherCount} 道老师题</span>
+              </div>
+            </div>
+            <div class="hero-meta-grid chapter-hero-metrics">
+              <div class="metric-card"><span>推荐用时</span><strong>${getStudyTime(chapter)}</strong></div>
+              <div class="metric-card"><span>当前掌握度</span><strong>${progress.percent}%</strong></div>
+              <div class="metric-card"><span>最近测试</span><strong>${chapterState.lastQuizScore ?? '--'}</strong></div>
             </div>
           </div>
-          <div class="hero-meta-grid chapter-hero-metrics">
-            <div class="metric-card"><span>推荐用时</span><strong>${getStudyTime(chapter)}</strong></div>
-            <div class="metric-card"><span>当前掌握度</span><strong>${progress.percent}%</strong></div>
-            <div class="metric-card"><span>最近测试</span><strong>${chapterState.lastQuizScore ?? '--'}</strong></div>
-          </div>
-        </div>
-      </section>
+        </section>
+      ` : ''}
 
       ${app.state.chapterContentMode === 'overview'
         ? `<section class="section-overview-stack">${chapter.sections.map((section, index) => renderSectionOverviewCard(chapter, section, index)).join('')}</section>`

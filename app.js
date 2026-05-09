@@ -216,6 +216,9 @@ function createDefaultState(chapters) {
     view: 'dashboard',
     activeTrack: 'textbook',
     mobileSidebarOpen: false,
+    chapterSidebarCollapsed: false,
+    expandedChapterIds: chapters[0]?.id ? [chapters[0].id] : [],
+    chapterContentMode: 'overview',
     selectedChapterId: chapters[0]?.id || null,
     selectedSectionId: chapters[0]?.sections[0]?.id || null,
     selectedSimulatorId: SIMULATORS[0]?.id || null,
@@ -238,7 +241,7 @@ function createDefaultState(chapters) {
 
 function renderView() {
   const compactLayout = app.state.view !== 'dashboard';
-  appShellEl.className = `app-shell ${compactLayout ? 'workspace-layout' : 'overview-layout'}`;
+  appShellEl.className = `app-shell ${compactLayout ? 'workspace-layout' : 'overview-layout'}${app.state.view === 'chapter' && app.state.chapterSidebarCollapsed ? ' chapter-sidebar-collapsed' : ''}`;
   renderSidebar();
   renderTopbar();
   const views = {
@@ -253,16 +256,24 @@ function renderView() {
 }
 
 function renderSidebar() {
-  const stats = getProgressStats();
   if (app.state.view === 'dashboard') {
     sidebarEl.className = 'sidebar sidebar-empty';
     sidebarEl.innerHTML = '';
     return;
   }
-  sidebarEl.className = `sidebar ${app.state.mobileSidebarOpen ? 'open' : ''}`;
+  sidebarEl.className = `sidebar ${app.state.mobileSidebarOpen ? 'open' : ''}${app.state.view === 'chapter' && app.state.chapterSidebarCollapsed ? ' collapsed' : ''}`;
   if (app.state.view === 'chapter') {
     const chapter = getSelectedChapter();
     const progress = getChapterProgress(chapter);
+    if (app.state.chapterSidebarCollapsed) {
+      sidebarEl.innerHTML = `
+        <div class="rail-brand rail-brand-collapsed">
+          <div class="rail-mark">课</div>
+          <button class="icon-btn rail-collapse-btn" data-action="toggle-sidebar-collapse" aria-label="展开目录">展</button>
+        </div>
+      `;
+      return;
+    }
     sidebarEl.innerHTML = `
       <div class="rail-brand">
         <div class="rail-mark">课</div>
@@ -271,6 +282,9 @@ function renderSidebar() {
           <p>${chapter.title}</p>
         </div>
       </div>
+      <div class="rail-toolbar">
+        <button class="btn tiny subtle" data-action="toggle-sidebar-collapse">收起目录</button>
+      </div>
       <section class="rail-panel rail-progress">
         <div class="rail-head"><strong>当前章节</strong><span>${progress.percent}%</span></div>
         <div class="progress-bar"><span style="width:${progress.percent}%"></span></div>
@@ -278,7 +292,7 @@ function renderSidebar() {
       </section>
       <section class="rail-panel">
         <h3>章节目录</h3>
-        <div class="chapter-tree compact">${renderSidebarTree()}</div>
+        <div class="chapter-tree compact">${renderChapterSidebarTree()}</div>
       </section>
       <section class="rail-panel">
         <h3>本章导览</h3>
@@ -309,12 +323,12 @@ function renderSidebar() {
     </section>
     <section class="rail-panel">
       <h3>切换章节</h3>
-      <div class="chapter-tree compact">${renderSidebarTree()}</div>
+      <div class="chapter-tree compact">${renderPracticeSidebarTree()}</div>
     </section>
   `;
 }
 
-function renderSidebarTree() {
+function renderPracticeSidebarTree() {
   return Object.entries(app.parts).map(([partId, partName]) => {
     const chapters = app.data.chapters.filter((chapter) => chapter.partId === partId);
     return `
@@ -336,6 +350,53 @@ function renderSidebarTree() {
                 <span>${progress.percent}%</span>
               </div>
             </button>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function renderChapterSidebarTree() {
+  return Object.entries(app.parts).map(([partId, partName]) => {
+    const chapters = app.data.chapters.filter((chapter) => chapter.partId === partId);
+    return `
+      <div class="chapter-part">
+        <h4>${partName}</h4>
+        ${chapters.map((chapter) => {
+          const progress = getChapterProgress(chapter);
+          const isActive = app.state.selectedChapterId === chapter.id;
+          const isExpanded = isChapterExpanded(chapter.id);
+          const currentSectionId = app.state.progress.chapters[chapter.id]?.lastSectionId || (isActive ? app.state.selectedSectionId : null);
+          return `
+            <div class="chapter-node ${isActive ? 'active' : ''}">
+              <div class="chapter-node-head">
+                <button class="chapter-link ${isActive ? 'active' : ''}" data-action="open-chapter" data-chapter-id="${chapter.id}">
+                  <div class="chapter-link-row">
+                    <strong>第 ${chapter.number} 章 · ${chapter.title}</strong>
+                    ${app.state.progress.lastChapterId === chapter.id ? '<span class="tiny-pill">最近</span>' : ''}
+                  </div>
+                  <div class="chapter-link-meta">
+                    <div class="mini-progress"><span style="width:${progress.percent}%"></span></div>
+                    <span>${progress.percent}%</span>
+                  </div>
+                </button>
+                <button class="icon-btn chapter-expand-btn" data-action="toggle-chapter-expand" data-chapter-id="${chapter.id}" aria-label="${isExpanded ? '收起章节' : '展开章节'}">${isExpanded ? '收' : '展'}</button>
+              </div>
+              ${isExpanded ? `
+                <div class="section-tree">
+                  ${chapter.sections.map((section, index) => `
+                    <button class="section-link ${currentSectionId === section.id && isActive && app.state.chapterContentMode === 'section' ? 'active' : ''}" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${section.id}">
+                      <div class="section-link-row">
+                        <strong>第 ${index + 1} 节 · ${section.title}</strong>
+                        ${currentSectionId === section.id ? '<span class="tiny-pill">当前</span>' : ''}
+                      </div>
+                      <span>${section.points.length} 个知识点</span>
+                    </button>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
           `;
         }).join('')}
       </div>
@@ -626,6 +687,8 @@ function renderChapterView() {
   const totalPoints = chapter.sections.reduce((sum, section) => sum + section.points.length, 0);
   const passline = getChapterPassline(chapter);
   const teacherCount = getTeacherQuestionsByChapter(chapter.id).length;
+  const activeSection = getSelectedChapterSection(chapter);
+  const activeSectionIndex = chapter.sections.findIndex((section) => section.id === activeSection?.id);
   pageEl.innerHTML = `
     <div class="page-stack chapter-stack">
       <section class="chapter-hero surface-panel">
@@ -722,7 +785,9 @@ function renderChapterView() {
         </div>
       </section>
 
-      ${chapter.sections.map((section, index) => renderSectionCard(chapter, section, index)).join('')}
+      ${app.state.chapterContentMode === 'overview'
+        ? `<section class="section-overview-stack">${chapter.sections.map((section, index) => renderSectionOverviewCard(chapter, section, index)).join('')}</section>`
+        : renderSectionStudyView(chapter, activeSection, activeSectionIndex)}
 
       <section class="surface-panel summary-panel">
         <div class="section-heading">
@@ -752,6 +817,61 @@ function renderChapterView() {
         </div>
       </section>
     </div>
+  `;
+}
+
+function renderSectionOverviewCard(chapter, section, sectionIndex) {
+  const grouped = groupSectionPoints(section);
+  const sectionSnapshot = getSectionSnapshot(grouped);
+  return `
+    <section class="surface-panel section-overview-card">
+      <div class="section-heading spread align-start">
+        <div>
+          <span class="eyebrow">分节导览 · 第 ${sectionIndex + 1} 节</span>
+          <h3>${section.title}</h3>
+          <p class="body-copy">${section.overview}</p>
+        </div>
+        <div class="section-head-actions">
+          <span class="tiny-pill">${section.points.length} 个知识点</span>
+          <button class="btn tiny primary" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${section.id}">进入本节</button>
+        </div>
+      </div>
+      <div class="section-snapshot-grid">
+        <div class="section-snapshot-card essential">
+          <span>先掌握</span>
+          <strong>${sectionSnapshot.essential}</strong>
+          <small>${sectionSnapshot.essentialHint}</small>
+        </div>
+        <div class="section-snapshot-card standard">
+          <span>再理解</span>
+          <strong>${sectionSnapshot.standard}</strong>
+          <small>${sectionSnapshot.standardHint}</small>
+        </div>
+        <div class="section-snapshot-card review">
+          <span>易混提醒</span>
+          <strong>${sectionSnapshot.review}</strong>
+          <small>${sectionSnapshot.reviewHint}</small>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderSectionStudyView(chapter, section, sectionIndex) {
+  if (!section) return '';
+  const prevSection = chapter.sections[sectionIndex - 1];
+  const nextSection = chapter.sections[sectionIndex + 1];
+  return `
+    <section class="section-mode-shell">
+      <div class="section-mode-nav">
+        <button class="text-link" data-action="open-chapter-overview" data-chapter-id="${chapter.id}">返回本章导览</button>
+        <div class="section-mode-switch">
+          ${prevSection ? `<button class="btn tiny subtle" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${prevSection.id}">上一节</button>` : ''}
+          ${nextSection ? `<button class="btn tiny subtle" data-action="open-chapter-section" data-chapter-id="${chapter.id}" data-section-id="${nextSection.id}">下一节</button>` : ''}
+        </div>
+      </div>
+      ${renderSectionCard(chapter, section, sectionIndex)}
+    </section>
   `;
 }
 
@@ -1352,6 +1472,16 @@ function handleClick(event) {
       app.state.mobileSidebarOpen = !app.state.mobileSidebarOpen;
       renderView();
       break;
+    case 'toggle-sidebar-collapse':
+      app.state.chapterSidebarCollapsed = !app.state.chapterSidebarCollapsed;
+      touchState();
+      renderView();
+      break;
+    case 'toggle-chapter-expand':
+      toggleChapterExpanded(d.chapterId);
+      touchState();
+      renderView();
+      break;
     case 'switch-view':
       app.state.view = PRIMARY_VIEWS.includes(d.view) ? d.view : 'dashboard';
       app.state.mobileSidebarOpen = false;
@@ -1388,7 +1518,9 @@ function handleClick(event) {
         app.state.view = 'practice';
         app.state.practiceMode = 'passline';
       } else {
-        app.state.view = 'chapter';
+        openChapterView(app.state.selectedChapterId);
+        renderView();
+        break;
       }
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
@@ -1396,16 +1528,31 @@ function handleClick(event) {
       renderView();
       break;
     case 'open-chapter':
-      app.state.selectedChapterId = d.chapterId;
-      app.state.activeTrack = 'textbook';
-      app.state.view = 'chapter';
-      app.state.mobileSidebarOpen = false;
-      touchState();
+      openChapterView(d.chapterId);
+      renderView();
+      break;
+    case 'open-chapter-section':
+      openChapterSectionView(d.chapterId, d.sectionId);
+      renderView();
+      break;
+    case 'open-chapter-overview':
+      openChapterOverview(d.chapterId || app.state.selectedChapterId);
       renderView();
       break;
     case 'focus-point':
       app.state.progress.lastPointId = d.pointId;
       app.state.progress.lastChapterId = d.chapterId;
+      {
+        const section = findSectionByPointId(d.pointId);
+        if (section) {
+          app.state.selectedSectionId = section.id;
+          app.state.progress.chapters[d.chapterId] = {
+            ...(app.state.progress.chapters[d.chapterId] || {}),
+            lastSectionId: section.id,
+          };
+        }
+      }
+      touchState();
       persistState();
       break;
     case 'set-point-status':
@@ -1485,6 +1632,19 @@ function handleClick(event) {
       app.state.activeTrack = 'textbook';
       app.state.view = 'chapter';
       app.state.progress.lastPointId = d.topicId;
+      {
+        const section = findSectionByPointId(d.topicId);
+        if (section) {
+          app.state.selectedSectionId = section.id;
+          app.state.chapterContentMode = 'section';
+          app.state.progress.chapters[d.chapterId] = {
+            ...(app.state.progress.chapters[d.chapterId] || {}),
+            lastSectionId: section.id,
+          };
+          setExpandedChapter(d.chapterId, true);
+        }
+      }
+      touchState();
       renderView();
       break;
     case 'open-simulator':
@@ -1872,6 +2032,68 @@ function getSelectedSimulator() {
 
 function getWrongbookCount() { return Object.keys(app.state.wrongbook).length; }
 function getSelectedChapter() { return app.data.chapters.find((chapter) => chapter.id === app.state.selectedChapterId) || app.data.chapters[0]; }
+function getChapterLastSectionId(chapter) {
+  return app.state.progress.chapters[chapter.id]?.lastSectionId
+    || (app.state.selectedChapterId === chapter.id ? app.state.selectedSectionId : null)
+    || chapter.sections[0]?.id
+    || null;
+}
+function getSelectedChapterSection(chapter = getSelectedChapter()) {
+  return chapter.sections.find((section) => section.id === app.state.selectedSectionId)
+    || chapter.sections.find((section) => section.id === getChapterLastSectionId(chapter))
+    || chapter.sections[0]
+    || null;
+}
+function isChapterExpanded(chapterId) {
+  return app.state.expandedChapterIds.includes(chapterId);
+}
+function setExpandedChapter(chapterId, expanded) {
+  const next = new Set(app.state.expandedChapterIds);
+  if (expanded) next.add(chapterId);
+  else next.delete(chapterId);
+  app.state.expandedChapterIds = Array.from(next);
+}
+function toggleChapterExpanded(chapterId) {
+  setExpandedChapter(chapterId, !isChapterExpanded(chapterId));
+}
+function openChapterOverview(chapterId) {
+  const chapter = app.data.chapters.find((item) => item.id === chapterId) || getSelectedChapter();
+  app.state.selectedChapterId = chapter.id;
+  app.state.selectedSectionId = chapter.sections[0]?.id || null;
+  app.state.chapterContentMode = 'overview';
+  app.state.activeTrack = 'textbook';
+  app.state.view = 'chapter';
+  app.state.mobileSidebarOpen = false;
+  app.state.progress.lastChapterId = chapter.id;
+  setExpandedChapter(chapter.id, true);
+  touchState();
+}
+function openChapterSectionView(chapterId, sectionId) {
+  const chapter = app.data.chapters.find((item) => item.id === chapterId) || getSelectedChapter();
+  const targetSectionId = sectionId || getChapterLastSectionId(chapter) || chapter.sections[0]?.id || null;
+  app.state.selectedChapterId = chapter.id;
+  app.state.selectedSectionId = targetSectionId;
+  app.state.chapterContentMode = 'section';
+  app.state.activeTrack = 'textbook';
+  app.state.view = 'chapter';
+  app.state.mobileSidebarOpen = false;
+  app.state.progress.lastChapterId = chapter.id;
+  app.state.progress.chapters[chapter.id] = {
+    ...(app.state.progress.chapters[chapter.id] || {}),
+    lastSectionId: targetSectionId,
+  };
+  setExpandedChapter(chapter.id, true);
+  touchState();
+}
+function openChapterView(chapterId) {
+  const chapter = app.data.chapters.find((item) => item.id === chapterId) || getSelectedChapter();
+  const lastSectionId = app.state.progress.chapters[chapter.id]?.lastSectionId;
+  if (lastSectionId) {
+    openChapterSectionView(chapter.id, lastSectionId);
+    return;
+  }
+  openChapterOverview(chapter.id);
+}
 function getQuizBundle(chapterId) { return app.data.quizzes.find((item) => item.chapterId === chapterId); }
 function getTeacherQuestionsByChapter(chapterId) {
   return app.data.teacherQuizzes.filter((question) => question.chapterId === chapterId);
@@ -2155,6 +2377,14 @@ function getChapterTestQuestions(chapterId) { return getQuizBundle(chapterId)?.c
 function findChapterByPointId(pointId) {
   return app.data.chapters.find((chapter) => chapter.sections.some((section) => section.points.some((point) => point.id === pointId)));
 }
+function findSectionByPointId(pointId) {
+  for (const chapter of app.data.chapters) {
+    for (const section of chapter.sections) {
+      if (section.points.some((point) => point.id === pointId)) return section;
+    }
+  }
+  return null;
+}
 function findPointById(pointId) {
   for (const chapter of app.data.chapters) {
     for (const section of chapter.sections) {
@@ -2255,6 +2485,9 @@ function serializeProgressState() {
     view: app.state.view,
     activeTrack: app.state.activeTrack,
     mobileSidebarOpen: false,
+    chapterSidebarCollapsed: app.state.chapterSidebarCollapsed,
+    expandedChapterIds: cloneData(app.state.expandedChapterIds),
+    chapterContentMode: app.state.chapterContentMode,
     selectedChapterId: app.state.selectedChapterId,
     selectedSectionId: app.state.selectedSectionId,
     selectedSimulatorId: app.state.selectedSimulatorId,
@@ -2296,6 +2529,9 @@ function applySyncedState(nextState) {
     lastPasslineScore: { ...(incoming.lastPasslineScore || {}) },
     quizHistory: Array.isArray(incoming.quizHistory) ? incoming.quizHistory : [],
     view: incoming.view === 'teacher' ? 'practice' : (incoming.view || defaults.view),
+    chapterSidebarCollapsed: Boolean(incoming.chapterSidebarCollapsed),
+    expandedChapterIds: Array.isArray(incoming.expandedChapterIds) && incoming.expandedChapterIds.length ? incoming.expandedChapterIds : defaults.expandedChapterIds,
+    chapterContentMode: incoming.chapterContentMode === 'section' ? 'section' : defaults.chapterContentMode,
     teacherChapterId: incoming.teacherChapterId || defaults.teacherChapterId,
     teacherSource: incoming.teacherSource || defaults.teacherSource,
     teacherSourceType: incoming.teacherSourceType || defaults.teacherSourceType,
@@ -2305,6 +2541,7 @@ function applySyncedState(nextState) {
     practiceMode: incoming.view === 'teacher' ? 'teacher' : (incoming.practiceMode || defaults.practiceMode),
     meta: { updatedAt: incoming.meta?.updatedAt || defaults.meta.updatedAt },
   };
+  setExpandedChapter(app.state.selectedChapterId, true);
 }
 
 function touchState() {

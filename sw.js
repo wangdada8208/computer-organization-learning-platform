@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coa-v2-static-20260508c';
+const CACHE_NAME = 'coa-v2-static-20260509a';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   './favicon.ico',
   './data/chapters.json',
   './data/quizzes.json',
+  './data/teacher_quizzes.json',
 ];
 
 self.addEventListener('install', (event) => {

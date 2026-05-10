@@ -1522,19 +1522,19 @@ function handleClick(event) {
       break;
     case 'toggle-sidebar-collapse':
       app.state.chapterSidebarCollapsed = !app.state.chapterSidebarCollapsed;
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'toggle-chapter-expand':
       toggleChapterExpanded(d.chapterId);
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'switch-view':
       app.state.view = PRIMARY_VIEWS.includes(d.view) ? d.view : 'dashboard';
       app.state.mobileSidebarOpen = false;
       if (app.state.view !== 'practice') resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'open-teacher':
@@ -1572,7 +1572,7 @@ function handleClick(event) {
       }
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'open-chapter':
@@ -1631,7 +1631,7 @@ function handleClick(event) {
       app.state.practiceMode = 'overview';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'open-passline':
@@ -1641,7 +1641,7 @@ function handleClick(event) {
       app.state.practiceMode = 'passline';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'open-wrongbook':
@@ -1651,7 +1651,7 @@ function handleClick(event) {
       app.state.practiceMode = 'wrongbook';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'open-test':
@@ -1661,14 +1661,14 @@ function handleClick(event) {
       app.state.practiceMode = 'test';
       app.state.mobileSidebarOpen = false;
       resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'set-practice-mode':
       app.state.practiceMode = d.mode;
       app.state.activeTrack = d.mode === 'passline' ? 'passline' : 'textbook';
       if (d.mode !== 'simulator') resetPracticeSession();
-      touchState();
+      touchState(false);
       renderView();
       break;
     case 'practice-prev':
@@ -1766,14 +1766,14 @@ function handleChange(event) {
     app.state.selectedSectionId = getSelectedChapter().sections[0]?.id || null;
     app.state.practiceMode = 'overview';
     resetPracticeSession();
-    touchState();
+    touchState(false);
     renderView();
   }
   if (event.target.matches('[data-change="select-practice-section"]')) {
     app.state.selectedSectionId = event.target.value;
     app.state.practiceCursor = 0;
     resetPracticeSession();
-    touchState();
+    touchState(false);
     renderView();
   }
   if (event.target.matches('[data-change="practice-fill"]')) {
@@ -2628,7 +2628,7 @@ function applySyncedState(nextState) {
     view: incoming.view === 'teacher' ? 'practice' : (incoming.view || defaults.view),
     chapterSidebarCollapsed: Boolean(incoming.chapterSidebarCollapsed),
     expandedChapterIds: Array.isArray(incoming.expandedChapterIds) && incoming.expandedChapterIds.length ? incoming.expandedChapterIds : defaults.expandedChapterIds,
-    chapterContentMode: incoming.chapterContentMode === 'section' ? 'section' : defaults.chapterContentMode,
+    chapterContentMode: incoming.chapterContentMode === 'overview' ? 'overview' : 'section',
     teacherChapterId: incoming.teacherChapterId || defaults.teacherChapterId,
     teacherSource: incoming.teacherSource || defaults.teacherSource,
     teacherSourceType: incoming.teacherSourceType || defaults.teacherSourceType,
@@ -2640,9 +2640,9 @@ function applySyncedState(nextState) {
   };
 }
 
-function touchState() {
+function touchState(sync = true) {
   app.state.meta.updatedAt = nowIso();
-  if (app.runtime.syncReady && app.auth.user) {
+  if (sync && app.runtime.syncReady && app.auth.user) {
     app.auth.pendingChanges = true;
     app.auth.syncStatus = 'pending';
     app.syncMeta.pending = true;

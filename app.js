@@ -1358,6 +1358,58 @@ function renderTestScore(chapterId) {
   return `<div class="score-box"><div><strong>${correct}/${questions.length}</strong><div class="muted">正确率 ${percent}%</div></div><div class="muted">成绩已同步到学习总览与错题记录。</div></div>`;
 }
 
+function wrongbookOptionIndex(item, i) {
+  const labels = item.type === 'single'
+    ? (item.options || []).map((_, j) => String.fromCharCode(65 + j))
+    : (item.options || []).map((_, j) => String(j + 1));
+  const label = labels[i] || '';
+  return {
+    isUser: label === item.userAnswer,
+    isCorrect: label === item.correctAnswer,
+  };
+}
+
+function renderWrongbookOptions(item) {
+  const opts = item.options || [];
+  if (!opts.length) {
+    return `<p class="muted">你的答案：${item.userAnswer || '未作答'} · 正确答案：${item.correctAnswer}</p>`;
+  }
+  const labels = item.type === 'single'
+    ? opts.map((_, i) => String.fromCharCode(65 + i))
+    : opts.map((_, i) => String(i + 1));
+  const optionExplanations = item.optionExplanations || [];
+  const entries = opts.map((opt, i) => {
+    const { isUser, isCorrect } = wrongbookOptionIndex(item, i);
+    return {
+      label: labels[i],
+      text: opt,
+      explain: optionExplanations[i] || null,
+      isUser,
+      isCorrect,
+    };
+  });
+
+  return `
+    <ul class="wrongbook-options">
+      ${entries.map((e) => {
+        let cls = 'wrongbook-option';
+        if (e.isUser && e.isCorrect) cls += ' is-both';
+        else if (e.isUser) cls += ' is-user';
+        else if (e.isCorrect) cls += ' is-correct';
+        return `
+        <li class="${cls}">
+          <div class="wrongbook-option-row">
+            <span class="wrongbook-option-label">${e.label}</span>
+            <span class="wrongbook-option-text">${e.text}</span>
+            ${e.isUser && !e.isCorrect ? '<span class="wrongbook-tag tag-user">你的选择</span>' : ''}
+            ${e.isCorrect ? '<span class="wrongbook-tag tag-correct">正确答案</span>' : ''}
+          </div>
+          ${e.explain ? `<p class="wrongbook-option-explain">${e.explain}</p>` : ''}
+        </li>`;
+      }).join('')}
+    </ul>`;
+}
+
 function renderWrongbook(chapter, wrongs) {
   return `
     <section class="training-panel training-panel-sheet">
@@ -1375,7 +1427,7 @@ function renderWrongbook(chapter, wrongs) {
             <span class="eyebrow">错 ${item.wrongCount} 次</span>
             <h4>${item.stem}</h4>
           </div>
-          <p class="muted">你的答案：${item.userAnswer || '未作答'} · 正确答案：${item.correctAnswer}</p>
+          ${renderWrongbookOptions(item)}
           ${item.explanation ? `<p class="body-copy">${item.explanation}</p>` : ''}
           <small class="muted">最近一次 ${formatDate(item.lastWrongAt)}</small>
           <div class="action-row small">
@@ -1922,6 +1974,8 @@ function recordWrongAnswer(question, userAnswer, correctAnswer) {
     explanation: question.explanation || '',
     relatedTopicId: question.relatedTopicId || null,
     relatedSimulatorId: question.relatedSimulatorId || null,
+    options: question.options || null,
+    optionExplanations: question.optionExplanations || null,
     wrongCount: (existing?.wrongCount || 0) + 1,
     lastWrongAt: new Date().toISOString(),
   };

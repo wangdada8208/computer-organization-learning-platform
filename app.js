@@ -1372,7 +1372,12 @@ function wrongbookOptionIndex(item, i) {
 function renderWrongbookOptions(item) {
   const opts = item.options || [];
   if (!opts.length) {
-    return `<p class="muted">你的答案：${item.userAnswer || '未作答'} · 正确答案：${item.correctAnswer}</p>`;
+    return `<p class="wrongbook-answer-bar">
+      <span class="wrongbook-answer-label">你的答案</span>
+      <strong class="wrongbook-answer-val is-user">${item.userAnswer || '未作答'}</strong>
+      <span class="wrongbook-answer-label">正确答案</span>
+      <strong class="wrongbook-answer-val is-correct">${item.correctAnswer}</strong>
+    </p>`;
   }
   const labels = item.type === 'single'
     ? opts.map((_, i) => String.fromCharCode(65 + i))
@@ -1389,7 +1394,13 @@ function renderWrongbookOptions(item) {
     };
   });
 
+  const hasUserMark = entries.some((e) => e.isUser);
+  const userNotice = (!hasUserMark && item.userAnswer && item.userAnswer !== '未作答')
+    ? `<p class="wrongbook-user-notice">你的选择：<strong>${item.userAnswer}</strong></p>`
+    : '';
+
   return `
+    ${userNotice}
     <ul class="wrongbook-options">
       ${entries.map((e) => {
         let cls = 'wrongbook-option';

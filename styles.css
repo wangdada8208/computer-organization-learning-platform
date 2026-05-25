@@ -625,16 +625,17 @@ ul { margin: 0; padding-left: 18px; }
   border-left: 4px solid var(--line-strong);
 }
 .wrongbook-option.is-user {
-  background: var(--rose-soft);
-  border-left-color: var(--rose);
+  background: #fef0f2;
+  border-left: 5px solid #d94f5c;
+  box-shadow: inset 0 0 0 1px rgba(217, 79, 92, 0.12);
 }
 .wrongbook-option.is-correct {
   background: var(--green-soft);
-  border-left-color: var(--green);
+  border-left: 5px solid var(--green);
 }
 .wrongbook-option.is-both {
   background: var(--green-soft);
-  border-left-color: var(--green);
+  border-left: 5px solid var(--green);
 }
 .wrongbook-option-row {
   display: flex;
@@ -648,10 +649,16 @@ ul { margin: 0; padding-left: 18px; }
   min-width: 22px;
   color: var(--ink);
 }
+.wrongbook-option.is-user .wrongbook-option-label {
+  color: #c03b46;
+}
 .wrongbook-option-text {
   flex: 1;
   font-size: 14px;
   color: var(--ink);
+}
+.wrongbook-option.is-user .wrongbook-option-text {
+  color: #a03842;
 }
 .wrongbook-tag {
   display: inline-flex;
@@ -663,9 +670,10 @@ ul { margin: 0; padding-left: 18px; }
   flex-shrink: 0;
 }
 .wrongbook-tag.tag-user {
-  background: var(--rose-soft);
-  color: var(--rose);
-  border: 1px solid var(--rose);
+  background: #fef0f2;
+  color: #c03b46;
+  border: 1px solid #e8a0a6;
+  font-weight: 700;
 }
 .wrongbook-tag.tag-correct {
   background: var(--green-soft);
@@ -681,6 +689,47 @@ ul { margin: 0; padding-left: 18px; }
   border-left: 3px solid var(--line);
   background: var(--surface-alt);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+/* ── Wrongbook answer bar (judge/fill questions without options) ── */
+.wrongbook-answer-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.wrongbook-answer-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+.wrongbook-answer-val {
+  font-size: 15px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.wrongbook-answer-val.is-user {
+  background: #fef0f2;
+  color: #c03b46;
+  border: 1px solid #e8a0a6;
+}
+.wrongbook-answer-val.is-correct {
+  background: var(--green-soft);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+/* ── Fallback notice when userAnswer doesn't match any option label ── */
+.wrongbook-user-notice {
+  margin: 0 0 6px 0;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #c03b46;
+  background: #fef0f2;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e8a0a6;
 }
 .next-side-actions {
   display: flex;

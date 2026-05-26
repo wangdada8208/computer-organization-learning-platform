@@ -23,7 +23,7 @@
             ],
             "answerIndex": 0,
             "explanation": "存储程序并按地址顺序执行是冯·诺依曼机区别于其他计算机模型的最本质特征。其他选项虽也相关，但不是最核心思想。",
-            "relatedTopicId": "ch1-s1-p1",
+            "relatedTopicId": "ch1-s2-p1",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "正确。冯·诺依曼体系结构的精髓就是将程序和数据存放在同一存储器中，按地址顺序逐条执行指令。",
@@ -48,7 +48,7 @@
             ],
             "answerIndex": 1,
             "explanation": "MIPS = f/(CPI×10⁶) = 2×10⁹/(4×10⁶) = 500",
-            "relatedTopicId": "ch1-s1-p2",
+            "relatedTopicId": "ch1-s3-p4",
             "relatedSimulatorId": "sim-base",
             "optionExplanations": [
               "8000 计算错误。MIPS = 2×10⁹ / (4×10⁶) = 500，不等于8000。",
@@ -73,7 +73,7 @@
             ],
             "answerIndex": 3,
             "explanation": "CPU执行时间=指令条数×CPI×时钟周期。增加Cache不会直接改变这三个参数（Cache是通过降低平均访存时间间接提升，不在此公式范畴）。",
-            "relatedTopicId": "ch1-s1-p3",
+            "relatedTopicId": "ch1-s3-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "减少指令条数可以缩短CPU时间，在公式中指令条数IC是直接因子。",
@@ -129,7 +129,7 @@
             ],
             "answerIndex": 1,
             "explanation": "层次从底到顶：微程序→机器语言→OS→汇编→高级语言。底层是硬件实现，上层是软件抽象。",
-            "relatedTopicId": "ch1-s2-p2",
+            "relatedTopicId": "ch1-s1-p2",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "高级语言在顶层，不是底层。正确的层次自底向上是：微程序→机器语言→OS→高级语言。",
@@ -154,7 +154,7 @@
             ],
             "answerIndex": 1,
             "explanation": "硬件和软件在逻辑功能上是等效的——同一功能既可用硬件实现也可用软件模拟，这叫软硬件逻辑等价性。",
-            "relatedTopicId": "ch1-s2-p3",
+            "relatedTopicId": "ch1-s1-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "不正确。硬件和软件在逻辑功能上可以实现同样的功能，所以是等效的。",
@@ -185,7 +185,7 @@
             ],
             "answerIndex": 1,
             "explanation": "MAR（存储器地址寄存器）的位数直接决定可寻址的存储单元个数=2^MAR位数。存储字长由MDR位数决定。",
-            "relatedTopicId": "ch1-s3-p1",
+            "relatedTopicId": "ch1-s2-p5",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "存储字长由MDR位数决定，不是MAR。MAR存放地址，位数决定能访问多少个存储单元。",
@@ -210,7 +210,7 @@
             ],
             "answerIndex": 2,
             "explanation": "补码中[-X]补=[X]补连同符号位取反+1。这是快速求相反数补码的方法。正数补码=原码，不需取反。",
-            "relatedTopicId": "ch1-s3-p2",
+            "relatedTopicId": "ch1-s1-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "错误。正数的补码就是其原码本身，无需取反+1，这条规则只适用于负数。",
@@ -581,7 +581,7 @@
             ],
             "answerIndex": 2,
             "explanation": "基因编辑属于生物技术领域，不是计算机的应用领域。科学计算、工业控制、虚拟现实都是计算机典型应用。",
-            "relatedTopicId": "ch2-s1-p3",
+            "relatedTopicId": "ch2-s2-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "科学计算是计算机最早也是最重要的应用领域之一，如天气预报、物理模拟等。",
@@ -612,7 +612,7 @@
             ],
             "answerIndex": 2,
             "explanation": "摩尔定律(Gordon Moore, 1965)：集成电路上晶体管数量约每18-24个月翻一番。",
-            "relatedTopicId": "ch2-s2-p1",
+            "relatedTopicId": "ch2-s1-p4",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "6个月过于频繁，不是摩尔定律的预测周期。",
@@ -637,7 +637,7 @@
             ],
             "answerIndex": 1,
             "explanation": "微型计算机的核心部件是微处理器(CPU芯片)。1971年Intel 4004标志微处理器时代开始。",
-            "relatedTopicId": "ch2-s2-p2",
+            "relatedTopicId": "ch2-s1-p7",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "存储器是重要的，但微型计算机的核心是微处理器（CPU集成在单一芯片上）。",
@@ -662,7 +662,7 @@
             ],
             "answerIndex": 2,
             "explanation": "IBM System/360(1964)首次实现了系列化兼容——不同型号的机器可运行相同的软件，是计算机历史上的里程碑。",
-            "relatedTopicId": "ch2-s2-p3",
+            "relatedTopicId": "ch2-s1-p3",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "第一台PC是1970年代的事，IBM System/360是1964年推出的。",
@@ -945,7 +945,7 @@
             ],
             "answerIndex": 1,
             "explanation": "数据总线是双向传输的——CPU可以从中读数据也可以写数据。地址总线是单向的（CPU发出），控制总线每根线有固定方向。",
-            "relatedTopicId": "ch3-s1-p1",
+            "relatedTopicId": "ch3-s1-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "地址总线是单向的，由CPU或总线主设备发出地址到各部件。",
@@ -970,7 +970,7 @@
             ],
             "answerIndex": 2,
             "explanation": "全互锁异步通信共4步：请求→应答→撤销请求→撤销应答，形成完整的握手闭环。",
-            "relatedTopicId": "ch3-s1-p2",
+            "relatedTopicId": "ch3-s3-p7",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "2步不足以完成全互锁异步通信。全互锁需要请求→响应→撤销请求→撤销响应共4步。",
@@ -995,7 +995,7 @@
             ],
             "answerIndex": 0,
             "explanation": "总线复用指地址线和数据线共用同一组物理连线，分时传送地址和数据，目的是减少引脚数。",
-            "relatedTopicId": "ch3-s1-p3",
+            "relatedTopicId": "ch3-s2-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "正确。总线复用指地址线和数据线共用同一组物理线路，分时使用——先传地址再传数据，可减少引脚数。",
@@ -1026,7 +1026,7 @@
             ],
             "answerIndex": 1,
             "explanation": "总线带宽=总线宽度×总线频率=64bit×100MHz=8B×100M=800MB/s",
-            "relatedTopicId": "ch3-s2-p1",
+            "relatedTopicId": "ch3-s2-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "100MB/s是错误计算。总线带宽 = 位宽×频率 = 64bit×100MHz = 6400Mbit/s = 800MB/s。",
@@ -1051,7 +1051,7 @@
             ],
             "answerIndex": 2,
             "explanation": "总线四大特性：机械特性、电气特性、功能特性、时间特性。\"价格特性\"不存在。",
-            "relatedTopicId": "ch3-s2-p2",
+            "relatedTopicId": "ch3-s2-p1",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "机械特性描述总线的物理尺寸、引脚排列等，属于总线特性之一。",
@@ -1082,7 +1082,7 @@
             ],
             "answerIndex": 2,
             "explanation": "链式查询只需3根线：BS(总线忙)、BR(总线请求)、BG(总线同意)。BG线以菊花链方式串行连接所有设备。",
-            "relatedTopicId": "ch3-s3-p1",
+            "relatedTopicId": "ch3-s3-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "1根控制线不足以实现链式查询的优先级判决。",
@@ -1107,7 +1107,7 @@
             ],
             "answerIndex": 1,
             "explanation": "PCIe是通信总线，用于系统与高速外设之间的点对点串行通信。",
-            "relatedTopicId": "ch3-s3-p2",
+            "relatedTopicId": "ch3-s2-p5",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "片内总线是CPU芯片内部的总线，PCIe不是这个层次。",
@@ -1138,7 +1138,7 @@
             ],
             "answerIndex": 1,
             "explanation": "计数器定时查询方式取消了BG线，改用设备地址线，需要log₂n根额外控制线来传输设备地址。",
-            "relatedTopicId": "ch3-s4-p1",
+            "relatedTopicId": "ch3-s3-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "数据线是两种方式都需要的，不是计数器查询比链式查询多出来的。",
@@ -1163,7 +1163,7 @@
             ],
             "answerIndex": 1,
             "explanation": "独立请求方式每台设备有独立的BR和BG两根线，共2根/设备。",
-            "relatedTopicId": "ch3-s4-p2",
+            "relatedTopicId": "ch3-s3-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "1根不足以完成独立请求的握手（需要请求和应答两根线）。",
@@ -1503,7 +1503,7 @@
             ],
             "answerIndex": 1,
             "explanation": "Cache用SRAM实现——速度快但集成度低成本高。DRAM速度慢但容量大，用作主存。Flash和磁盘是辅存。",
-            "relatedTopicId": "ch4-s1-p1",
+            "relatedTopicId": "ch4-s6-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "DRAM虽然也是半导体存储器，但速度较慢，通常用作主存而非Cache。",
@@ -1528,7 +1528,7 @@
             ],
             "answerIndex": 0,
             "explanation": "直接映射Cache地址分三段：标记(tag)用于区分不同主存块映射到同一行的情况，行号(index)确定Cache行位置，块内偏移(offset)定位块内具体字节。",
-            "relatedTopicId": "ch4-s1-p2",
+            "relatedTopicId": "ch4-s9-p2",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "正确。直接映射Cache将主存地址划分为三段：标记(tag)、行号(line/index)、块内偏移(block offset)。行号直接决定存放在Cache的哪一行。",
@@ -1553,7 +1553,7 @@
             ],
             "answerIndex": 1,
             "explanation": "汉明码能纠正1位错、检测2位错。通过插入k个校验位（位置在2的幂次方），使n+k位编码中任意两个合法码字距离≥3。纠错时重新计算校验位的奇偶性，得到的指误字指出出错位位置。",
-            "relatedTopicId": "ch4-s1-p3",
+            "relatedTopicId": "ch4-s7-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "不正确。汉明码能纠正1位错误、检测2位错误，而不是检1纠2。",
@@ -1584,7 +1584,7 @@
             ],
             "answerIndex": 1,
             "explanation": "DRAM存储元是电容+MOS管，电容会缓慢漏电，必须定期刷新（读出后重写）才能保持数据。SRAM用双稳态触发器，不需要刷新。",
-            "relatedTopicId": "ch4-s2-p1",
+            "relatedTopicId": "ch4-s6-p2",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "触发器是SRAM的存储单元，不易漏电，不是DRAM需要刷新的原因。",
@@ -1609,7 +1609,7 @@
             ],
             "answerIndex": 1,
             "explanation": "写回策略：写入时只更新Cache不更新主存，当该块被替换出Cache时才写回主存（需脏位标记是否被修改过）。优点是速度快，缺点是主存数据可能过时。",
-            "relatedTopicId": "ch4-s2-p2",
+            "relatedTopicId": "ch4-s9-p5",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "这是'写直达(Write Through)'策略的特点，不是写回策略。",
@@ -1634,7 +1634,7 @@
             ],
             "answerIndex": 3,
             "explanation": "磁盘属于磁表面存储器，不是半导体存储器。半导体存储器包括SRAM、DRAM和各种ROM（PROM/EPROM/EEPROM/Flash）。",
-            "relatedTopicId": "ch4-s2-p3",
+            "relatedTopicId": "ch4-s1-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "SRAM（静态随机存取存储器）是半导体存储器的一种。",
@@ -1665,7 +1665,7 @@
             ],
             "answerIndex": 1,
             "explanation": "LRU（Least Recently Used）替换近期最少使用的块。基于局部性原理：最近未用的块将来也不太可能被使用。这是命中率最高的替换策略。",
-            "relatedTopicId": "ch4-s3-p1",
+            "relatedTopicId": "ch4-s9-p5",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "最先进入的被替换是FIFO（先进先出）策略，不是LRU。",
@@ -1690,7 +1690,7 @@
             ],
             "answerIndex": 1,
             "explanation": "存储器层次结构从上到下：寄存器(速度最快容量最小)→Cache→主存(DRAM)→辅存(磁盘/SSD，速度最慢容量最大)。",
-            "relatedTopicId": "ch4-s3-p2",
+            "relatedTopicId": "ch4-s2-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "顺序反了。层次结构从顶层（离CPU最近）到底层依次是寄存器→Cache→主存→辅存。",
@@ -1721,7 +1721,7 @@
             ],
             "answerIndex": 0,
             "explanation": "平均访存时间=h×tc+(1-h)×tm。h为命中率（CPU在Cache中找到数据的概率），tc为Cache访问时间，tm为主存访问时间。若h=0.95、tc=5ns、tm=50ns，则平均=7.25ns。",
-            "relatedTopicId": "ch4-s4-p1",
+            "relatedTopicId": "ch4-s9-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "正确。平均访存时间 = 命中率×Cache访问时间 + (1-命中率)×主存访问时间 = h×tc + (1-h)×tm。",
@@ -1746,7 +1746,7 @@
             ],
             "answerIndex": 1,
             "explanation": "8体低位交叉编址：连续地址分布在不同体中（体号=地址%8），可实现流水线方式访问不同体，带宽理论上提升8倍。",
-            "relatedTopicId": "ch4-s4-p2",
+            "relatedTopicId": "ch4-s8-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "同一体是高位交叉编址的特点——连续地址位于同一模块体内。",
@@ -2105,7 +2105,7 @@
             ],
             "answerIndex": 0,
             "explanation": "程序查询方式CPU主动循环检测设备状态，CPU与外设完全串行工作——CPU大量时间浪费在等待查询上，效率最低。中断和DMA都实现了CPU与I/O的并行。",
-            "relatedTopicId": "ch5-s1-p1",
+            "relatedTopicId": "ch5-s2-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "正确。程序查询方式是CPU不断循环查询I/O设备状态，CPU在查询期间不能做其他工作，效率最低。",
@@ -2130,7 +2130,7 @@
             ],
             "answerIndex": 2,
             "explanation": "DMA（直接存储器访问）最适合磁盘等高速大批量数据传送——在主存和I/O间建立直接通路，CPU仅在传送开始和结束时介入，传输过程完全由DMA控制器硬件完成。",
-            "relatedTopicId": "ch5-s1-p2",
+            "relatedTopicId": "ch5-s4-p1",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "程序查询方式每次传送都要CPU全程参与、不断查询，无法实现高速大批量传送。",
@@ -2161,7 +2161,7 @@
             ],
             "answerIndex": 1,
             "explanation": "DMA在存取周期结束时响应总线请求。区别于中断在指令执行结束时响应——DMA响应更及时，可以在当前总线周期结束后立即获得总线控制权。",
-            "relatedTopicId": "ch5-s2-p1",
+            "relatedTopicId": "ch5-s4-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "指令结束时才响应太慢，DMA需要更高的响应速度来保证数据不丢失。",
@@ -2186,7 +2186,7 @@
             ],
             "answerIndex": 1,
             "explanation": "中断嵌套指高优先级中断可以打断正在执行的低优先级中断服务程序，先去处理更紧急的高优先级事件，完成后返回继续低优先级服务。这是通过中断屏蔽技术实现的。",
-            "relatedTopicId": "ch5-s2-p2",
+            "relatedTopicId": "ch5-s3-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "多个中断同时处理表述不准确——CPU同时只能处理一个中断服务程序。嵌套是层次关系，不是并行处理。",
@@ -2217,7 +2217,7 @@
             ],
             "answerIndex": 0,
             "explanation": "中断响应第一步：关中断（置EINT=0），防止响应过程中被新的中断请求干扰。然后才是保存断点（PC和PSW入栈）。这三步由硬件自动完成（中断隐指令）。",
-            "relatedTopicId": "ch5-s3-p1",
+            "relatedTopicId": "ch5-s3-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "正确。中断响应时，CPU做的第一件事是关中断，防止在保存断点和取中断向量的过程中被新的中断干扰。",
@@ -2242,7 +2242,7 @@
             ],
             "answerIndex": 2,
             "explanation": "I/O接口的四大功能：选址、传送命令、传送数据、反映设备状态。算术运算是CPU（ALU）的功能，不是I/O接口的任务。",
-            "relatedTopicId": "ch5-s3-p2",
+            "relatedTopicId": "ch5-s1-p1",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "选址（设备选择）是I/O接口的基本功能之一——根据地址线译码选择相应设备。",
@@ -2273,7 +2273,7 @@
             ],
             "answerIndex": 3,
             "explanation": "中断隐指令包括：关中断、保存断点(PC/PSW入栈)、形成中断服务程序入口地址（取向量）。数据传送是中断服务程序的事，不是隐指令的内容。",
-            "relatedTopicId": "ch5-s4-p1",
+            "relatedTopicId": "ch5-s3-p3",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "关中断是中断隐指令的一部分——CPU在响应中断时自动关中断以保护现场。",
@@ -2298,7 +2298,7 @@
             ],
             "answerIndex": 1,
             "explanation": "中断屏蔽字：每位对应一个中断源优先级。CPU可以编程设置屏蔽字——1表示屏蔽该级及更低级中断。这样低优先级无法打断高优先级服务，实现了灵活的动态优先级管理。",
-            "relatedTopicId": "ch5-s4-p2",
+            "relatedTopicId": "ch5-s3-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "中断屏蔽字不会加速中断处理——它为中断优先级控制引入额外判断，但不以加速为目的。",
@@ -2619,7 +2619,7 @@
             ],
             "answerIndex": 1,
             "explanation": "[-X]补的快速求法：[X]补连同符号位一起取反再加1。例如[+5]补=0101，[-5]补=1011。这是补码最重要的性质之一。",
-            "relatedTopicId": "ch6-s1-p1",
+            "relatedTopicId": "ch6-s1-p5",
             "relatedSimulatorId": "sim-base",
             "optionExplanations": [
               "错误。原码取反得到的是反码，不是[-X]补。",
@@ -2644,7 +2644,7 @@
             ],
             "answerIndex": 1,
             "explanation": "Booth算法是补码乘法的标准算法——不需要将补码转回原码，符号位参与运算。通过检查乘数相邻两位决定+[X]补、-[X]补或+0。",
-            "relatedTopicId": "ch6-s1-p2",
+            "relatedTopicId": "ch6-s3-p5",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "Booth和他的算法处理的是补码乘法，不是原码。原码乘法用原码一位乘算法。",
@@ -2669,7 +2669,7 @@
             ],
             "answerIndex": 0,
             "explanation": "IEEE754中NaN（Not a Number）表示非数值结果。阶码全1且尾数M≠0时表示NaN，典型如0/0、∞-∞等未定义运算。1/0得±∞（阶码全1尾数全0）。",
-            "relatedTopicId": "ch6-s1-p3",
+            "relatedTopicId": "ch6-s4-p2",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "正确。IEEE754标准规定NaN（Not a Number）表示非数值结果，如0/0、∞-∞、负数的平方根等无效运算。",
@@ -2700,7 +2700,7 @@
             ],
             "answerIndex": 0,
             "explanation": "溢出判断可用Cn⊕Cn-1：符号位进位与最高数值位进位异或。若两个进位不同→溢出。例如双符号位法用00正常/01正溢出/10负溢出；进位判断法看同号相加结果变号。",
-            "relatedTopicId": "ch6-s2-p1",
+            "relatedTopicId": "ch6-s3-p2",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "正确。Cn⊕Cn-1（最高进位与次高进位的异或）是判断补码运算是否溢出的经典方法：若异或结果为1则溢出。",
@@ -2725,7 +2725,7 @@
             ],
             "answerIndex": 1,
             "explanation": "浮点数加减第一步是对阶——小阶向大阶对齐。将阶码小的数的尾数右移，阶码增加至与大阶相同。小阶向大阶可保证较大数的精度不损失。",
-            "relatedTopicId": "ch6-s2-p2",
+            "relatedTopicId": "ch6-s4-p3",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "大阶向小阶对齐会导致大数失真——尾数向右移可能丢失有效位。正确的做法是反过来，保护大数的精度。",
@@ -2750,7 +2750,7 @@
             ],
             "answerIndex": 3,
             "explanation": "全加器输入三个：Ai、Bi、Ci-1（低位进位）。输出两个：Si（和）=Ai⊕Bi⊕Ci-1，Ci（进位）=AiBi+(Ai⊕Bi)Ci-1。Si是输出不是输入。",
-            "relatedTopicId": "ch6-s2-p3",
+            "relatedTopicId": "ch6-s5-p1",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "Ai（被加数位）是全加器的输入端之一。",
@@ -2781,7 +2781,7 @@
             ],
             "answerIndex": 1,
             "explanation": "IEEE754单精度浮点数：1位符号+8位阶码(移码偏127)+23位尾数(隐含1)。阶码真值=E-127。双精度偏置1023。",
-            "relatedTopicId": "ch6-s3-p1",
+            "relatedTopicId": "ch6-s4-p2",
             "relatedSimulatorId": "sim-base",
             "optionExplanations": [
               "64是双精度指数中实际值的偏置，不是单精度IEEE754的。",
@@ -2806,7 +2806,7 @@
             ],
             "answerIndex": 2,
             "explanation": "8位补码整数范围：-2⁷ ~ 2⁷-1 = -128 ~ +127。注意负数比正数多一个（-128没有对应的正数+128）。",
-            "relatedTopicId": "ch6-s3-p2",
+            "relatedTopicId": "ch6-s1-p5",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "0~255是无符号8位整数的范围，补码表示有符号数时包含负数。",
@@ -2837,7 +2837,7 @@
             ],
             "answerIndex": 2,
             "explanation": "双符号位：00正常正数，11正常负数，01正溢出（两个正数相加超出了表示范围），10负溢出（两个负数相加超出范围）。双符号位01表示上溢。",
-            "relatedTopicId": "ch6-s4-p1",
+            "relatedTopicId": "ch6-s3-p3",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "双符号位00表示正数、无溢出。01不是表示正数。",
@@ -2862,7 +2862,7 @@
             ],
             "answerIndex": 1,
             "explanation": "浮点数中尾数位数决定精度（有效数字的位数），阶码位数决定表示范围（能表示的最大最小数值）。",
-            "relatedTopicId": "ch6-s4-p2",
+            "relatedTopicId": "ch6-s4-p1",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "浮点数的表示范围主要由阶码的位数决定（阶码决定了数值的量级）。",
@@ -3221,7 +3221,7 @@
             ],
             "answerIndex": 0,
             "explanation": "变址寻址EA=(IX)+A，IX为变址寄存器内容（可递增），A为形式地址（偏移量）。数组访问的经典方式：IX存基址，每循环一次加1指向下一元素。",
-            "relatedTopicId": "ch7-s1-p1",
+            "relatedTopicId": "ch7-s3-p7",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "正确。变址寻址的有效地址 EA = (IX) + A，其中IX为变址寄存器的内容，A为指令中的形式地址。常用于数组访问。",
@@ -3271,7 +3271,7 @@
             ],
             "answerIndex": 0,
             "explanation": "基址寻址中BR存放程序段或数据段的起始地址（基地址），通常由操作系统设置。这允许程序在主存中灵活放置（重定位），程序员无需关心绝对地址。",
-            "relatedTopicId": "ch7-s1-p3",
+            "relatedTopicId": "ch7-s3-p9",
             "relatedSimulatorId": "sim-pipeline",
             "optionExplanations": [
               "正确。基址寄存器BR中存放的是程序段或数据段的起始地址（基地址），加上形式地址A（偏移量）形成有效地址，用于程序的动态重定位和分段管理。",
@@ -3302,7 +3302,7 @@
             ],
             "answerIndex": 1,
             "explanation": "RISC指令长度通常定长32位。格式规整便于流水线取指和译码。对比CISC的x86变长1-15字节，RISC的设计哲学是简单规整。",
-            "relatedTopicId": "ch7-s2-p1",
+            "relatedTopicId": "ch7-s5-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "变长指令是CISC的特征，RISC追求固定长度以简化流水线。",
@@ -3327,7 +3327,7 @@
             ],
             "answerIndex": 3,
             "explanation": "CISC核心特征：指令变长格式多样、支持主存操作数、寻址方式丰富(10+种)、常用微程序控制。RISC则相反——定长指令、仅Load/Store访存、简单寻址。",
-            "relatedTopicId": "ch7-s2-p2",
+            "relatedTopicId": "ch7-s5-p3",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "定长指令是RISC的特征，不是CISC。",
@@ -3352,7 +3352,7 @@
             ],
             "answerIndex": 1,
             "explanation": "操作码扩展（Huffman编码思想）：短操作码给高频指令（如MOV/ADD），长操作码给低频指令（如DIV/浮点运算）。在有限指令字长内支持更多指令，同时缩短常用指令。",
-            "relatedTopicId": "ch7-s2-p3",
+            "relatedTopicId": "ch7-s1-p2",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "增加指令种类通常会增大平均指令长度或复杂度，不是扩展操作码的直接目的。",
@@ -3383,7 +3383,7 @@
             ],
             "answerIndex": 2,
             "explanation": "寄存器寻址：操作数在CPU内部寄存器中，无需访存，速度最快。RISC的Load-Store架构中绝大多数运算指令都使用寄存器寻址。",
-            "relatedTopicId": "ch7-s3-p1",
+            "relatedTopicId": "ch7-s3-p3",
             "relatedSimulatorId": "sim-float",
             "optionExplanations": [
               "间接寻址需要两次访存（取地址→取操作数），速度较慢。",
@@ -3408,7 +3408,7 @@
             ],
             "answerIndex": 1,
             "explanation": "相对寻址EA=(PC)+A（位移量用补码表示可正可负），专门用于转移指令。优点：代码与位置无关——程序可以加载到主存任何位置运行。",
-            "relatedTopicId": "ch7-s3-p2",
+            "relatedTopicId": "ch7-s3-p9",
             "relatedSimulatorId": "sim-pipeline",
             "optionExplanations": [
               "数组访问通常使用变址寻址，不是相对寻址的主要用途。",
@@ -3729,7 +3729,7 @@
             ],
             "answerIndex": 0,
             "explanation": "理想情况下k段流水线加速比趋近于k。n条指令在k段流水线上执行时间=(k+n-1)τ，加速比=n×kτ/(k+n-1)τ→k(n→∞)。实际因冒险和开销低于理论值。",
-            "relatedTopicId": "ch8-s1-p1",
+            "relatedTopicId": "ch8-s3-p3",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "正确。k段流水线在任务数n→∞时，加速比趋近于k（流水线段数）。因为理想情况下每拍可完成一个任务，吞吐率是顺序执行的k倍。",
@@ -3754,7 +3754,7 @@
             ],
             "answerIndex": 1,
             "explanation": "中断响应时先将PC（程序计数器/断点地址）和PSW（程序状态字）压入堆栈保存，以便中断服务完成后恢复。这些由硬件自动完成（中断隐指令），无需编程。",
-            "relatedTopicId": "ch8-s1-p2",
+            "relatedTopicId": "ch8-s4-p2",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "ACC（累加器）是通用寄存器，不一定在中断响应时最先保存。",
@@ -3785,7 +3785,7 @@
             ],
             "answerIndex": 3,
             "explanation": "数据冒险的三种解决：旁路/转发(前递ALU结果)、插入气泡(流水线暂停)、编译重排(编译器调度指令顺序)。\"增加段数\"不能解决数据冒险，反而可能加重。",
-            "relatedTopicId": "ch8-s2-p1",
+            "relatedTopicId": "ch8-s3-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "旁路技术（数据前推）是解决数据相关的重要方法——将ALU结果直接前推到需要该数据的流水段。",
@@ -3810,7 +3810,7 @@
             ],
             "answerIndex": 1,
             "explanation": "超标量处理器：每时钟周期可以发射（issue）多条指令到不同功能单元并行执行。如4发射超标量每周期最多执行4条指令。需要多个执行单元和复杂的调度逻辑。",
-            "relatedTopicId": "ch8-s2-p2",
+            "relatedTopicId": "ch8-s3-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "每周期发射1条指令是标量处理器的特征，不是超标量。",
@@ -3866,7 +3866,7 @@
             ],
             "answerIndex": 3,
             "explanation": "CPU内部寄存器包括PC、IR、MAR、MDR、ACC、MQ、通用寄存器等。DRAM是动态随机存取存储器芯片，属于主存部件，不在CPU内部。",
-            "relatedTopicId": "ch8-s3-p2",
+            "relatedTopicId": "ch8-s1-p2",
             "relatedSimulatorId": "sim-pipeline",
             "optionExplanations": [
               "PC（程序计数器）是CPU内部的重要寄存器。",
@@ -3897,7 +3897,7 @@
             ],
             "answerIndex": 2,
             "explanation": "转移指令引起控制冒险——转移发生前CPU已预取了后续指令，转移后这些预取指令无效需要清空。解决：分支预测、延迟转移（转移后紧跟的指令总会被执行）。",
-            "relatedTopicId": "ch8-s4-p1",
+            "relatedTopicId": "ch8-s3-p2",
             "relatedSimulatorId": "sim-complement",
             "optionExplanations": [
               "结构冒险是硬件资源冲突导致的（如一个存储器端口同时被取指和读数据争用），不是转移指令引起的。",
@@ -3922,7 +3922,7 @@
             ],
             "answerIndex": 2,
             "explanation": "指令周期包括取指+（可能间址）+执行+（可能中断）。并非所有指令都需要间址周期（取决于寻址方式），中断周期只在响应中断时才出现。",
-            "relatedTopicId": "ch8-s4-p2",
+            "relatedTopicId": "ch8-s2-p1",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "只取指不能完成指令执行——指令周期远不止取指阶段。",
@@ -4243,7 +4243,7 @@
             ],
             "answerIndex": 1,
             "explanation": "取指周期第一步：PC→MAR。将程序计数器中的指令地址送到存储器地址寄存器，为读取指令做准备。这是每条指令执行的起点。",
-            "relatedTopicId": "ch9-s1-p1",
+            "relatedTopicId": "ch9-s1-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "正确。取指周期的第一步微操作是PC→MAR，将程序计数器的内容（下一条指令的地址）送入存储器地址寄存器，准备读取指令。",
@@ -4268,7 +4268,7 @@
             ],
             "answerIndex": 1,
             "explanation": "间址周期：当指令使用间接寻址时，需要额外访问主存获取操作数的有效地址。Ad(IR)→MAR→Read→MDR→Ad(IR)，将间址单元内容(有效地址)写回指令地址码字段。",
-            "relatedTopicId": "ch9-s1-p2",
+            "relatedTopicId": "ch9-s1-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "取出操作码是取指周期的任务（IR←MDR，然后通过操作码译码），间址周期不重复取操作码。",
@@ -4293,7 +4293,7 @@
             ],
             "answerIndex": 3,
             "explanation": "CU输出信号包括：寄存器读写使能、ALU功能选择、Read/Write命令、PC控制、数据通路选择等。INTR是中断请求信号，是从外部输入到CU的输入信号，不是CU的输出。",
-            "relatedTopicId": "ch9-s1-p3",
+            "relatedTopicId": "ch9-s2-p1",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "寄存器读写使能是CU输出的控制信号之一——控制何时对哪个寄存器读写。",
@@ -4324,7 +4324,7 @@
             ],
             "answerIndex": 3,
             "explanation": "三级时序系统：工作周期（取指/间址/执行/中断周期）、节拍（T0,T1...Tn）、脉冲（时钟触发沿）。\"指令\"是机器指令，不属于时序系统的层级。",
-            "relatedTopicId": "ch9-s2-p1",
+            "relatedTopicId": "ch9-s2-p3",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "工作周期（如取指周期、间址周期、执行周期）是三级时序的最高层。",
@@ -4349,7 +4349,7 @@
             ],
             "answerIndex": 0,
             "explanation": "中断周期微操作：关中断→SP-1压PC→SP-1压PSW→取向量地址→PC。这些都是硬件自动完成的中断隐指令，不需要程序执行取操作数或加法。",
-            "relatedTopicId": "ch9-s2-p2",
+            "relatedTopicId": "ch9-s1-p5",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "正确。中断周期的核心微操作是关中断（防止新中断干扰）和保存断点（将PC、PSW等压入堆栈或特定存储单元），以便中断结束后能正确返回原程序。",
@@ -4374,7 +4374,7 @@
             ],
             "answerIndex": 1,
             "explanation": "STA（Store Accumulator）存数指令：ACC内容写入主存。需要在执行周期发出Write写命令：Ad(IR)→MAR, ACC→MDR, Write→将MDR内容写入M(MAR)。这涉及写操作而非仅读取。",
-            "relatedTopicId": "ch9-s2-p3",
+            "relatedTopicId": "ch9-s1-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "STA（Store Accumulator）指令需要将累加器内容写入主存，是'写'操作而非只读不写。",
@@ -4405,7 +4405,7 @@
             ],
             "answerIndex": 1,
             "explanation": "微操作命令由控制单元CU发出。CU根据指令操作码(来自IR)和时序信号，产生控制信号序列协调各部件工作。这是CPU的指挥中心。",
-            "relatedTopicId": "ch9-s3-p1",
+            "relatedTopicId": "ch9-s2-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "ALU（算术逻辑单元）是执行部件，它接收控制信号执行运算，但不是'发出'微操作命令的部件。",
@@ -4430,7 +4430,7 @@
             ],
             "answerIndex": 2,
             "explanation": "同步控制：所有微操作由统一时钟信号同步，工作周期固定。优点是控制简单，缺点是快指令会浪费等待时间。现代CPU多为同步控制+异步等待的联合方式。",
-            "relatedTopicId": "ch9-s3-p1",
+            "relatedTopicId": "ch9-s2-p4",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "各操作耗时自适应是异步控制的特点，不是同步控制。",
@@ -4751,7 +4751,7 @@
             ],
             "answerIndex": 0,
             "explanation": "组合逻辑控制：控制信号由门电路直接产生（硬布线），无取控制字的额外延迟，因此速度快。缺点是设计复杂、不易修改、缺乏规整性。RISC处理器多采用此方案。",
-            "relatedTopicId": "ch10-s1-p1",
+            "relatedTopicId": "ch10-s2-p6",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "正确。组合逻辑控制器的最大优点是速度快——控制信号由组合电路直接产生，无额外的存储器访问延迟，适合高性能RISC处理器。",
@@ -4776,7 +4776,7 @@
             ],
             "answerIndex": 1,
             "explanation": "水平型微指令：长字长（100+位），采用直接编码或少量字段编码，一位对应一个控制信号。并行度高（可同时发出多个控制信号）、执行速度快，但微指令字长较长。",
-            "relatedTopicId": "ch10-s1-p2",
+            "relatedTopicId": "ch10-s2-p5",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "水平型微指令宽度大（长），可并行控制多个微操作，即'长、并行、快'。不是短、串行。",
@@ -4801,7 +4801,7 @@
             ],
             "answerIndex": 1,
             "explanation": "CM（控制存储器）存放的是微指令序列（微程序），不是机器指令。每条机器指令对应一段微程序，每条微指令在一个微周期内发出一组控制信号。",
-            "relatedTopicId": "ch10-s1-p3",
+            "relatedTopicId": "ch10-s2-p2",
             "relatedSimulatorId": "sim-fetch",
             "optionExplanations": [
               "机器指令存放在主存中，由程序员编写。CM中存放的是微指令（控制的更低一层）。",
@@ -4826,7 +4826,7 @@
             ],
             "answerIndex": 1,
             "explanation": "动态微程序：运行时可通过WCS（Writable Control Store，可写控制存储器）修改微程序内容。常用于仿真其他指令集——同一硬件加载不同微程序即可执行不同指令集。",
-            "relatedTopicId": "ch10-s1-p1",
+            "relatedTopicId": "ch10-s2-p7",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "ROM中是不可修改的静态微程序。动态微程序的核心特征就是运行时可通过可写控制存储器修改。",
@@ -4857,7 +4857,7 @@
             ],
             "answerIndex": 2,
             "explanation": "CM（Control Memory，控制存储器）是微程序控制的核心，用ROM实现，存放所有微程序（微指令序列）。不是主存、不是Cache，是CU内部专用的控制存储器。",
-            "relatedTopicId": "ch10-s2-p1",
+            "relatedTopicId": "ch10-s2-p2",
             "relatedSimulatorId": "sim-base",
             "optionExplanations": [
               "主存放的是程序和数据（机器指令级别），而非微指令。",
@@ -4882,7 +4882,7 @@
             ],
             "answerIndex": 0,
             "explanation": "RISC追求速度和简单——采用组合逻辑（硬布线）控制。CISC指令复杂才使用微程序控制（便于实现和修改复杂指令）。这是两者的核心差异之一。",
-            "relatedTopicId": "ch10-s2-p2",
+            "relatedTopicId": "ch10-s1-p1",
             "relatedSimulatorId": "sim-cache",
             "optionExplanations": [
               "正确。RISC处理器追求简单高效的硬件实现，通常采用组合逻辑（硬布线）控制。微程序多用于CISC处理器来应对复杂指令。",

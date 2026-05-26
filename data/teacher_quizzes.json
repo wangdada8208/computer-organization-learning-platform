@@ -103,7 +103,7 @@
       ],
       "answerIndex": 2,
       "explanation": "机器语言直接由 0 和 1 的编码组成。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s1-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -163,7 +163,7 @@
       ],
       "answerIndex": 2,
       "explanation": "汇编语言要靠汇编程序翻译成机器语言。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s1-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -193,7 +193,7 @@
       ],
       "answerIndex": 1,
       "explanation": "1 Byte 固定等于 8 bit，与机器字长无关。",
-      "relatedTopicId": "ch1-s1-p2",
+      "relatedTopicId": "ch1-s3-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -223,7 +223,7 @@
       ],
       "answerIndex": 2,
       "explanation": "机器语言无需翻译，执行层级最低。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s1-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -253,7 +253,7 @@
       ],
       "answerIndex": 1,
       "explanation": "解释程序边翻译边执行，不产生独立目标程序。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s1-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -343,7 +343,7 @@
       ],
       "answerIndex": 2,
       "explanation": "16 位地址能表示 2^16 个地址，即 65536 个地址空间。",
-      "relatedTopicId": "ch1-s2-p2",
+      "relatedTopicId": "ch1-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -402,7 +402,7 @@
         "存储器内存"
       ],
       "explanation": "课件和老师测试都对应这一表述，常见写法为“存储器”或“内存”。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s2-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -486,7 +486,7 @@
       ],
       "answerIndex": 3,
       "explanation": "片内总线属于芯片内部连接，不属于系统总线。",
-      "relatedTopicId": "ch3-s2-p1",
+      "relatedTopicId": "ch3-s1-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -516,7 +516,7 @@
       ],
       "answerIndex": 2,
       "explanation": "地址线既可寻址主存，也可寻址 I/O 接口。",
-      "relatedTopicId": "ch3-s2-p1",
+      "relatedTopicId": "ch3-s1-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -546,7 +546,7 @@
       ],
       "answerIndex": 2,
       "explanation": "总线带宽 = 33 × (32/8) = 132MB/s。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -574,7 +574,7 @@
         "复用"
       ],
       "explanation": "同一组信号线在不同时间承担不同含义，就是总线复用。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -598,7 +598,7 @@
       ],
       "answerIndex": 2,
       "explanation": "总线复用的直接效果是减少信号线数量，通常会牺牲部分速度。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -628,7 +628,7 @@
       ],
       "answerIndex": 1,
       "explanation": "AGP 是专门为显卡设计的局部总线。",
-      "relatedTopicId": "ch3-s3-p2",
+      "relatedTopicId": "ch3-s2-p5",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -658,7 +658,7 @@
       ],
       "answerIndex": 2,
       "explanation": "链式查询只有一条总线请求线，优先级由链接顺序决定。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -688,7 +688,7 @@
       ],
       "answerIndex": 2,
       "explanation": "独立请求方式每个设备有独立请求线，判优响应最快。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -718,7 +718,7 @@
       ],
       "answerIndex": 0,
       "explanation": "链式查询一旦链路中某处故障，后续设备都会受影响。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -748,7 +748,7 @@
       ],
       "answerIndex": 2,
       "explanation": "同步控制依靠统一时钟或时序信号来协调各部件动作。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p6",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -778,7 +778,7 @@
       ],
       "answerIndex": 3,
       "explanation": "同步总线长度受时钟分布与部件响应时间限制，不能无限制延长。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p6",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -838,7 +838,7 @@
       ],
       "answerIndex": 3,
       "explanation": "现代存储系统通常按层次组织，包括 Cache、主存和外存。",
-      "relatedTopicId": "ch4-s1-p1",
+      "relatedTopicId": "ch4-s2-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -868,7 +868,7 @@
       ],
       "answerIndex": 0,
       "explanation": "按字节寻址，64KB 对应 64K 个地址，范围是 0 到 64K-1。",
-      "relatedTopicId": "ch4-s2-p1",
+      "relatedTopicId": "ch4-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -898,7 +898,7 @@
       ],
       "answerIndex": 0,
       "explanation": "4MB / 4B = 1M 个字地址。",
-      "relatedTopicId": "ch4-s2-p1",
+      "relatedTopicId": "ch4-s3-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -928,7 +928,7 @@
       ],
       "answerIndex": 1,
       "explanation": "地址线 10 根、数据线 8 根、读写控制 2 根、片选 1 根，共 21 根或 22 根取决于是否单独片选；按题目老师答案为 22。",
-      "relatedTopicId": "ch4-s2-p2",
+      "relatedTopicId": "ch4-s6-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -958,7 +958,7 @@
       ],
       "answerIndex": 0,
       "explanation": "4M×8 需要 22 位地址，采用地址复用后只需 11 根地址引脚，再加 8 根数据引脚，共 19 根。",
-      "relatedTopicId": "ch4-s2-p2",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -988,7 +988,7 @@
       ],
       "answerIndex": 1,
       "explanation": "DRAM 刷新按行进行。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1016,7 +1016,7 @@
         "集中刷新;分散刷新;异步刷新"
       ],
       "explanation": "按顺序填写：集中、分散、异步。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1040,7 +1040,7 @@
       ],
       "answerIndex": 1,
       "explanation": "分散刷新把刷新操作分散到正常访存周期内，不形成集中死区。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1064,7 +1064,7 @@
       "stem": "一个 8K×8 位的动态 RAM 芯片，其内部结构排列成 256×256 形式，存取周期为 0.1μs。按顺序填写：集中刷新的刷新间隔、死区时间、分散刷新的刷新间隔、异步刷新的刷新间隔。",
       "answer": "2;25.6;51.2;2",
       "explanation": "正确顺序是 2ms、25.6μs、51.2μs、2ms。作答时可写成 2;25.6;51.2;2。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1086,7 +1086,7 @@
         "dram;sram"
       ],
       "explanation": "主存通常采用 DRAM，高速缓存通常采用 SRAM。",
-      "relatedTopicId": "ch4-s2-p4",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1110,7 +1110,7 @@
       ],
       "answerIndex": 1,
       "explanation": "错误的是 II 和 III：DRAM 成本更低、速度更慢。",
-      "relatedTopicId": "ch4-s2-p4",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1134,7 +1134,7 @@
       "stem": "设某 CPU 地址总线共 16 根，ROM 区为 0000H-3FFFH，RAM 区起始地址为 6000H，24K×16 位。现有 16K×16 ROM 芯片、8K×16 RAM 芯片。按顺序填写：ROM 芯片个数；三片 RAM 芯片的结束/起始地址。",
       "answer": "1;7FFF;8000;9FFF;A000;BFFF",
       "explanation": "标准答案顺序为：1；7FFF；8000；9FFF；A000；BFFF。",
-      "relatedTopicId": "ch4-s2-p5",
+      "relatedTopicId": "ch4-s6-p7",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1189,7 +1189,7 @@
       ],
       "answerIndex": 2,
       "explanation": "地址线既定位主存单元，也定位 I/O 接口地址。",
-      "relatedTopicId": "ch3-s2-p1",
+      "relatedTopicId": "ch3-s1-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1219,7 +1219,7 @@
       ],
       "answerIndex": 0,
       "explanation": "信号线复用是拿时间换连线，通常减少线数，不会提升带宽。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1249,7 +1249,7 @@
       ],
       "answerIndex": 1,
       "explanation": "总线宽度通常专指一次并行传输的数据位数，也就是数据总线根数。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1279,7 +1279,7 @@
       ],
       "answerIndex": 1,
       "explanation": "每秒总线周期数为 10MHz / 2 = 5M，每周期 4B，所以带宽为 20MB/s。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1309,7 +1309,7 @@
       ],
       "answerIndex": 1,
       "explanation": "有效 4 个时钟周期共传 8 次数据，每次 64 位，即平均每周期 2 次数据中的有效传输比例为 4/5，综合得到 6.72GB/s。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1339,7 +1339,7 @@
       ],
       "answerIndex": 2,
       "explanation": "独立请求方式响应最快。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1369,7 +1369,7 @@
       ],
       "answerIndex": 1,
       "explanation": "从上次终止点继续计数能轮转设备机会，实现相对公平。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1399,7 +1399,7 @@
       ],
       "answerIndex": 0,
       "explanation": "BS 表示总线忙，通常由获得总线控制权的主设备发出。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1429,7 +1429,7 @@
       ],
       "answerIndex": 0,
       "explanation": "链式查询最怕链路中的单点故障。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1459,7 +1459,7 @@
       ],
       "answerIndex": 3,
       "explanation": "同步总线长度受时钟同步与传播延迟限制。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p6",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1489,7 +1489,7 @@
       ],
       "answerIndex": 1,
       "explanation": "半同步通信兼有时钟同步和应答/握手特征。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p8",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1519,7 +1519,7 @@
       ],
       "answerIndex": 2,
       "explanation": "分离式通信能把请求与应答分离，提升总线利用率，也便于多模块成为主模块。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p9",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1549,7 +1549,7 @@
       ],
       "answerIndex": 0,
       "explanation": "每帧 10 位，波特率=10×120=1200bps，比特率=7×120=840bps。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s2-p6",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1577,7 +1577,7 @@
         "仲裁判优"
       ],
       "explanation": "总线使用权问题由判优或仲裁机制解决。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1601,7 +1601,7 @@
         "应答;全互锁"
       ],
       "explanation": "异步通信依赖应答/握手信号，安全性最高的是全互锁方式。",
-      "relatedTopicId": "ch3-s4-p2",
+      "relatedTopicId": "ch3-s3-p7",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1625,7 +1625,7 @@
       ],
       "answerIndex": 3,
       "explanation": "Cache 的核心作用是缓解 CPU 与主存之间的速度差距。",
-      "relatedTopicId": "ch4-s1-p1",
+      "relatedTopicId": "ch4-s2-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1655,7 +1655,7 @@
       ],
       "answerIndex": 2,
       "explanation": "存取周期强调相邻两次独立存取操作之间的最短时间间隔。",
-      "relatedTopicId": "ch4-s2-p1",
+      "relatedTopicId": "ch4-s4-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1685,7 +1685,7 @@
       ],
       "answerIndex": 1,
       "explanation": "DRAM 按行刷新。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1715,7 +1715,7 @@
       ],
       "answerIndex": 1,
       "explanation": "分散刷新不形成集中死区。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p4",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1745,7 +1745,7 @@
       ],
       "answerIndex": 1,
       "explanation": "错误的是 II 和 III：DRAM 成本低且速度慢。",
-      "relatedTopicId": "ch4-s2-p4",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1775,7 +1775,7 @@
       ],
       "answerIndex": 0,
       "explanation": "地址复用后地址引脚 11 根，配合 8 根数据引脚共 19 根。",
-      "relatedTopicId": "ch4-s2-p2",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1802,7 +1802,7 @@
         "160"
       ],
       "explanation": "带宽 = 32bit / 200ns = 1.6×10^8 bps = 160Mbps。",
-      "relatedTopicId": "ch4-s2-p1",
+      "relatedTopicId": "ch4-s4-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1824,7 +1824,7 @@
         "译码重合法"
       ],
       "explanation": "存储芯片地址译码常见有线选法和重合法。",
-      "relatedTopicId": "ch4-s2-p2",
+      "relatedTopicId": "ch4-s5-p2",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1845,7 +1845,7 @@
         "2;25.6;51.2;2"
       ],
       "explanation": "正确顺序是 2ms、25.6μs、51.2μs、2ms。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p3",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1867,7 +1867,7 @@
         "1;7fff;8000;9fff;a000;bfff"
       ],
       "explanation": "ROM 需要 1 片；RAM 三片对应 6000H-7FFFH、8000H-9FFFH、A000H-BFFFH。",
-      "relatedTopicId": "ch4-s2-p5",
+      "relatedTopicId": "ch4-s6-p7",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1889,7 +1889,7 @@
         "16;64"
       ],
       "explanation": "高位交叉带宽为 32bit/200ns=1.6×10^8bps，低位交叉流水方式可达 32bit/50ns=6.4×10^8bps。",
-      "relatedTopicId": "ch4-s3-p2",
+      "relatedTopicId": "ch4-s8-p1",
       "tags": [
         "老师测试",
         "雨课堂",
@@ -1913,7 +1913,7 @@
         "存储器内存"
       ],
       "explanation": "这是第 1 章课件中的原题。",
-      "relatedTopicId": "ch1-s1-p1",
+      "relatedTopicId": "ch1-s2-p2",
       "tags": [
         "课件题",
         "Chapter 1",
@@ -1997,7 +1997,7 @@
       ],
       "answerIndex": 2,
       "explanation": "课件原题，公式题常考。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p3",
       "tags": [
         "课件题",
         "Chapter 3",
@@ -2025,7 +2025,7 @@
         "复用"
       ],
       "explanation": "课件原题。",
-      "relatedTopicId": "ch3-s3-p1",
+      "relatedTopicId": "ch3-s2-p4",
       "tags": [
         "课件题",
         "Chapter 3",
@@ -2049,7 +2049,7 @@
       ],
       "answerIndex": 2,
       "explanation": "课件原题。",
-      "relatedTopicId": "ch3-s4-p1",
+      "relatedTopicId": "ch3-s3-p4",
       "tags": [
         "课件题",
         "Chapter 3",
@@ -2079,7 +2079,7 @@
       ],
       "answerIndex": 1,
       "explanation": "课件原题，存储层次设计目的题。",
-      "relatedTopicId": "ch4-s1-p1",
+      "relatedTopicId": "ch4-s2-p1",
       "tags": [
         "课件题",
         "Chapter 4",
@@ -2109,7 +2109,7 @@
       ],
       "answerIndex": 1,
       "explanation": "课件原题。",
-      "relatedTopicId": "ch4-s2-p3",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "课件题",
         "Chapter 4",
@@ -2139,7 +2139,7 @@
       ],
       "answerIndex": 1,
       "explanation": "课件原题。",
-      "relatedTopicId": "ch4-s2-p4",
+      "relatedTopicId": "ch4-s6-p2",
       "tags": [
         "课件题",
         "Chapter 4",

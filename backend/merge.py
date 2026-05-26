@@ -56,6 +56,7 @@ def normalize_state(raw_state):
     state["progress"].setdefault("lastPointId", None)
     state.setdefault("quizHistory", [])
     state.setdefault("wrongbook", {})
+    state.setdefault("reviewList", {})
     state.setdefault("trackProgress", {})
     state["trackProgress"].setdefault("textbook", {})
     state["trackProgress"].setdefault("passline", {})
@@ -83,6 +84,7 @@ def merge_progress_states(local_state, remote_state):
     merged["progress"] = merge_progress(local["progress"], remote["progress"], preferred)
     merged["quizHistory"] = merge_quiz_history(local["quizHistory"], remote["quizHistory"])
     merged["wrongbook"] = merge_wrongbook(local["wrongbook"], remote["wrongbook"])
+    merged["reviewList"] = merge_review_list(local["reviewList"], remote["reviewList"])
     merged["trackProgress"] = {
         "textbook": merge_track_map(local["trackProgress"]["textbook"], remote["trackProgress"]["textbook"]),
         "passline": merge_track_map(local["trackProgress"]["passline"], remote["trackProgress"]["passline"]),
@@ -174,6 +176,36 @@ def merge_wrongbook(local_book, remote_book):
             "relatedSimulatorId": latest.get("relatedSimulatorId") or left.get("relatedSimulatorId") or right.get("relatedSimulatorId"),
             "wrongCount": int(left.get("wrongCount") or 0) + int(right.get("wrongCount") or 0) if left and right else int(latest.get("wrongCount") or 0),
             "lastWrongAt": newer_time(left.get("lastWrongAt"), right.get("lastWrongAt")),
+        }
+    return result
+
+
+def merge_review_list(local_list, remote_list):
+    result = {}
+    keys = set((local_list or {}).keys()) | set((remote_list or {}).keys())
+    for key in keys:
+        left = (local_list or {}).get(key) or {}
+        right = (remote_list or {}).get(key) or {}
+        latest = left if (parse_time(left.get("flaggedAt")) or datetime.min.replace(tzinfo=timezone.utc)) >= (parse_time(right.get("flaggedAt")) or datetime.min.replace(tzinfo=timezone.utc)) else right
+        left_flags = set(left.get("flaggedOptions") or [])
+        right_flags = set(right.get("flaggedOptions") or [])
+        merged_flags = sorted(list(left_flags | right_flags))
+        result[key] = {
+            "id": latest.get("id") or key,
+            "questionId": latest.get("questionId") or left.get("questionId") or right.get("questionId"),
+            "chapterId": latest.get("chapterId") or left.get("chapterId") or right.get("chapterId"),
+            "chapterTitle": latest.get("chapterTitle") or left.get("chapterTitle") or right.get("chapterTitle"),
+            "stem": latest.get("stem") or left.get("stem") or right.get("stem"),
+            "type": latest.get("type") or left.get("type") or right.get("type"),
+            "teacherFocus": bool(latest.get("teacherFocus") or left.get("teacherFocus") or right.get("teacherFocus")),
+            "options": latest.get("options") or left.get("options") or right.get("options"),
+            "optionExplanations": latest.get("optionExplanations") or left.get("optionExplanations") or right.get("optionExplanations"),
+            "explanation": latest.get("explanation") or left.get("explanation") or right.get("explanation"),
+            "relatedTopicId": latest.get("relatedTopicId") or left.get("relatedTopicId") or right.get("relatedTopicId"),
+            "relatedSimulatorId": latest.get("relatedSimulatorId") or left.get("relatedSimulatorId") or right.get("relatedSimulatorId"),
+            "flaggedOptions": merged_flags,
+            "guessed": bool(left.get("guessed")) or bool(right.get("guessed")),
+            "flaggedAt": newer_time(left.get("flaggedAt"), right.get("flaggedAt")),
         }
     return result
 

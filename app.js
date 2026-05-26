@@ -14,7 +14,7 @@ authLayerEl.className = 'auth-layer';
 document.body.appendChild(authLayerEl);
 
 const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
-const PRACTICE_MODES = ['overview', 'passline', 'section', 'test', 'wrongbook', 'simulator', 'teacher'];
+const PRACTICE_MODES = ['overview', 'passline', 'section', 'test', 'wrongbook', 'review', 'simulator', 'teacher'];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
   { label: '处理器执行', ids: ['sim-pipeline', 'sim-fetch'] },
@@ -52,6 +52,7 @@ const app = {
     testSubmitted: false,
     practiceCursor: 0,
     testCursor: 0,
+    reviewFlags: {},
     authDraft: {
       username: '',
       password: '',
@@ -234,6 +235,7 @@ function createDefaultState(chapters) {
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
     wrongbook: {},
+    reviewList: {},
     trackProgress: { textbook: {}, passline: {} },
     chapterWeakness: {},
     lastPasslineScore: {},
@@ -934,6 +936,7 @@ function renderPracticeView() {
   const bundle = getQuizBundle(chapter.id);
   const section = getSelectedPracticeSection(chapter, bundle);
   const wrongs = wrongbookEntries().filter((item) => item.chapterId === chapter.id);
+  const reviews = reviewListEntries().filter((item) => item.chapterId === chapter.id);
   const passlineSet = getPasslineQuestionSet(chapter.id);
   pageEl.innerHTML = `
     <div class="page-stack training-stack">
@@ -960,6 +963,7 @@ function renderPracticeView() {
               ${renderModeTab('section', '章节练习')}
               ${renderModeTab('test', '综合测试')}
               ${renderModeTab('wrongbook', '错题复习')}
+              ${renderModeTab('review', '待复习')}
               ${renderModeTab('teacher', '老师题')}
               ${renderModeTab('simulator', '模拟器')}
             </div>
@@ -967,7 +971,7 @@ function renderPracticeView() {
           <div class="training-status-card">
             <span class="eyebrow">训练状态</span>
             <h4>${modeSummaryLabel()}</h4>
-            <p class="body-copy">${modeSummaryText(chapter, section, wrongs)}</p>
+            <p class="body-copy">${modeSummaryText(chapter, section, wrongs, reviews)}</p>
             <div class="action-row small">
               <button class="btn tiny subtle" data-action="open-teacher" data-chapter-id="${chapter.id}">刷本章老师题</button>
             </div>
@@ -979,6 +983,7 @@ function renderPracticeView() {
         ${app.state.practiceMode === 'section' ? renderSectionPractice(section) : ''}
         ${app.state.practiceMode === 'test' ? renderChapterTest(chapter, bundle) : ''}
         ${app.state.practiceMode === 'wrongbook' ? renderWrongbook(chapter, wrongs) : ''}
+        ${app.state.practiceMode === 'review' ? renderReviewList(chapter, reviews) : ''}
         ${app.state.practiceMode === 'teacher' ? renderTeacherPractice(chapter) : ''}
         ${app.state.practiceMode === 'simulator' ? renderSimulatorWorkbench(chapter) : ''}
       </section>
@@ -1261,8 +1266,16 @@ function renderPracticeQuestion(question) {
       </div>
       ${renderPracticeInput(question, current, feedback)}
       ${feedback ? `<div class="feedback ${feedback.status}">${feedback.message}${question.explanation ? `<br><strong>解析：</strong>${question.explanation}` : ''}</div>` : ''}
+      ${feedback?.status === 'correct' ? renderGuessedRow(question.id) : ''}
     </article>
   `;
+}
+
+function renderGuessedRow(questionId) {
+  const key = Object.keys(app.state.reviewList).find(k => k.endsWith(`-${questionId}`));
+  const entry = key ? app.state.reviewList[key] : null;
+  const isGuessed = entry?.guessed;
+  return `<div class="guessed-row"><button class="btn tiny subtle" data-action="flag-guessed" data-question-id="${questionId}">${isGuessed ? '已标记为蒙对的' : '这道题我其实是蒙的'}</button></div>`;
 }
 
 function renderPracticeInput(question, current, feedback) {
@@ -1280,7 +1293,12 @@ function renderPracticeInput(question, current, feedback) {
         if (index === question.answerIndex) classes.push('correct');
         else if (current === index && current !== question.answerIndex) classes.push('wrong');
       }
-      return `<button class="${classes.join(' ')}" data-action="practice-answer" data-question-id="${question.id}" data-answer-index="${index}">${String.fromCharCode(65 + index)}. ${option}</button>`;
+      const isFlagged = (app.session.reviewFlags[question.id] || []).includes(index);
+      const showFlag = !feedback?.status;
+      return `<div class="option-row">
+        <button class="${classes.join(' ')}" data-action="practice-answer" data-question-id="${question.id}" data-answer-index="${index}">${String.fromCharCode(65 + index)}. ${option}</button>
+        ${showFlag ? `<button class="option-flag-btn${isFlagged ? ' flagged' : ''}" data-action="flag-option" data-question-id="${question.id}" data-option-index="${index}" title="${isFlagged ? '取消标记' : '这个选项我不理解'}">${isFlagged ? '!' : '?'}</button>` : ''}
+      </div>`;
     }).join('')}
   </div>`;
 }
@@ -1342,11 +1360,14 @@ function renderTestQuestion(question, index) {
         if (answer === optionIndex) classes.push('selected');
         if (submitted && optionIndex === question.answerIndex) classes.push('correct');
         if (submitted && answer === optionIndex && answer !== question.answerIndex) classes.push('wrong');
-        return `<button class="${classes.join(' ')}" data-action="test-answer" data-question-id="${question.id}" data-answer-index="${optionIndex}">${String.fromCharCode(65 + optionIndex)}. ${option}</button>`;
+        const isFlagged = (app.session.reviewFlags[question.id] || []).includes(optionIndex);
+        const showFlag = !submitted;
+        return `<div class="option-row"><button class="${classes.join(' ')}" data-action="test-answer" data-question-id="${question.id}" data-answer-index="${optionIndex}">${String.fromCharCode(65 + optionIndex)}. ${option}</button>${showFlag ? `<button class="option-flag-btn${isFlagged ? ' flagged' : ''}" data-action="flag-option" data-question-id="${question.id}" data-option-index="${optionIndex}" title="${isFlagged ? '取消标记' : '这个选项我不理解'}">${isFlagged ? '!' : '?'}</button>` : ''}</div>`;
       }).join('')}</div>` : ''}
       ${question.type === 'judge' ? `<div class="option-list"><button class="option-btn ${answer === true ? 'selected' : ''} ${submitted && question.answer === true ? 'correct' : ''} ${submitted && answer === true && question.answer !== true ? 'wrong' : ''}" data-action="test-answer" data-question-id="${question.id}" data-answer-value="true">正确</button><button class="option-btn ${answer === false ? 'selected' : ''} ${submitted && question.answer === false ? 'correct' : ''} ${submitted && answer === false && question.answer !== false ? 'wrong' : ''}" data-action="test-answer" data-question-id="${question.id}" data-answer-value="false">错误</button></div>` : ''}
       ${question.type === 'fill' ? `<input class="input" data-change="test-fill" data-question-id="${question.id}" value="${escapeHtml(answer || '')}" placeholder="请输入答案" ${submitted ? 'disabled' : ''}/>` : ''}
       ${submitted ? `<div class="feedback ${ok ? 'correct' : 'wrong'}">${ok ? '回答正确。' : `正确答案：${formatAnswer(question, correctAnswerFor(question))}`}${question.explanation ? `<br><strong>解析：</strong>${question.explanation}` : ''}</div>` : ''}
+      ${submitted && ok ? renderGuessedRow(question.id) : ''}
     </article>
   `;
 }
@@ -1450,6 +1471,74 @@ function renderWrongbook(chapter, wrongs) {
   `;
 }
 
+function renderReviewOptions(item) {
+  const opts = item.options || [];
+  if (!opts.length) {
+    return `<p class="wrongbook-answer-bar">
+      <span class="wrongbook-answer-label">标记的题目</span>
+      <strong class="wrongbook-answer-val is-user">${item.guessed ? '蒙对的' : '有不理解的选项'}</strong>
+    </p>`;
+  }
+  const labels = item.type === 'single'
+    ? opts.map((_, i) => String.fromCharCode(65 + i))
+    : opts.map((_, i) => String(i + 1));
+  const optionExplanations = item.optionExplanations || [];
+  const flaggedSet = new Set(item.flaggedOptions || []);
+  const entries = opts.map((opt, i) => ({
+    label: labels[i],
+    text: opt,
+    explain: optionExplanations[i] || null,
+    isFlagged: flaggedSet.has(i),
+  }));
+
+  return `
+    ${item.guessed ? '<p class="review-guessed-banner">这道题是蒙对的</p>' : ''}
+    <ul class="wrongbook-options">
+      ${entries.map((e) => {
+        let cls = 'wrongbook-option';
+        if (e.isFlagged) cls += ' review-flagged';
+        return `
+        <li class="${cls}">
+          <div class="wrongbook-option-row">
+            <span class="wrongbook-option-label">${e.label}</span>
+            <span class="wrongbook-option-text">${e.text}</span>
+            ${e.isFlagged ? '<span class="wrongbook-tag review-tag">标记了</span>' : ''}
+          </div>
+          ${e.explain ? `<p class="wrongbook-option-explain">${e.explain}</p>` : ''}
+        </li>`;
+      }).join('')}
+    </ul>`;
+}
+
+function renderReviewList(chapter, reviews) {
+  return `
+    <section class="training-panel training-panel-sheet">
+      <div class="section-heading training-panel-head">
+        <div>
+          <span class="eyebrow">待复习</span>
+          <h3>${chapter.title}</h3>
+          <p class="body-copy">标记了不确定的选项或蒙对的题目，回看解析吃透它们。</p>
+        </div>
+        <span class="soft-badge">${reviews.length} 道</span>
+      </div>
+      ${reviews.length ? `<div class="wrongbook-list">${reviews.map((item) => `
+        <article class="wrong-item">
+          <div class="question-head">
+            <span class="eyebrow">${item.guessed ? '蒙对的' : '有不理解的选项'}</span>
+            <h4>${item.stem}</h4>
+          </div>
+          ${renderReviewOptions(item)}
+          ${item.explanation ? `<p class="body-copy">${item.explanation}</p>` : ''}
+          <small class="muted">标记于 ${formatDate(item.flaggedAt)}</small>
+          <div class="action-row small">
+            ${item.relatedTopicId ? `<button class="btn tiny primary" data-action="review-topic" data-topic-id="${item.relatedTopicId}" data-chapter-id="${item.chapterId}">先回知识点</button>` : ''}
+            ${item.relatedSimulatorId ? `<button class="btn tiny subtle" data-action="open-simulator" data-simulator-id="${item.relatedSimulatorId}">我还是没懂，开模拟器</button>` : ''}
+          </div>
+        </article>`).join('')}</div><div class="action-row"><button class="btn subtle" data-action="clear-review" data-chapter-id="${chapter.id}">清空本章待复习</button></div>` : '<div class="empty-state">没有待复习的题目。做题时点选项旁的 <strong>?</strong> 标记不理解的内容，或答对后点"蒙的"标记。</div>'}
+    </section>
+  `;
+}
+
 function renderSimulatorWorkbench(chapter) {
   return `
     <section class="training-panel simulator-workbench">
@@ -1492,13 +1581,14 @@ function modeSummaryLabel() {
     section: '当前处于章节练习',
     test: '当前处于综合测试',
     wrongbook: '当前处于错题复习',
+    review: '当前处于待复习',
     teacher: '当前处于老师题模式',
     simulator: '当前处于模拟器强化',
   };
   return labels[app.state.practiceMode] || '当前训练中';
 }
 
-function modeSummaryText(chapter, section, wrongs) {
+function modeSummaryText(chapter, section, wrongs, reviews) {
   if (app.state.practiceMode === 'overview') {
     const teacherQuestions = getTeacherQuestionsByChapter(chapter.id).length;
     return `这一章有 ${teacherQuestions} 道老师题、${getChapterTestQuestions(chapter.id).length} 道综合测试题，可以先看导览再决定从哪条训练线进去。`;
@@ -1517,6 +1607,11 @@ function modeSummaryText(chapter, section, wrongs) {
     return wrongs.length
       ? `本章已有 ${wrongs.length} 道错题，可依次回看知识点并补齐薄弱概念。`
       : '本章暂时没有错题记录，可以转入章节练习或综合测试继续训练。';
+  }
+  if (app.state.practiceMode === 'review') {
+    return (reviews || []).length
+      ? `本章有 ${reviews.length} 道标记为待复习的题，回看解析吃透它们。`
+      : '还没有标记待复习的题。做题时点选项旁的 ? 标记不确定的选项。';
   }
   if (app.state.practiceMode === 'teacher') {
     const teacherQuestions = getFilteredTeacherQuestions();
@@ -1814,6 +1909,29 @@ function handleClick(event) {
       touchState();
       renderView();
       break;
+    case 'flag-option': {
+      const flags = app.session.reviewFlags[d.questionId] || [];
+      const idx = Number(d.optionIndex);
+      const pos = flags.indexOf(idx);
+      if (pos > -1) flags.splice(pos, 1);
+      else flags.push(idx);
+      app.session.reviewFlags[d.questionId] = flags;
+      renderView();
+      break;
+    }
+    case 'flag-guessed': {
+      const q = findQuestion(d.questionId);
+      saveToReviewList(q, [], true);
+      renderView();
+      break;
+    }
+    case 'clear-review':
+      Object.keys(app.state.reviewList).forEach((key) => {
+        if (app.state.reviewList[key].chapterId === d.chapterId) delete app.state.reviewList[key];
+      });
+      touchState();
+      renderView();
+      break;
   }
 }
 
@@ -1899,6 +2017,10 @@ function handlePracticeAnswer(questionId, answerIndex) {
   } else {
     recordWrongAnswer(question, formatAnswer(question, answerIndex), formatAnswer(question, correctAnswerFor(question)));
   }
+  const flags = app.session.reviewFlags[questionId];
+  if (flags && flags.length > 0) {
+    saveToReviewList(question, flags);
+  }
   if (app.state.practiceMode === 'passline') updatePasslineProgress(question.chapterId);
   const currentIndex = questions.findIndex((item) => item.id === questionId);
   if (currentIndex > -1 && currentIndex < questions.length - 1) {
@@ -1917,6 +2039,10 @@ function submitTest(chapterId) {
       markQuestionReview(question);
     } else {
       recordWrongAnswer(question, formatAnswer(question, answer), formatAnswer(question, correctAnswerFor(question)));
+    }
+    const flags = app.session.reviewFlags[question.id];
+    if (flags && flags.length > 0) {
+      saveToReviewList(question, flags);
     }
   });
   app.session.testSubmitted = true;
@@ -2565,6 +2691,48 @@ function formatAnswer(question, answer) {
 function wrongbookEntries() {
   return Object.values(app.state.wrongbook).sort((a, b) => new Date(b.lastWrongAt || 0) - new Date(a.lastWrongAt || 0));
 }
+function reviewListEntries() {
+  return Object.values(app.state.reviewList).sort((a, b) => new Date(b.flaggedAt || 0) - new Date(a.flaggedAt || 0));
+}
+function getReviewListCount() { return Object.keys(app.state.reviewList).length; }
+function findQuestion(questionId) {
+  for (const ch of app.data.chapters) {
+    const b = getQuizBundle(ch.id);
+    for (const sq of b.sectionQuizzes || []) {
+      const f = (sq.questions || []).find(q => q.id === questionId);
+      if (f) return f;
+    }
+    const f = (b.chapterTest || []).find(q => q.id === questionId);
+    if (f) return f;
+  }
+  return getFilteredTeacherQuestions().find(q => q.id === questionId) || null;
+}
+function saveToReviewList(question, flaggedOptions, guessed) {
+  if (!question) return;
+  const key = `${question.chapterId}-${question.id}`;
+  const existing = app.state.reviewList[key];
+  const mergedFlags = existing
+    ? [...new Set([...(existing.flaggedOptions || []), ...(flaggedOptions || [])])]
+    : (flaggedOptions || []);
+  app.state.reviewList[key] = {
+    id: key,
+    questionId: question.id,
+    chapterId: question.chapterId,
+    chapterTitle: app.data.chapters.find(c => c.id === question.chapterId)?.title || question.chapterId,
+    stem: question.stem,
+    type: question.type,
+    teacherFocus: Boolean(question.teacherFocus),
+    options: question.options || null,
+    optionExplanations: question.optionExplanations || null,
+    explanation: question.explanation || '',
+    relatedTopicId: question.relatedTopicId || null,
+    relatedSimulatorId: question.relatedSimulatorId || null,
+    flaggedOptions: mergedFlags,
+    guessed: existing?.guessed || guessed || false,
+    flaggedAt: new Date().toISOString(),
+  };
+  touchState();
+}
 function resetPracticeSession() {
   app.session.practiceAnswers = {};
   app.session.practiceFeedback = {};
@@ -2572,6 +2740,7 @@ function resetPracticeSession() {
   app.session.testSubmitted = false;
   app.session.practiceCursor = 0;
   app.session.testCursor = 0;
+  app.session.reviewFlags = {};
 }
 
 function getBoundedCursor(cursor, total) {
@@ -2663,6 +2832,7 @@ function serializeProgressState() {
     progress: cloneData(app.state.progress),
     quizHistory: cloneData(app.state.quizHistory),
     wrongbook: cloneData(app.state.wrongbook),
+    reviewList: cloneData(app.state.reviewList),
     trackProgress: cloneData(app.state.trackProgress),
     chapterWeakness: cloneData(app.state.chapterWeakness),
     lastPasslineScore: cloneData(app.state.lastPasslineScore),
@@ -2683,6 +2853,7 @@ function applySyncedState(nextState) {
       chapters: { ...defaults.progress.chapters, ...(incoming.progress?.chapters || {}) },
     },
     wrongbook: { ...(incoming.wrongbook || {}) },
+    reviewList: { ...(incoming.reviewList || {}) },
     trackProgress: {
       textbook: { ...(incoming.trackProgress?.textbook || {}) },
       passline: { ...(incoming.trackProgress?.passline || {}) },

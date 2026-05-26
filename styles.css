@@ -1185,6 +1185,81 @@ ul { margin: 0; padding-left: 18px; }
 }
 .feedback.correct { background: var(--green-soft); color: var(--green); }
 .feedback.wrong { background: var(--rose-soft); color: var(--rose); }
+/* ── Option flag button ── */
+.option-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.option-row .option-btn {
+  flex: 1;
+}
+.option-flag-btn {
+  flex-shrink: 0;
+  width: 36px;
+  border: 1px solid var(--line);
+  background: #fbfcfb;
+  color: var(--muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.option-flag-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: #fffaf0;
+}
+.option-flag-btn.flagged {
+  background: #fff7ed;
+  border-color: var(--amber);
+  color: var(--amber);
+  box-shadow: inset 0 0 0 1px rgba(217, 150, 49, 0.15);
+}
+/* ── Guessed row ── */
+.guessed-row {
+  margin-top: 8px;
+  text-align: right;
+}
+.guessed-row .btn {
+  font-size: 12px;
+  opacity: 0.65;
+}
+.guessed-row .btn:hover {
+  opacity: 1;
+}
+/* ── Review list ── */
+.review-guessed-banner {
+  margin: 0 0 10px 0;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #b85c10;
+  background: #fff8f0;
+  border-left: 4px solid var(--amber);
+  border-radius: 6px;
+}
+.wrongbook-option.review-flagged {
+  background: #fff8f0;
+  border-left: 5px solid var(--amber);
+  box-shadow: inset 0 0 0 1px rgba(217, 150, 49, 0.12);
+}
+.wrongbook-option.review-flagged .wrongbook-option-label {
+  color: #b85c10;
+}
+.wrongbook-option.review-flagged .wrongbook-option-text {
+  color: #8b6914;
+}
+.wrongbook-tag.review-tag {
+  background: #fff8f0;
+  color: #b85c10;
+  border: 1px solid #e8c878;
+  font-weight: 700;
+}
 .score-box {
   margin-top: 18px;
   display: flex;

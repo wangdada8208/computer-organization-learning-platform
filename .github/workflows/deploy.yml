@@ -28,7 +28,7 @@ jobs:
       - name: 同步站点文件到服务器
         shell: bash
         run: |
-          rsync -avz --delete \
+          rsync -avz --delete --exclude='backend/data' \
             -e "ssh -i ~/.ssh/deploy_key" \
             "$GITHUB_WORKSPACE/index.html" \
             "$GITHUB_WORKSPACE/app.js" \

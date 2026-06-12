@@ -1137,6 +1137,10 @@ ul { margin: 0; padding-left: 18px; }
   background: #e5efea;
   color: var(--primary-strong);
 }
+.chip-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
 .quiz-flow-head {
   display: flex;
   align-items: center;
@@ -1799,6 +1803,181 @@ ul { margin: 0; padding-left: 18px; }
 
 .teacher-empty-state p {
   margin: 0;
+}
+
+.graph-stack,
+.guide-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.graph-part-block + .graph-part-block {
+  margin-top: 18px;
+}
+
+.graph-part-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--primary-strong);
+}
+
+.graph-chapter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.graph-flow-block {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.graph-flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.graph-flow-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(108, 92, 231, 0.08);
+  color: var(--primary-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.graph-flow-arrow {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.graph-flow-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.graph-image-frame {
+  margin: 18px 0 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8faf9;
+  border: 1px solid var(--line);
+}
+
+.graph-image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.graph-image-frame figcaption {
+  margin-top: 10px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.graph-empty-note {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.graph-empty-note strong {
+  color: var(--primary-strong);
+}
+
+.graph-empty-note span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.graph-section-outline {
+  margin-top: 18px;
+}
+
+.guide-path {
+  display: grid;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.guide-path-card {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fafcfb 0%, #f4f7f5 100%);
+  border: 1px solid var(--line);
+}
+
+.guide-path-card.active {
+  border-color: rgba(108, 92, 231, 0.35);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.guide-path-step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.guide-path-body h4 {
+  margin: 0 0 8px;
+}
+
+.guide-path-body p {
+  margin: 0 0 8px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.guide-path-chapters {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.guide-path-tip {
+  color: #b7791f !important;
+}
+
+.guide-path-line {
+  width: 2px;
+  height: 18px;
+  margin-left: 39px;
+  background: rgba(108, 92, 231, 0.25);
+}
+
+.guide-highlights-panel .chapter-guide-card {
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fafcfb 0%, #f4f7f5 100%);
+  border: 1px solid var(--line);
+}
+
+.guide-highlights-panel .chapter-guide-card h4 {
+  margin: 0 0 8px;
+}
+
+.overview-map-entry {
+  margin-top: 0;
 }
 
 @media (max-width: 1180px) {

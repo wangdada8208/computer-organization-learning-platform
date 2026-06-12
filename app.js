@@ -13,8 +13,42 @@ const authLayerEl = document.createElement('div');
 authLayerEl.className = 'auth-layer';
 document.body.appendChild(authLayerEl);
 
-const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice'];
+const PRIMARY_VIEWS = ['dashboard', 'chapter', 'practice', 'graph', 'guide'];
 const PRACTICE_MODES = ['overview', 'passline', 'section', 'test', 'wrongbook', 'review', 'simulator', 'teacher'];
+const KNOWLEDGE_GRAPH_IMAGES = {
+  ch1: './assets/knowledge-graph/ch1.jpg',
+  ch2: './assets/knowledge-graph/ch2.jpg',
+  ch3: './assets/knowledge-graph/ch3.jpg',
+  ch4: './assets/knowledge-graph/ch4.jpg',
+  ch6: './assets/knowledge-graph/ch6.jpg',
+  ch7: './assets/knowledge-graph/ch7.jpg',
+};
+const LEARNING_GUIDE_STAGES = [
+  {
+    name: '第1篇 概论',
+    chapters: 'Ch1-2',
+    desc: '建立计算机整体认知。了解软硬件概念、冯·诺依曼结构、计算机发展与应用。这是所有后续知识的基础框架。',
+    tips: '先通读不深究细节，重点是理解「计算机由哪些部分组成、如何工作」的大图景。',
+  },
+  {
+    name: '第2篇 硬件结构',
+    chapters: 'Ch3-5',
+    desc: '深入三大硬件：总线(Ch3)是连接各部件的高速公路、存储器(Ch4)是记忆核心、I/O系统(Ch5)是对外窗口。',
+    tips: 'Ch4存储器是重点章节，Cache原理和层次结构要彻底理解，考频极高。',
+  },
+  {
+    name: '第3篇 CPU核心',
+    chapters: 'Ch6-8',
+    desc: '进入CPU内部：Ch6运算方法是数学基础、Ch7指令系统是软硬接口、Ch8 CPU结构是执行引擎。',
+    tips: 'Ch6的补码运算和浮点数必须动手算！Ch8的流水线是难点也是重点，多看动画演示。',
+  },
+  {
+    name: '第4篇 控制单元',
+    chapters: 'Ch9-10',
+    desc: 'CU是计算机的指挥中心。Ch9学习微操作序列和时序系统、Ch10掌握组合逻辑和微程序两种设计方法。',
+    tips: '学到这里你会豁然开朗——前面零散的知识在这里全部串联起来了。',
+  },
+];
 const SIMULATOR_GROUPS = [
   { label: '数值与编码', ids: ['sim-base', 'sim-complement', 'sim-float'] },
   { label: '处理器执行', ids: ['sim-pipeline', 'sim-fetch'] },
@@ -232,6 +266,7 @@ function createDefaultState(chapters) {
     teacherQuickMode: 'chapter-current',
     teacherRandomIds: [],
     practiceMode: 'overview',
+    selectedGraphChapterId: chapters[0]?.id || null,
     progress: { points: {}, chapters: {}, lastChapterId: chapters[0]?.id || null, lastPointId: null },
     quizHistory: [],
     wrongbook: {},
@@ -244,14 +279,16 @@ function createDefaultState(chapters) {
 }
 
 function renderView() {
-  const compactLayout = app.state.view !== 'dashboard';
-  appShellEl.className = `app-shell ${compactLayout ? 'workspace-layout' : 'overview-layout'}${app.state.view === 'chapter' && app.state.chapterSidebarCollapsed ? ' chapter-sidebar-collapsed' : ''}`;
+  const overviewLayout = ['dashboard', 'graph', 'guide'].includes(app.state.view);
+  appShellEl.className = `app-shell ${overviewLayout ? 'overview-layout' : 'workspace-layout'}${app.state.view === 'chapter' && app.state.chapterSidebarCollapsed ? ' chapter-sidebar-collapsed' : ''}`;
   renderSidebar();
   renderTopbar();
   const views = {
     dashboard: renderDashboard,
     chapter: renderChapterView,
     practice: renderPracticeView,
+    graph: renderGraphView,
+    guide: renderGuideView,
   };
   views[app.state.view]?.();
   renderAuthLayer();
@@ -260,7 +297,7 @@ function renderView() {
 }
 
 function renderSidebar() {
-  if (app.state.view === 'dashboard') {
+  if (['dashboard', 'graph', 'guide'].includes(app.state.view)) {
     sidebarEl.className = 'sidebar sidebar-empty';
     sidebarEl.innerHTML = '';
     return;
@@ -438,6 +475,8 @@ function renderTopbar() {
     dashboard: ['学习总览', '继续当前章节，或者先做及格线练习。'],
     chapter: ['章节学习', '先抓每章必会，再顺着知识点把概念真正读懂。'],
     practice: ['训练强化', '先过线，再提分；做题、错题和模拟器放在同一条补强回路里。'],
+    graph: ['知识图谱', '按篇章浏览知识结构，查看各章思维导图并快速跳转学习。'],
+    guide: ['学习导学', '零基础友好的四篇学习路线与各章重点速览。'],
   };
   const [title, subtitle] = titleMap[app.state.view];
   topbarEl.innerHTML = `
@@ -452,7 +491,7 @@ function renderTopbar() {
       </div>
       <div class="topbar-right">
         <nav class="primary-tabs" aria-label="主导航">
-          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化']]
+          ${[['dashboard', '学习总览'], ['chapter', '章节学习'], ['practice', '训练强化'], ['graph', '知识图谱'], ['guide', '学习导学']]
             .map(([view, label]) => `<button class="primary-tab ${app.state.view === view ? 'active' : ''}" data-action="switch-view" data-view="${view}">${label}</button>`).join('')}
         </nav>
         <div class="account-bar">
@@ -598,6 +637,164 @@ function renderDashboard() {
             <button class="btn subtle" data-action="open-chapter" data-chapter-id="${continueChapter.id}">继续第 ${continueChapter.number} 章</button>
             <button class="btn subtle" data-action="switch-view" data-view="chapter">打开章节目录</button>
           </div>
+        </div>
+      </section>
+
+      <section class="surface-panel overview-map-entry">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">全局视角</span>
+            <h3>知识图谱与学习导学</h3>
+          </div>
+        </div>
+        <div class="overview-entry-row">
+          <div class="overview-entry-copy">
+            <strong>建立整体框架</strong>
+            <p class="body-copy">用知识图谱看各章脉络，或用导学路线规划从零到掌握的学习顺序。</p>
+          </div>
+          <div class="overview-entry-actions">
+            <button class="btn subtle" data-action="switch-view" data-view="graph">打开知识图谱</button>
+            <button class="btn subtle" data-action="switch-view" data-view="guide">查看学习导学</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderGraphView() {
+  const selectedId = app.state.selectedGraphChapterId || app.data.chapters[0]?.id;
+  const selectedChapter = app.data.chapters.find((chapter) => chapter.id === selectedId) || app.data.chapters[0];
+  const graphImage = selectedChapter ? KNOWLEDGE_GRAPH_IMAGES[selectedChapter.id] : null;
+  pageEl.innerHTML = `
+    <div class="page-stack graph-stack">
+      <section class="surface-panel graph-overview-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">全 10 章</span>
+            <h3>计算机组成原理 知识图谱</h3>
+          </div>
+        </div>
+        <p class="body-copy">按教材四篇组织，点击章节可查看思维导图并进入对应学习。</p>
+        ${Object.entries(app.parts).map(([partId, partName]) => {
+          const chapters = app.data.chapters.filter((chapter) => chapter.partId === partId);
+          return `
+            <div class="graph-part-block">
+              <h4 class="graph-part-title">${partName}</h4>
+              <div class="graph-chapter-chips">
+                ${chapters.map((chapter) => `
+                  <button
+                    class="chip-btn ${chapter.id === selectedChapter?.id ? 'active' : ''}"
+                    data-action="select-graph-chapter"
+                    data-chapter-id="${chapter.id}"
+                  >第 ${chapter.number} 章 ${chapter.title}${KNOWLEDGE_GRAPH_IMAGES[chapter.id] ? ' · 有导图' : ''}</button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+        <div class="graph-flow-block">
+          <h4 class="graph-part-title">整体脉络</h4>
+          <div class="graph-flow-row">
+            <span class="graph-flow-chip">概论</span>
+            <span class="graph-flow-arrow">→</span>
+            <span class="graph-flow-chip">硬件结构</span>
+            <span class="graph-flow-arrow">→</span>
+            <span class="graph-flow-chip">CPU</span>
+            <span class="graph-flow-arrow">→</span>
+            <span class="graph-flow-chip">控制单元</span>
+          </div>
+          <p class="graph-flow-note">自上而下：先整体 → 再部件 → 再核心 → 再控制</p>
+        </div>
+      </section>
+
+      ${selectedChapter ? `
+        <section class="surface-panel graph-detail-panel">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">第 ${selectedChapter.number} 章</span>
+              <h3>${selectedChapter.title}</h3>
+            </div>
+            <div class="section-head-actions">
+              <button class="btn tiny primary" data-action="open-chapter" data-chapter-id="${selectedChapter.id}">进入章节学习</button>
+              <button class="btn tiny subtle" data-action="open-practice-chapter" data-chapter-id="${selectedChapter.id}">本章刷题</button>
+            </div>
+          </div>
+          <p class="body-copy">${selectedChapter.summary}</p>
+          ${graphImage ? `
+            <figure class="graph-image-frame">
+              <img src="${graphImage}" alt="第 ${selectedChapter.number} 章知识图谱" loading="lazy" />
+              <figcaption>第 ${selectedChapter.number} 章 · ${selectedChapter.title} 知识图谱</figcaption>
+            </figure>
+          ` : `
+            <div class="graph-empty-note">
+              <strong>本章暂无导图图片</strong>
+              <span>可直接进入章节学习，按知识点卡片建立本章结构。</span>
+            </div>
+          `}
+          <div class="graph-section-outline">
+            <h4>本章结构</h4>
+            <ul class="plain-list">
+              ${selectedChapter.chapterMap.map((item) => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        </section>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderGuideView() {
+  const highlights = app.data.chapters.map((chapter) => [
+    `Ch${chapter.number} ${chapter.title}`,
+    [
+      ...(chapter.highFrequency.slice(0, 2)),
+      chapter.checkpoints[0] || '',
+    ].filter(Boolean).join('；'),
+  ]);
+  pageEl.innerHTML = `
+    <div class="page-stack guide-stack">
+      <section class="surface-panel guide-intro-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">零基础友好</span>
+            <h3>学习导学路线</h3>
+          </div>
+        </div>
+        <p class="body-copy">按照以下路径循序渐进，先建立整体框架，再逐章深入细节。</p>
+        <div class="guide-path">
+          ${LEARNING_GUIDE_STAGES.map((stage, index) => `
+            <article class="guide-path-card ${index === 0 ? 'active' : ''}">
+              <div class="guide-path-step">${index + 1}</div>
+              <div class="guide-path-body">
+                <h4>${stage.name} <span class="guide-path-chapters">${stage.chapters}</span></h4>
+                <p>${stage.desc}</p>
+                <p class="guide-path-tip">💡 ${stage.tips}</p>
+              </div>
+            </article>
+            ${index < LEARNING_GUIDE_STAGES.length - 1 ? '<div class="guide-path-line" aria-hidden="true"></div>' : ''}
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="surface-panel guide-highlights-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">各章重点</span>
+            <h3>各章重点速览</h3>
+          </div>
+        </div>
+        <div class="guide-grid">
+          ${highlights.map(([title, body]) => `
+            <article class="chapter-guide-card">
+              <h4>${title}</h4>
+              <p class="body-copy">${body}</p>
+            </article>
+          `).join('')}
+        </div>
+        <div class="action-row">
+          <button class="btn primary" data-action="switch-view" data-view="chapter">进入章节学习</button>
+          <button class="btn subtle" data-action="switch-view" data-view="graph">查看知识图谱</button>
         </div>
       </section>
     </div>
@@ -1692,6 +1889,12 @@ function handleClick(event) {
       app.state.view = PRIMARY_VIEWS.includes(d.view) ? d.view : 'dashboard';
       app.state.mobileSidebarOpen = false;
       if (app.state.view !== 'practice') resetPracticeSession();
+      touchState(false);
+      renderView();
+      break;
+    case 'select-graph-chapter':
+      app.state.selectedGraphChapterId = d.chapterId;
+      app.state.view = 'graph';
       touchState(false);
       renderView();
       break;
@@ -2829,6 +3032,7 @@ function serializeProgressState() {
     teacherQuickMode: app.state.teacherQuickMode,
     teacherRandomIds: cloneData(app.state.teacherRandomIds),
     practiceMode: app.state.practiceMode,
+    selectedGraphChapterId: app.state.selectedGraphChapterId,
     progress: cloneData(app.state.progress),
     quizHistory: cloneData(app.state.quizHistory),
     wrongbook: cloneData(app.state.wrongbook),
@@ -2861,7 +3065,8 @@ function applySyncedState(nextState) {
     chapterWeakness: { ...(incoming.chapterWeakness || {}) },
     lastPasslineScore: { ...(incoming.lastPasslineScore || {}) },
     quizHistory: Array.isArray(incoming.quizHistory) ? incoming.quizHistory : [],
-    view: incoming.view === 'teacher' ? 'practice' : (incoming.view || defaults.view),
+    view: incoming.view === 'teacher' ? 'practice' : (PRIMARY_VIEWS.includes(incoming.view) ? incoming.view : defaults.view),
+    selectedGraphChapterId: incoming.selectedGraphChapterId || defaults.selectedGraphChapterId,
     chapterSidebarCollapsed: Boolean(incoming.chapterSidebarCollapsed),
     expandedChapterIds: Array.isArray(incoming.expandedChapterIds) && incoming.expandedChapterIds.length ? incoming.expandedChapterIds : defaults.expandedChapterIds,
     chapterContentMode: incoming.chapterContentMode === 'overview' ? 'overview' : 'section',

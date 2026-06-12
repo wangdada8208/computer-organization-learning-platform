@@ -45,6 +45,7 @@ jobs:
             "$GITHUB_WORKSPACE/site-icon-v2.ico" \
             "$GITHUB_WORKSPACE/site-icon-v2-192.png" \
             "$GITHUB_WORKSPACE/site-icon-v2-512.png" \
+            "$GITHUB_WORKSPACE/assets" \
             "$GITHUB_WORKSPACE/data" \
             "$GITHUB_WORKSPACE/backend" \
             "$GITHUB_WORKSPACE/ops" \

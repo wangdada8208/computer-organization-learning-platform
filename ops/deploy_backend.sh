@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVICE_NAME="coa-sync.service"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
-NGINX_FILE="/etc/nginx/sites-enabled/wangdada8208.xyz"
+NGINX_FILE="/etc/nginx/sites-enabled/jz.wangdada8208.xyz"
 DB_DIR="${ROOT_DIR}/backend/data"
 
 mkdir -p "${DB_DIR}"
@@ -29,7 +29,7 @@ EOF
 python3 - <<'PY'
 from pathlib import Path
 
-nginx_file = Path("/etc/nginx/sites-enabled/wangdada8208.xyz")
+nginx_file = Path("/etc/nginx/sites-enabled/jz.wangdada8208.xyz")
 text = nginx_file.read_text(encoding="utf-8")
 snippet = """
     # --- API proxy ---
@@ -45,6 +45,8 @@ snippet = """
 """
 if "location /api/" not in text:
     marker = "    # --- favicon ---"
+    if marker not in text:
+        marker = "    # --- Main HTML ---"
     if marker not in text:
         raise SystemExit("Cannot find insertion point in nginx config")
     text = text.replace(marker, snippet + marker, 1)

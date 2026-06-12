@@ -12,7 +12,9 @@
 
 直接打开即可使用，无需安装任何软件：
 
-**👉 [https://wangdada8208.xyz](https://wangdada8208.xyz)**
+**👉 [https://jz.wangdada8208.xyz](https://jz.wangdada8208.xyz)**
+
+> 主域名 [wangdada8208.xyz](https://wangdada8208.xyz) 为个人网站；计组学习平台部署在 **jz** 子域名。
 
 ---
 
@@ -149,10 +151,11 @@ python3 build_step3.py   # 修复重复、加入核心 JS 逻辑、闭合 HTML
 ## 🌐 部署
 
 ### 在线访问
-- **域名**：[https://wangdada8208.xyz](https://wangdada8208.xyz)
+- **学习平台**：[https://jz.wangdada8208.xyz](https://jz.wangdada8208.xyz)
+- **个人网站**：[https://wangdada8208.xyz](https://wangdada8208.xyz)
 - **HTTPS**：Let's Encrypt 自动续期
 - **反向代理**：Nginx，HTTP 301 自动跳转 HTTPS
-- **账号同步 API**：同域名 `/api/*`，由 Python 服务提供
+- **账号同步 API**：jz 子域名 `/api/*`，由 Python 服务提供
 
 ### GitHub
 - 仓库：[https://github.com/wangdada8208/computer-organization-platform](https://github.com/wangdada8208/computer-organization-platform)

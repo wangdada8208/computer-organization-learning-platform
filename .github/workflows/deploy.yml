@@ -5,10 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# 计组学习平台只部署到 jz 子域名，禁止指向主域名 wangdada8208.xyz（主域名为个人站）
 env:
   DEPLOY_HOST: 47.80.18.105
   DEPLOY_USER: root
-  DEPLOY_PATH: /var/www/wangdada8208.xyz
+  DEPLOY_PATH: /var/www/jz.wangdada8208.xyz
+  DEPLOY_HOST_HEADER: jz.wangdada8208.xyz
   MIN_TEACHER_QUESTIONS: "126"
 
 jobs:
@@ -41,6 +43,10 @@ jobs:
       - name: 同步站点文件到服务器
         shell: bash
         run: |
+          if [[ "$DEPLOY_PATH" != *"jz.wangdada8208.xyz"* ]]; then
+            echo "DEPLOY_PATH must target jz subdomain, got: $DEPLOY_PATH" >&2
+            exit 1
+          fi
           rsync -avz --delete \
             --exclude='backend/data/' \
             --exclude='**/*.bak' \
@@ -81,4 +87,4 @@ jobs:
         shell: bash
         run: |
           ssh -o StrictHostKeyChecking=yes "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "systemctl is-active --quiet coa-sync.service && bash ${DEPLOY_PATH}/ops/verify_deploy.sh ${DEPLOY_PATH} ${MIN_TEACHER_QUESTIONS}"
+            "systemctl is-active --quiet coa-sync.service && DEPLOY_HOST_HEADER=${DEPLOY_HOST_HEADER} bash ${DEPLOY_PATH}/ops/verify_deploy.sh ${DEPLOY_PATH} ${MIN_TEACHER_QUESTIONS}"

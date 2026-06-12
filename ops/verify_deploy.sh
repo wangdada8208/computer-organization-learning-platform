@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DEPLOY_PATH="${1:-/var/www/wangdada8208.xyz}"
+DEPLOY_PATH="${1:-/var/www/jz.wangdada8208.xyz}"
 MIN_TEACHER_QUESTIONS="${2:-126}"
+DEPLOY_HOST_HEADER="${DEPLOY_HOST_HEADER:-jz.wangdada8208.xyz}"
+
+if [[ "${DEPLOY_PATH}" != *"jz.wangdada8208.xyz"* ]]; then
+  echo "refusing to verify non-jz deploy path: ${DEPLOY_PATH}" >&2
+  exit 1
+fi
 
 teacher_file="${DEPLOY_PATH}/data/teacher_quizzes.json"
 index_file="${DEPLOY_PATH}/index.html"
@@ -32,7 +38,7 @@ grep -q 'app.js?v=' "${index_file}"
 grep -q 'APP_VERSION' "${app_file}"
 grep -q 'DATA_VERSION' "${app_file}"
 
-live_count="$(curl -fsSk -H 'Host: wangdada8208.xyz' 'https://127.0.0.1/data/teacher_quizzes.json' \
+live_count="$(curl -fsSk -H "Host: ${DEPLOY_HOST_HEADER}" "https://127.0.0.1/data/teacher_quizzes.json" \
   | python3 -c 'import json,sys; print(len(json.load(sys.stdin).get("questions", [])))')"
 
 if (( live_count < MIN_TEACHER_QUESTIONS )); then

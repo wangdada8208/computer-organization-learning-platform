@@ -3,11 +3,13 @@ name: 自动部署到服务器
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 env:
   DEPLOY_HOST: 47.80.18.105
   DEPLOY_USER: root
   DEPLOY_PATH: /var/www/wangdada8208.xyz
+  MIN_TEACHER_QUESTIONS: "126"
 
 jobs:
   deploy:
@@ -18,18 +20,36 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 配置 SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: 添加 known_hosts
         shell: bash
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
           ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: 测试 SSH 连接
+        shell: bash
+        run: |
+          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "echo github-actions-ssh-ok"
 
       - name: 同步站点文件到服务器
         shell: bash
         run: |
-          rsync -avz --delete --exclude='backend/data' \
-            -e "ssh -i ~/.ssh/deploy_key" \
+          rsync -avz --delete \
+            --exclude='backend/data/' \
+            --exclude='**/*.bak' \
+            --exclude='**/__pycache__/' \
+            --exclude='.claude/' \
+            --exclude='.git/' \
+            --exclude='docs/' \
+            --exclude='screenshots/' \
+            -e "ssh -o StrictHostKeyChecking=yes" \
             "$GITHUB_WORKSPACE/index.html" \
             "$GITHUB_WORKSPACE/app.js" \
             "$GITHUB_WORKSPACE/illustrations.js" \
@@ -45,20 +65,20 @@ jobs:
             "$GITHUB_WORKSPACE/site-icon-v2.ico" \
             "$GITHUB_WORKSPACE/site-icon-v2-192.png" \
             "$GITHUB_WORKSPACE/site-icon-v2-512.png" \
-            "$GITHUB_WORKSPACE/assets" \
-            "$GITHUB_WORKSPACE/data" \
-            "$GITHUB_WORKSPACE/backend" \
-            "$GITHUB_WORKSPACE/ops" \
-            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+            "$GITHUB_WORKSPACE/assets/" \
+            "$GITHUB_WORKSPACE/data/" \
+            "$GITHUB_WORKSPACE/backend/" \
+            "$GITHUB_WORKSPACE/ops/" \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
 
-      - name: 部署后端服务
+      - name: 部署后端并修复部署权限
         shell: bash
         run: |
-          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
-            "bash $DEPLOY_PATH/ops/deploy_backend.sh"
+          ssh -o StrictHostKeyChecking=yes "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "bash ${DEPLOY_PATH}/ops/ensure_deploy_access.sh && bash ${DEPLOY_PATH}/ops/deploy_backend.sh"
 
-      - name: 校验线上目录
+      - name: 校验线上目录与内容
         shell: bash
         run: |
-          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
-            "test -f $DEPLOY_PATH/index.html && test -f $DEPLOY_PATH/app.js && test -f $DEPLOY_PATH/data/chapters.json && test -f $DEPLOY_PATH/backend/server.py && systemctl is-active --quiet coa-sync.service"
+          ssh -o StrictHostKeyChecking=yes "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "systemctl is-active --quiet coa-sync.service && bash ${DEPLOY_PATH}/ops/verify_deploy.sh ${DEPLOY_PATH} ${MIN_TEACHER_QUESTIONS}"

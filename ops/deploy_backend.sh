@@ -54,5 +54,7 @@ PY
 systemctl daemon-reload
 systemctl enable "${SERVICE_NAME}"
 systemctl restart "${SERVICE_NAME}"
+
+bash "${ROOT_DIR}/ops/ensure_deploy_access.sh"
 nginx -t
 systemctl reload nginx

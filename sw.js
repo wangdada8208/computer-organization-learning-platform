@@ -1,9 +1,8 @@
-const CACHE_NAME = 'coa-v2-static-20260612a';
+const CACHE_NAME = 'coa-v2-static-20260612b';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
-  './app.js',
   './illustrations.js',
   './simulators.js',
   './manifest.json',
@@ -11,9 +10,6 @@ const APP_SHELL = [
   './site-icon-v2.ico',
   './site-icon-v2-192.png',
   './site-icon-v2-512.png',
-  './data/chapters.json',
-  './data/quizzes.json',
-  './data/teacher_quizzes.json',
 ];
 
 self.addEventListener('install', (event) => {
@@ -34,7 +30,13 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   const isSameOrigin = url.origin === self.location.origin;
-  const isCoreAsset = isSameOrigin && /\/(app|simulators|illustrations)\.js$|\/styles\.css$|\/data\/.+\.json$|\/manifest\.json$|\/(favicon|site-icon-v2)(\.svg|-\d+\.png|\.ico)$/.test(url.pathname);
+  const isDataJson = isSameOrigin && /\/data\/.+\.json(\?.*)?$/.test(url.pathname + url.search);
+  const isCoreAsset = isSameOrigin && /\/(app|simulators|illustrations)\.js(\?.*)?$|\/styles\.css$|\/manifest\.json$|\/(favicon|site-icon-v2)(\.svg|-\d+\.png|\.ico)$/.test(url.pathname);
+
+  if (isDataJson) {
+    event.respondWith(fetch(request));
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {

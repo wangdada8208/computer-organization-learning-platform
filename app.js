@@ -2,7 +2,8 @@ import { SIMULATORS, mountSimulator } from './simulators.js';
 import { POINT_ILLUSTRATIONS } from './illustrations.js';
 
 const AUTH_STORAGE_KEY = 'coa.v2.auth';
-const DATA_VERSION = '20260612a';
+const APP_VERSION = '20260612b';
+const DATA_VERSION = APP_VERSION;
 const LEGACY_PROGRESS_KEY = 'coa_p';
 const LEGACY_WRONG_KEY = 'coa_wrong';
 
@@ -109,6 +110,7 @@ boot();
 
 async function boot() {
   try {
+    await purgeStaleClientCachesIfNeeded();
     const [rawChapters, rawQuizzes, rawTeacherQuizzes] = await Promise.all([
       fetchJson('./data/chapters.json'),
       fetchJson('./data/quizzes.json'),
@@ -124,7 +126,7 @@ async function boot() {
     app.runtime.syncReady = true;
     renderView();
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).catch(() => {});
     }
     window.addEventListener('beforeunload', flushSyncOnLeave);
   } catch (error) {
@@ -138,6 +140,24 @@ async function fetchJson(url) {
   const response = await fetch(bustUrl, { cache: 'no-store' });
   if (!response.ok) throw new Error('Failed to load ' + url);
   return response.json();
+}
+
+async function purgeStaleClientCachesIfNeeded() {
+  const storageKey = 'coa.appVersion';
+  const previous = localStorage.getItem(storageKey);
+  if (previous === APP_VERSION) return;
+  localStorage.setItem(storageKey, APP_VERSION);
+  if (previous && previous !== APP_VERSION) {
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((registration) => registration.unregister()));
+    }
+    location.reload();
+  }
 }
 
 function normalizeChapters(chapters) {
@@ -514,6 +534,7 @@ function renderTopbar() {
 
 function renderDashboard() {
   const stats = getProgressStats();
+  const teacherStats = getTeacherStats();
   const continueChapter = getContinueChapter();
   const history = [...app.state.quizHistory].reverse();
   const recentWrongs = wrongbookEntries().slice(0, 2);
@@ -580,6 +601,11 @@ function renderDashboard() {
             <span>待回看错题</span>
             <strong>${getWrongbookCount()}</strong>
             <small>${latestWrong ? `${latestWrong.chapterTitle} 有最近错题` : '当前没有错题'}</small>
+          </article>
+          <article class="overview-number-card">
+            <span>老师题总量</span>
+            <strong>${teacherStats.total}</strong>
+            <small>覆盖 ${teacherStats.chapters} 章 · 雨课堂 ${teacherStats.rainclassroom} 题</small>
           </article>
         </div>
       </section>
@@ -1200,7 +1226,10 @@ function renderTeacherPractice(chapter) {
   const chapterOptions = [{ value: 'all', label: '全部章节' }].concat(
     app.data.chapters
       .filter((item) => getTeacherQuestionsByChapter(item.id).length)
-      .map((item) => ({ value: item.id, label: `第 ${item.number} 章 · ${item.title}` })),
+      .map((item) => {
+        const count = getTeacherQuestionsByChapter(item.id).length;
+        return { value: item.id, label: `第 ${item.number} 章 · ${item.title}（${count} 题）` };
+      }),
   );
   const sourceOptions = [{ value: 'all', label: '全部来源' }].concat(
     app.data.teacherSources.map((source) => ({ value: source.id, label: source.label })),

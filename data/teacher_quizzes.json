@@ -53,6 +53,18 @@
       "label": "课件题 · Chapter 4",
       "type": "courseware",
       "description": "第 4 章课件内嵌题。"
+    },
+    {
+      "id": "rain-ch6-4371796",
+      "label": "雨课堂测试 · 第6章随堂测试（4371796）",
+      "type": "rainclassroom",
+      "description": "第6章随堂测试，覆盖数制码制、移位、补码运算与浮点基础。"
+    },
+    {
+      "id": "rain-ch6-4378006",
+      "label": "雨课堂测试 · 第6章随堂测试（4378006）",
+      "type": "rainclassroom",
+      "description": "第6章随堂测试补充卷，覆盖机器字长、移码、IEEE754 与浮点运算步骤。"
     }
   ],
   "questions": [
@@ -2504,6 +2516,1670 @@
         "ch4-s6-p2",
         "ch4-s6-p2",
         "ch4-s6-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q01",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "假设某计算机中的寄存器为4位，则寄存器分别存储以下数据时，能表示的数的范围为：(1) 存无符号数，范围：( )，( )；(2) 有符号数原码，范围：( )，( )；(3) 有符号数补码，范围：( )，( )；(4) 有符号数反码，范围：( )，( )。",
+      "answer": "0;15;-7;7;-8;7;-7;7",
+      "acceptedAnswers": [
+        "0;15;-7;7;-8;-7;-7;7",
+        "0;15;-7;7;-8;7;-7;7"
+      ],
+      "explanation": "4位无符号数0~15；原码与反码为-(2^3-1)~+(2^3-1)；4位补码为-2^3~+(2^3-1)。",
+      "relatedTopicId": "ch6-s1-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "表示范围"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q02",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "假设某计算机中的寄存器为4位，二进制数 -1000 的原码、补码、反码分别为（请填写二进制，无法表示则填“不存在”）。",
+      "answer": "不存在;1000;不存在",
+      "acceptedAnswers": [
+        "不存在/溢出;1000;不存在",
+        "不存在;1000;不存在",
+        "不存在;1000;F7"
+      ],
+      "explanation": "4位补码中1000表示-8；真值-8在原码/反码中无法合法表示，因此原码与反码填“不存在”。",
+      "relatedTopicId": "ch6-s1-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "原码补码反码"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q03",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "假设某计算机中的寄存器为8位，二进制数 -1000 的原码、补码、反码分别为（十六进制，用分号分隔）。",
+      "answer": "88;F8;F7",
+      "acceptedAnswers": [
+        "88;F8;F7"
+      ],
+      "explanation": "-8的8位原码为10001000=88H，补码为11111000=F8H，反码为11110111=F7H。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "原码补码反码"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q04",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "一个8位二进制整数，若采用补码表示，且由4个1和4个0组成，则最小值为( )。",
+      "options": [
+        "-120",
+        "-7",
+        "-112",
+        "-121"
+      ],
+      "answerIndex": 3,
+      "explanation": "负数真值越小，补码形式越小；4个1和4个0组成的最小补码为10000111，对应-121。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码范围"
+      ],
+      "optionExplanations": [
+        "-120不是由4个1和4个0组成。",
+        "-7对应的1的个数不足4个。",
+        "-112不是最小值。",
+        "正确。10000111含4个1和4个0，是满足条件的最大负数。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q05",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "将一个十进制数 x=-8192 表示成补码时，至少采用( )位二进制代码。",
+      "options": [
+        "13",
+        "14",
+        "15",
+        "12"
+      ],
+      "answerIndex": 1,
+      "explanation": "-8192=2^13，需要14位补码才能表示到-8192。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码位数"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q06",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "设 x 为整数，[x]补=1,x1x2x3x4x5，若要 x<-16，应满足的条件是( )。",
+      "options": [
+        "x1~x5至少有一个是1",
+        "x1必须是0，x2~x5至少有一个是1",
+        "x1必须是0，x2~x5任意",
+        "x1~x5任意"
+      ],
+      "answerIndex": 2,
+      "explanation": "6位补码中 x<-16 要求 x1=0 且其余位不能全为0。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码比较"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q07",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "补码 1011 0110 对应的真值是( )。",
+      "options": [
+        "-74",
+        "-54",
+        "-68",
+        "-48"
+      ],
+      "answerIndex": 0,
+      "explanation": "10110110作为8位补码，真值为-74。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码真值"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q08",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "【2016-13】考虑以下C语言代码：short si=-32767; unsigned short usi=si; 执行后 usi 的值是( )。",
+      "options": [
+        "-32767",
+        "32767",
+        "32768",
+        "32769"
+      ],
+      "answerIndex": 3,
+      "explanation": "short 转 unsigned short 时按位解释，-32767 的补码模式对应 32769。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "类型转换"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q09",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在小数定点机中，下列描述正确的是( )。",
+      "options": [
+        "原码和反码不能表示-1，补码可以表示-1",
+        "原码、反码和补码均可以表示-1",
+        "原码、反码和补码均可以表示-1，且三种机器数的表示范围相同",
+        "原码和反码可以表示-1，补码不能表示-1"
+      ],
+      "answerIndex": 0,
+      "explanation": "小数定点补码可以表示-1，原码和反码通常不能。",
+      "relatedTopicId": "ch6-s1-p7",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "定点小数"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q10",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "Float型变量 x=-8.25，IEEE754单精度表示时 FR1 的内容是( )。",
+      "options": [
+        "C1040000H",
+        "C2420000H",
+        "C1840000H",
+        "C1C20000H"
+      ],
+      "answerIndex": 0,
+      "explanation": "-8.25=-1.00001×2^3，符号1，阶码130，尾数000010…，对应C1040000H。",
+      "relatedTopicId": "ch6-s4-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "IEEE754"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p1",
+        "ch6-s4-p1",
+        "ch6-s4-p1",
+        "ch6-s4-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q11",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "定点小数原码 [x]原=x0.x1…xn 表示的数值范围是( )。",
+      "options": [
+        "-1+2^-n < x ≤ 1-2^-n",
+        "-1+2^-n ≤ x < 1-2^-n",
+        "-1+2^-n ≤ x ≤ 1-2^-n",
+        "-1+2^-n < x < 1-2^-n"
+      ],
+      "answerIndex": 2,
+      "explanation": "n位定点小数原码范围为[-1+2^-n, 1-2^-n]，两端都能取到。",
+      "relatedTopicId": "ch6-s1-p7",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "定点小数"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q12",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s2",
+      "sectionTitle": "6.2 移位运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "设机器字长8位(含1位符号位)，若机器数 BAH 为原码，则算术左移一位得( )，算术右移一位得( )。",
+      "options": [
+        "F4H EDH",
+        "B4H 6DH",
+        "F4H 9DH",
+        "B5H EDH"
+      ],
+      "answerIndex": 2,
+      "explanation": "BAH原码为-26，算术左移得F4H，算术右移得9DH。",
+      "relatedTopicId": "ch6-s2-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "算术移位"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s2-p3",
+        "ch6-s2-p3",
+        "ch6-s2-p3",
+        "ch6-s2-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q13",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s2",
+      "sectionTitle": "6.2 移位运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "【2018】整数 x 的机器数为 1101 1000，分别对 x 进行逻辑右移1位和算术右移1位，得到的机器数分别是( )。",
+      "options": [
+        "1110 1100、1110 1100",
+        "0110 1100、1110 1100",
+        "1110 1100、0110 1100",
+        "0110 1100、0110 1100"
+      ],
+      "answerIndex": 1,
+      "explanation": "逻辑右移高位补0得01101100，算术右移高位补符号位1得11101100。",
+      "relatedTopicId": "ch6-s2-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "逻辑移位"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s2-p1",
+        "ch6-s2-p1",
+        "ch6-s2-p1",
+        "ch6-s2-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q14",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "【2013】8位计算机中 [x]补=1111 0100，[y]补=1011 0000，若 z=2*x+y/2，则 z 的机器数为( )。",
+      "options": [
+        "1100 0000",
+        "0010 0100",
+        "1010 1010",
+        "溢出"
+      ],
+      "answerIndex": 0,
+      "explanation": "x=-12，y=-80，z=2x+y/2=-64，机器数为11000000。",
+      "relatedTopicId": "ch6-s3-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码运算"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p1",
+        "ch6-s3-p1",
+        "ch6-s3-p1",
+        "ch6-s3-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q15",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "两补码相加，采用1位符号位，则当( )时，表示结果溢出。",
+      "options": [
+        "最高位有进位",
+        "最高位进位和次高位进位异或结果为0",
+        "最高位为1",
+        "最高位进位和次高位进位异或结果为1"
+      ],
+      "answerIndex": 3,
+      "explanation": "一位符号位溢出判据：最高位进位与次高位进位异或结果为1。",
+      "relatedTopicId": "ch6-s3-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "溢出判断"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q16",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "两补码相加，采用2位符号位，则当符号位为( )和( )时表示溢出；溢出时正确的符号位为( )，其余都是数值位。",
+      "answer": "01;10;最高位",
+      "acceptedAnswers": [
+        "01;10;最高符号位",
+        "01;10;最高位"
+      ],
+      "explanation": "变形补码溢出时符号位为01或10；正确符号位是最高符号位。",
+      "relatedTopicId": "ch6-s3-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "双符号位溢出"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q17",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在整数定点机中，机器数采用补码、双符号位，若十六进制为 C0H，它代表的真值是( )。",
+      "options": [
+        "-1",
+        "+3",
+        "-64",
+        "-128"
+      ],
+      "answerIndex": 2,
+      "explanation": "C0H=11000000，双符号位11表示负数，真值为-64。",
+      "relatedTopicId": "ch6-s3-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "双符号位"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p4",
+        "ch6-s3-p4",
+        "ch6-s3-p4",
+        "ch6-s3-p4"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q18",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在浮点机中判断补码规格化形式的原则是( )。",
+      "options": [
+        "尾数的符号位与第一数值位不同",
+        "尾数的第一数值位为1",
+        "尾数的符号位与第一数值位相同",
+        "阶符与数符不同"
+      ],
+      "answerIndex": 0,
+      "explanation": "补码尾数规格化要求符号位与第一数值位不同。",
+      "relatedTopicId": "ch6-s4-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "浮点规格化"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q19",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "下列形式的尾数 S，符合规格化浮点数的是( )。",
+      "options": [
+        "[S]原=1.000 1011",
+        "[S]补=1.100 1011",
+        "[S]补=0.000 1011",
+        "[S]补=1.000 0000"
+      ],
+      "answerIndex": 3,
+      "explanation": "补码规格化尾数形式为1.0000000（符号位与第一数值位不同且已规格化）。",
+      "relatedTopicId": "ch6-s4-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "浮点规格化"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q20",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "若浮点数尾数使用双符号位补码，当尾数出现 00.0×…× 或 11.1×…× 时需进行( )；当出现 01.×…× 或 10.×…× 时需进行( )。",
+      "answer": "左规;右规",
+      "acceptedAnswers": [
+        "左规;右规"
+      ],
+      "explanation": "00.0/11.1 形式左规；01./10. 形式右规。",
+      "relatedTopicId": "ch6-s4-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "浮点规格化"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q21",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "如果采用0舍1入法，则 0.01010110011 舍去最后一位后，结果为( )。",
+      "options": [
+        "0.0101011001",
+        "0.0101011010",
+        "0.0101011011",
+        "0.0101011100"
+      ],
+      "answerIndex": 1,
+      "explanation": "被舍位为1，采用0舍1入后末位进1，结果为0.0101011010。",
+      "relatedTopicId": "ch6-s4-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "舍入"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p3",
+        "ch6-s4-p3",
+        "ch6-s4-p3",
+        "ch6-s4-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q22",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "浮点数运算中，若结果阶码大于最大阶码则产生( )；若小于最小阶码则产生下溢出，按( )处理。",
+      "answer": "上溢出;0",
+      "acceptedAnswers": [
+        "上溢;0",
+        "溢出;0",
+        "上溢出;机器零"
+      ],
+      "explanation": "阶码上溢表示结果过大；下溢常按机器零(0)处理。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "浮点溢出"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4371796-q23",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4371796",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "下列有关浮点数加减运算的叙述中，正确的是( )。",
+      "options": [
+        "对阶操作有可能会引起阶码上溢或下溢",
+        "右规和尾数舍入都有可能会引起阶码上溢",
+        "左规时不可能引起阶码下溢",
+        "右规时不可能引起阶码上溢"
+      ],
+      "answerIndex": 1,
+      "explanation": "右规与尾数舍入过程中都可能改变阶码并引发上溢。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "浮点加减"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p4",
+        "ch6-s4-p4",
+        "ch6-s4-p4",
+        "ch6-s4-p4"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q01",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在计算机中，所谓的机器字长一般是指( )。",
+      "options": [
+        "总线的带宽",
+        "缓存的位数",
+        "存储器的位数",
+        "寄存器的位数"
+      ],
+      "answerIndex": 3,
+      "explanation": "机器字长通常指CPU/general register 的位数。",
+      "relatedTopicId": "ch6-s1-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "机器字长"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p2",
+        "ch6-s1-p2",
+        "ch6-s1-p2",
+        "ch6-s1-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q02",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "以下各类表示法中，引入( )的概念是为了消除减法操作。",
+      "options": [
+        "补码",
+        "移码",
+        "反码",
+        "原码"
+      ],
+      "answerIndex": 0,
+      "explanation": "补码使减法可转化为加法。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q03",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "计算机机器数的表示方法中，零的表示方法唯一的是( )。",
+      "options": [
+        "原码",
+        "反码",
+        "补码",
+        "移码"
+      ],
+      "answerIndex": 2,
+      "explanation": "补码中0只有一种表示。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q04",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "寄存器位数为8位，机器数采用补码(含1位符号位)。对应十进制数-27，寄存器内容为( )。",
+      "options": [
+        "27H",
+        "9BH",
+        "E5H",
+        "65H"
+      ],
+      "answerIndex": 2,
+      "explanation": "-27的8位补码为11100101=E5H。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q05",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "x=-1010，那么 x 的移码表示为( )。",
+      "options": [
+        "0,1010",
+        "1,1010",
+        "0,0110",
+        "1,0110"
+      ],
+      "answerIndex": 2,
+      "explanation": "真值-10加偏置16得6，移码为0,0110。",
+      "relatedTopicId": "ch6-s1-p6",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "移码"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p6",
+        "ch6-s1-p6",
+        "ch6-s1-p6",
+        "ch6-s1-p6"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q06",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "由3个“1”和5个“0”组成的8位二进制补码，能表示的最小整数是( )。",
+      "options": [
+        "-126",
+        "-125",
+        "-32",
+        "-3"
+      ],
+      "answerIndex": 1,
+      "explanation": "最小补码为10000011，真值-125。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q07",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "设 x 为整数，[x]补=1,x1x2x3x4x5，若要 x<-16，x1~x5 应满足( )。",
+      "options": [
+        "x1~x5至少有一个是1",
+        "x1必须是0，x2~x5至少有一个是1",
+        "x1必须是0，x2~x5任意",
+        "x1~x5任意"
+      ],
+      "answerIndex": 2,
+      "explanation": "6位补码中 x<-16 要求 x1=0。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5",
+        "ch6-s1-p5"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q08",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "8位无符号整数的表示范围为( )。",
+      "options": [
+        "0-127",
+        "0-255",
+        "0-511",
+        "0-63"
+      ],
+      "answerIndex": 1,
+      "explanation": "8位无符号整数范围0~255。",
+      "relatedTopicId": "ch6-s1-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "无符号数"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p1",
+        "ch6-s1-p1",
+        "ch6-s1-p1",
+        "ch6-s1-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q09",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "设某小数点定点机字长为8位，采用补码(含1位符号位)，则机器数所能表示的范围是( )。",
+      "options": [
+        "[-(1-2^-7), (1-2^-7)]",
+        "[-(1-2^-8), (1-2^-8)]",
+        "[-1.0000000, (1-2^-7)]",
+        "[-1.0000000, 1.0000000]"
+      ],
+      "answerIndex": 0,
+      "explanation": "8位定点小数补码范围为[-(1-2^-7), 1-2^-7]。",
+      "relatedTopicId": "ch6-s1-p7",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "定点小数"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7",
+        "ch6-s1-p7"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q10",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "【2021】下列数值中，不能用IEEE754浮点格式精确表示的是( )。",
+      "options": [
+        "1.2",
+        "1.25",
+        "2.0",
+        "2.5"
+      ],
+      "answerIndex": 0,
+      "explanation": "1.2 在二进制中是无限循环小数，无法精确表示。",
+      "relatedTopicId": "ch6-s4-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "IEEE754"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p1",
+        "ch6-s4-p1",
+        "ch6-s4-p1",
+        "ch6-s4-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q11",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s2",
+      "sectionTitle": "6.2 移位运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "对于补码机器数的算术移位，方法正确的是( )。",
+      "options": [
+        "右移时高位补0，左移时低位补0",
+        "右移时高位补1，左移时低位补0",
+        "右移时高位补符号位，左移时低位补0",
+        "右移时高位补符号位，左移时低位补符号位"
+      ],
+      "answerIndex": 2,
+      "explanation": "补码算术右移补符号位，左移低位补0。",
+      "relatedTopicId": "ch6-s2-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "算术移位"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s2-p3",
+        "ch6-s2-p3",
+        "ch6-s2-p3",
+        "ch6-s2-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q12",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s2",
+      "sectionTitle": "6.2 移位运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "【2018】x 的机器数为 1101 1000(补码)，分别逻辑右移1位和算术右移1位，得到的机器数各是( )。",
+      "options": [
+        "1110 1100 , 1110 1100",
+        "0110 1100 , 1110 1100",
+        "1110 1100 , 0110 1100",
+        "0110 1100 , 0110 1100"
+      ],
+      "answerIndex": 1,
+      "explanation": "逻辑右移01101100，算术右移11101100。",
+      "relatedTopicId": "ch6-s2-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "移位"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s2-p1",
+        "ch6-s2-p1",
+        "ch6-s2-p1",
+        "ch6-s2-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q13",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "两补码相加，采用1位符号位，则当( )时，表示结果溢出。",
+      "options": [
+        "最高有效位有进位",
+        "最高有效位产生的进位和符号位产生的进位异或结果为0",
+        "符号位有进位",
+        "最高有效位产生的进位和符号位产生的进位异或结果为1"
+      ],
+      "answerIndex": 3,
+      "explanation": "一位符号位溢出：最高数值位进位与符号位进位异或为1。",
+      "relatedTopicId": "ch6-s3-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "溢出"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q14",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在补码加/减运算部件中，必须有( )电路，它一般用异或门来实现。",
+      "options": [
+        "译码",
+        "编码",
+        "溢出判断",
+        "移位"
+      ],
+      "answerIndex": 2,
+      "explanation": "补码加减部件需要溢出判断电路。",
+      "relatedTopicId": "ch6-s3-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "溢出判断"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q15",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "若 x=103, y=-25，则下列表达式采用8位定点补码实现运算时，会发生溢出的是( )。",
+      "options": [
+        "x+y",
+        "-x+y",
+        "x-y",
+        "-x-y"
+      ],
+      "answerIndex": 2,
+      "explanation": "x-y=128，超出8位有符号范围。",
+      "relatedTopicId": "ch6-s3-p3",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "溢出"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3",
+        "ch6-s3-p3"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q16",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "字长8位，[x]补=1111 0100，[y]补=1011 0000，整型变量 z=4*x+y/2，则 z 的机器数为( )。",
+      "options": [
+        "1100 0000",
+        "1010 1000",
+        "1010 1010",
+        "溢出"
+      ],
+      "answerIndex": 1,
+      "explanation": "x=-12，y=-80，z=4x+y/2=-88=10101000。",
+      "relatedTopicId": "ch6-s3-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "补码运算"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s3-p1",
+        "ch6-s3-p1",
+        "ch6-s3-p1",
+        "ch6-s3-p1"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q17",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在浮点数加减法的对阶过程中，( )。",
+      "options": [
+        "将被加(减)数的阶码向加(减)数的阶码看齐",
+        "将加(减)数的阶码向被加(减)数的阶码看齐",
+        "将大的阶码向小的阶码看齐",
+        "将小的阶码向大的阶码看齐"
+      ],
+      "answerIndex": 3,
+      "explanation": "对阶时小阶向大阶看齐。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "对阶"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p4",
+        "ch6-s4-p4",
+        "ch6-s4-p4",
+        "ch6-s4-p4"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q18",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "设浮点数阶码采用移码、尾数用原码，判断规格化数的方法是( )。",
+      "options": [
+        "尾数最高位为1，其余位任意",
+        "尾数最高位为0，其余位任意",
+        "尾数最高位和符号相同，其余位任意",
+        "尾数最高位和符号相异，其余位任意"
+      ],
+      "answerIndex": 0,
+      "explanation": "原码尾数规格化要求最高数值位为1。",
+      "relatedTopicId": "ch6-s4-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "规格化"
+      ],
+      "optionExplanations": [
+        "正确。",
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q19",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "single",
+      "stem": "在浮点机中，判断补码规格化形式的原则是( )。",
+      "options": [
+        "尾数的第一数位为1，数符任意",
+        "尾数的符号位与第一数位相同",
+        "尾数的符号位与第一数位不同",
+        "阶符与数符不同"
+      ],
+      "answerIndex": 2,
+      "explanation": "补码尾数规格化：符号位与第一数值位不同。",
+      "relatedTopicId": "ch6-s4-p2",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "规格化"
+      ],
+      "optionExplanations": [
+        "该选项不符合题意。",
+        "该选项不符合题意。",
+        "正确。",
+        "该选项不符合题意。"
+      ],
+      "optionTopicIds": [
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2",
+        "ch6-s4-p2"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q20",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "-110 ≡ ( ) (mod 2^3)（请填写带“+”或“-”的3位二进制）。",
+      "answer": "+010",
+      "acceptedAnswers": [
+        "+010",
+        "010",
+        "+10"
+      ],
+      "explanation": "-6 mod 8 = 2，3位二进制为+010。",
+      "relatedTopicId": "ch6-s1-p5",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "模运算"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q21",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "整数定点机1位符号位，寄存器内容为10000000，分别为：原码真值( )；补码真值( )；反码真值( )；无符号数真值( )（十进制）。",
+      "answer": "-128;-128;-127;128",
+      "acceptedAnswers": [
+        "-128;-128;-127;128"
+      ],
+      "explanation": "10000000：原码/补码均为-128，反码-127，无符号128。",
+      "relatedTopicId": "ch6-s1-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "机器数真值"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q22",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s1",
+      "sectionTitle": "6.1 数制与码制",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "若 ABH 表示移码(含1位符号位)，其对应的十进制数是( )。",
+      "answer": "43",
+      "acceptedAnswers": [
+        "43"
+      ],
+      "explanation": "ABH=171，移码真值=171-128=43。",
+      "relatedTopicId": "ch6-s1-p6",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "移码"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q23",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "将 (41/128)10 转换成 IEEE754 标准 32 位浮点数的十六进制存储格式为( )。",
+      "answer": "3EA40000H",
+      "acceptedAnswers": [
+        "3EA40000H",
+        "3EA40000",
+        "0x3EA40000"
+      ],
+      "explanation": "41/128=0.01001001×2^-2，对应单精度3EA40000H。",
+      "relatedTopicId": "ch6-s4-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "IEEE754"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q24",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "已知 IEEE754 单精度机器数 C1500000H，它所表示的十进制真值是( )。",
+      "answer": "-13",
+      "acceptedAnswers": [
+        "-13",
+        "-13.0",
+        "-13.00"
+      ],
+      "explanation": "C1500000H 表示 -13.0。",
+      "relatedTopicId": "ch6-s4-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "IEEE754"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q25",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "定点数补码相加，采用2位符号位，当两个符号位相同时无溢出；溢出时正确的符号位为最( )位（填高或低）。",
+      "answer": "高",
+      "acceptedAnswers": [
+        "高",
+        "最高"
+      ],
+      "explanation": "变形补码溢出时，最高符号位为正确符号位。",
+      "relatedTopicId": "ch6-s3-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "双符号位"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q26",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "浮点数运算中，若结果阶码 [J]补=01,×…× 则产生( )；若 [J]补=10,×…× 则产生( )。",
+      "answer": "上溢出;下溢出",
+      "acceptedAnswers": [
+        "上溢;下溢",
+        "上溢出;下溢出"
+      ],
+      "explanation": "01表示上溢，10表示下溢。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "浮点溢出"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q27",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s3",
+      "sectionTitle": "6.3 定点数加减运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "8位补码，A=63，B=-24，计算 A-B：[A]补=( )；[B]补=( )；[-B]补=( )；[A-B]补=( )；是否溢出( )（填是/否）。",
+      "answer": "00111111;11101000;00011000;01010111;否",
+      "acceptedAnswers": [
+        "00111111;11101000;00011000;01010111;否",
+        "00111111;11101000;00011000;01010111;不"
+      ],
+      "explanation": "A-B=87，无溢出。",
+      "relatedTopicId": "ch6-s3-p1",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "补码运算"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q28",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "课本例6.30：x=-0.101000×2^-101，y=0.111011×2^-100。已知 [x]补=11,011;11.011000，则 [y]补=( ); 对阶时 11,011+( )=11,111；x尾数右规后阶码加( )。",
+      "answer": "11,011;00,100;1",
+      "acceptedAnswers": [
+        "11,011;00,100;1"
+      ],
+      "explanation": "[y]补=11,011;00.111011，[-jy]补=00,100，右规后阶码+1。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "浮点对阶"
+      ]
+    },
+    {
+      "id": "teacher-ch6-4378006-q29",
+      "chapterId": "ch6",
+      "sectionId": "ch6-s4",
+      "sectionTitle": "6.4 浮点数运算",
+      "sourceId": "rain-ch6-4378006",
+      "sourceType": "rainclassroom",
+      "type": "fill",
+      "stem": "续上题：尾数符号位出现10需( )规；0舍1入舍入后尾数为( )。",
+      "answer": "右;11.011000",
+      "acceptedAnswers": [
+        "右规;11.011000",
+        "右;11.011000"
+      ],
+      "explanation": "10形式右规；舍入后尾数为11.011000。",
+      "relatedTopicId": "ch6-s4-p4",
+      "tags": [
+        "老师测试",
+        "雨课堂",
+        "填空题",
+        "浮点舍入"
       ]
     }
   ]

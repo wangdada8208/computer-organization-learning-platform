@@ -2,6 +2,7 @@ import { SIMULATORS, mountSimulator } from './simulators.js';
 import { POINT_ILLUSTRATIONS } from './illustrations.js';
 
 const AUTH_STORAGE_KEY = 'coa.v2.auth';
+const DATA_VERSION = '20260612a';
 const LEGACY_PROGRESS_KEY = 'coa_p';
 const LEGACY_WRONG_KEY = 'coa_wrong';
 
@@ -133,7 +134,8 @@ async function boot() {
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url);
+  const bustUrl = url.includes('?') ? `${url}&v=${DATA_VERSION}` : `${url}?v=${DATA_VERSION}`;
+  const response = await fetch(bustUrl, { cache: 'no-store' });
   if (!response.ok) throw new Error('Failed to load ' + url);
   return response.json();
 }

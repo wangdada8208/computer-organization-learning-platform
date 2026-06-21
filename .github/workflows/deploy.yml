@@ -27,13 +27,13 @@ jobs:
 
       - name: 部署后端服务
         run: |
-          bash "$DEPLOY_PATH/ops/deploy_backend.sh"
+          sudo bash "$DEPLOY_PATH/ops/deploy_backend.sh"
 
       - name: 校验线上目录与内容
         run: |
-          systemctl is-active --quiet coa-sync.service
-          DEPLOY_HOST_HEADER=${DEPLOY_HOST_HEADER} bash "$DEPLOY_PATH/ops/verify_deploy.sh" "$DEPLOY_PATH" "$MIN_TEACHER_QUESTIONS"
+          sudo systemctl is-active --quiet coa-sync.service
+          DEPLOY_HOST_HEADER=${DEPLOY_HOST_HEADER} sudo -E bash "$DEPLOY_PATH/ops/verify_deploy.sh" "$DEPLOY_PATH" "$MIN_TEACHER_QUESTIONS"
 
       - name: 刷新 nginx 缓存
         run: |
-          nginx -t && systemctl reload nginx
+          sudo nginx -t && sudo systemctl reload nginx
